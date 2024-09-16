@@ -34,13 +34,6 @@ int main() {
     mac_unit.cycle(2.5, 4.0);  // 2.5 * 4.0 = 10.0
     mac_unit.cycle(1.5, 2.0);  // 1.5 * 2.0 = 3.0
     mac_unit.cycle(2.5, 4.0);  // 2.5 * 4.0 = 10.0
-    mac_unit.cycle(1.5, 2.0);  // 1.5 * 2.0 = 3.0
-    mac_unit.cycle(2.5, 4.0);  // 2.5 * 4.0 = 10.0
-    mac_unit.cycle(1.5, 2.0);  // 1.5 * 2.0 = 3.0
-    mac_unit.cycle(2.5, 4.0);  // 2.5 * 4.0 = 10.0
-    mac_unit.cycle(1.5, 2.0);  // 1.5 * 2.0 = 3.0
-    mac_unit.cycle(2.5, 4.0);  // 2.5 * 4.0 = 10.0
-    mac_unit.cycle(1.5, 2.0);  // 1.5 * 2.0 = 3.0
 
     std::cout << "Accumulated value: " << mac_unit.read_accumulator() << std::endl;
 
