@@ -14,7 +14,7 @@ class channel{
 public:
     channel(size_t capacity): capacity(capacity), is_full(is_full){}
 
-    void channel_push(T& element){
+    void channel_push(T& element){ 
         if (buffer.size() >= capacity){
             cout << "Buffer full..." << endl;
             return;
