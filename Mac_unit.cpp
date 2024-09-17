@@ -70,8 +70,8 @@ struct read_ack{
     int32_t id;
 };
 
-channel<read_request> read_request_channel(4), read_sink_channel(4);
-channel<read_ack> read_ack_channel(4), sink_ack_channel(4);
+channel<int32_t> number_channel(4);  // Holds numbers to be added
+channel<int32_t> result_channel(4);  // Holds results of additions
 
 // perf_vector
 // 0: number of instructions/memory ops/requests processed
@@ -79,49 +79,18 @@ channel<read_ack> read_ack_channel(4), sink_ack_channel(4);
 // 2: number of hits
 vector<int> perf_vector(3, 0); 
 
-// Function to push requests into the read request channel
-void push_requests() {
-    for (int i = 0; i < 5; ++i) {
-        read_request req = {i * 10, i};  // Sample data
-        if (!read_request_channel.channel_full()) {
-            read_request_channel.channel_push(req);
-            cout << "Pushed read_request: {address: " << req.address 
-                 << ", id: " << req.id << "}" << endl;
-            perf_vector[0]++;  // Increment processed requests count
+void push_numbers() {
+    for (int i = 1; i <= 5; ++i) {
+        if (!number_channel.channel_full()) {
+            number_channel.channel_push(i);  // Pushes numbers 1, 2, 3, 4, 5 into the channel
+            cout << "Pushed number: " << i << endl;
         } else {
-            cout << "Request channel is full!" << endl;
+            cout << "Number channel is full!" << endl;
         }
     }
 }
 
-// Function to pop requests and process them
-void process_requests() {
-    while (!read_request_channel.channel_empty()) {
-        read_request req = read_request_channel.channel_pop();
-        cout << "Processing read_request: {address: " << req.address 
-             << ", id: " << req.id << "}" << endl;
 
-        // Simulate processing and generating read_ack
-        read_ack ack = {true, req.address, req.id};
-        read_ack_channel.channel_push(ack);
-
-        // For demonstration, consider every alternate request a "miss"
-        if (req.id % 2 == 0) {
-            perf_vector[1]++;  // Count as a "miss"
-        } else {
-            perf_vector[2]++;  // Count as a "hit"
-        }
-    }
-}
-
-// Function to pop acks
-void process_acks() {
-    while (!read_ack_channel.channel_empty()) {
-        read_ack ack = read_ack_channel.channel_pop();
-        cout << "Ack received: {success: " << ack.read_success 
-             << ", address: " << ack.address << ", id: " << ack.id << "}" << endl;
-    }
-}
 
 
 
@@ -129,17 +98,17 @@ template<typename T>
 class MACUnit {
 public:
     
-   MACUnit() : accumulator(0){}
+   MACUnit() : accumulator(0) {}
 
-   void cycle(T a, T b){
+   void cycle(T a, T b) {
     accumulator += a*b;
    }
 
-T read_accumulator() const{
+T read_accumulator() const {
     return accumulator;
 }
 
-void clear_accumulator(){
+void clear_accumulator() {
     accumulator = 0;
 }
 
@@ -160,10 +129,7 @@ int main() {
     // Process the acknowledgements
     process_acks();
 
-    // Display performance vector results
-    cout << "Processed Requests: " << perf_vector[0] << endl;
-    cout << "Misses: " << perf_vector[1] << endl;
-    cout << "Hits: " << perf_vector[2] << endl;
+    
 
     mac_unit.cycle(2.5, 4.0);  // 2.5 * 4.0 = 10.0
     mac_unit.cycle(1.5, 2.0);  // 1.5 * 2.0 = 3.0
