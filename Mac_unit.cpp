@@ -71,8 +71,8 @@ struct read_ack {
 };
 
 // Channels to hold numbers for the MAC unit operations
-channel<int32_t> number_channelA(100);  // Holds numbers for MAC unit A
-channel<int32_t> number_channelB(100);  // Holds numbers for MAC unit B
+channel<int32_t> number_channelA(128);  // Holds numbers for MAC unit A
+channel<int32_t> number_channelB(128);  // Holds numbers for MAC unit B
 
 // Performance vector
 // [0]: Number of instructions/memory operations/requests processed
@@ -145,17 +145,17 @@ void Mac_Cycle() {
         // Display the result of the current MAC operation and accumulated value
         cout << "--------------------------------" << endl;
         cout << "MAC Operation: " << numA << " * " << numB << " = " << numA * numB << endl;
-        cout << "Accumulated value: " << mac_unit.read_accumulator() << endl;
-        cout << "--------------------------------" << endl;
+        cout << "\033[1;34m"<< "Accumulated value: " << mac_unit.read_accumulator() << endl;
+        cout << "\033[1;37m"<<"--------------------------------" << endl;
     }
 }
 
 int main() {
     // Push numbers into both channels
-    push_numberA(30);
+    push_numberA(100);
     cout << "Succesfully pushed numbers into channel A" << endl;
     cout << "--------------------------------" << endl;
-    push_numberB(30);
+    push_numberB(100);
     cout << "Succesfully Pushed numbers into channel B" << endl;
     cout << "" << endl;
     cout << "now performing MAC operation" << endl;
