@@ -36,7 +36,10 @@ public:
 
         return ret_val;
     }
-
+    
+    T front(){
+        return buffer.front();
+    }
     // Check if the buffer is full
     bool channel_full() {
         return is_full;
@@ -113,7 +116,13 @@ public:
     MACUnit() : accumulator(0) {}
 
     // Performs a multiply-and-accumulate operation
-    void cycle(T a, T b) {
+    // void cycle(T a, T b) {
+    //     accumulator += a * b;
+    // }
+
+    void cycle() {
+        T a = number_channelA.channel_pop();
+        T b = number_channelB.channel_pop();
         accumulator += a * b;
     }
 
@@ -137,20 +146,22 @@ void Mac_Cycle() {
 
     // Process both channels as long as they're not empty
     while (!number_channelA.channel_empty() && !number_channelB.channel_empty()) {
-        int32_t numA = number_channelA.channel_pop();  // Pop from channel A
-        int32_t numB = number_channelB.channel_pop();  // Pop from channel B
-
-        mac_unit.cycle(numA, numB);  // Perform MAC operation
+        // int32_t numA = number_channelA.channel_pop();  // Pop from channel A
+        // int32_t numB = number_channelB.channel_pop();  // Pop from channel B
+        cout << "multiplying " << number_channelA.front() << " with " << number_channelB.front() << endl;
+        mac_unit.cycle();  // Perform MAC operation
+        cout << mac_unit.read_accumulator() << endl;
 
         // Display the result of the current MAC operation and accumulated value
-        cout << "--------------------------------" << endl;
+        /*cout << "--------------------------------" << endl;
         cout << "MAC Operation: " << numA << " * " << numB << " = " << numA * numB << endl;
         cout << "\033[1;34m"<< "Accumulated value: " << mac_unit.read_accumulator() << endl;
-        cout << "\033[1;37m"<<"--------------------------------" << endl;
+        cout << "\033[1;37m"<<"--------------------------------" << endl;*/
     }
 }
 
 int main() {
+    MACUnit<double> mac_unit;
     // Push numbers into both channels
     push_numberA(100);
     cout << "Succesfully pushed numbers into channel A" << endl;
@@ -162,6 +173,7 @@ int main() {
 
     // Perform MAC operations
     Mac_Cycle();
+    cout << mac_unit.read_accumulator() << endl;
     cout << "Mac Operation Completed YAY!!" << endl;
     return 0;
 }
