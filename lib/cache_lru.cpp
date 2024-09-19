@@ -45,12 +45,9 @@ void cache_lru::init_(const std::string& input_fname) {
 }
 
 void cache_lru::cycle() {
-    // Handle LRU cache behavior during a single cycle
-    // Including processing cache hits, misses, and moving LRU elements
-    // ...
+
 }
 
 void cache_lru::move_to_back_lru(int addr) {
-    // Logic to move cache lines to the back of the LRU queue
-    // ...
+
 }

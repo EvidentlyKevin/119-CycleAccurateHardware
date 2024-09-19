@@ -181,8 +181,6 @@ CMakeFiles/cache_model.dir/lib/cache_fifo.cpp.o: ../lib/cache_fifo.cpp \
   /usr/include/c++/11/bits/basic_string.tcc \
   ../include/channel.h \
   ../include/channel.tpp \
-  ../include/request_structs.h \
-  ../include/channel.h \
   /usr/include/c++/11/iostream \
   /usr/include/c++/11/ostream \
   /usr/include/c++/11/ios \
@@ -212,6 +210,8 @@ CMakeFiles/cache_model.dir/lib/cache_fifo.cpp.o: ../lib/cache_fifo.cpp \
   /usr/include/c++/11/bits/ostream.tcc \
   /usr/include/c++/11/istream \
   /usr/include/c++/11/bits/istream.tcc \
+  ../include/request_structs.h \
+  ../include/channel.h \
   /usr/include/c++/11/fstream \
   /usr/include/c++/11/bits/codecvt.h \
   /usr/include/x86_64-linux-gnu/c++/11/bits/basic_file.h \

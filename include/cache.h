@@ -9,18 +9,17 @@
 class Cache {
 public:
     Cache(size_t block_size, size_t cache_size, int n_ways);
-
-    void init_(const std::string& input_fname);
-    void cycle();
-    int get_bits(int val);
-
-private:
+    virtual void init_(const std::string& input_fname) = 0;
+    virtual void cycle() = 0;
+protected:
     size_t block_size, cache_size;
     int n_ways;
     int stall_rem = 0;
     int block_offset_bits, index_bits, tag_bits, set_index_mask;
-    std::unordered_map<int, int> storage_map, cache_map, free_lines_map;
-    std::unordered_map<int, std::queue<int>> set_fifo_map;
+
+    int get_bits(int val) {
+        return static_cast<int>(log2(val));
+    }
 };
 
 #endif // CACHE_H

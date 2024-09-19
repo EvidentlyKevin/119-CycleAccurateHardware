@@ -1,6 +1,7 @@
 #include "cache_fifo.h"
 #include "request_structs.h"
 #include "channel.h"
+#include "globals.h"
 #include <iostream>
 #include <fstream>
 #include <sstream>

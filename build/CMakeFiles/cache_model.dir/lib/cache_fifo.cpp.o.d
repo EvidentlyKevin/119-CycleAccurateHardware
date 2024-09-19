@@ -149,8 +149,6 @@ CMakeFiles/cache_model.dir/lib/cache_fifo.cpp.o: \
  /usr/include/c++/11/bits/basic_string.tcc \
  /home/kevin/git/119-CycleAccurateHardware/include/channel.h \
  /home/kevin/git/119-CycleAccurateHardware/include/channel.tpp \
- /home/kevin/git/119-CycleAccurateHardware/include/request_structs.h \
- /home/kevin/git/119-CycleAccurateHardware/include/channel.h \
  /usr/include/c++/11/iostream /usr/include/c++/11/ostream \
  /usr/include/c++/11/ios /usr/include/c++/11/exception \
  /usr/include/c++/11/bits/exception_ptr.h \
@@ -172,8 +170,11 @@ CMakeFiles/cache_model.dir/lib/cache_fifo.cpp.o: \
  /usr/include/c++/11/bits/locale_facets.tcc \
  /usr/include/c++/11/bits/basic_ios.tcc \
  /usr/include/c++/11/bits/ostream.tcc /usr/include/c++/11/istream \
- /usr/include/c++/11/bits/istream.tcc /usr/include/c++/11/fstream \
- /usr/include/c++/11/bits/codecvt.h \
+ /usr/include/c++/11/bits/istream.tcc \
+ /home/kevin/git/119-CycleAccurateHardware/include/request_structs.h \
+ /home/kevin/git/119-CycleAccurateHardware/include/channel.h \
+ /home/kevin/git/119-CycleAccurateHardware/include/globals.h \
+ /usr/include/c++/11/fstream /usr/include/c++/11/bits/codecvt.h \
  /usr/include/x86_64-linux-gnu/c++/11/bits/basic_file.h \
  /usr/include/x86_64-linux-gnu/c++/11/bits/c++io.h \
  /usr/include/c++/11/bits/fstream.tcc /usr/include/c++/11/sstream \
