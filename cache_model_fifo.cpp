@@ -165,7 +165,7 @@ public:
         tag_bits = 32 - (block_offset_bits + index_bits);
 
         set_index_mask = (1 << index_bits) - 1;
-        for (int i = 0; i < n_sets; i++){
+        for (int i = 0; i < n_sets; i++) {
             free_lines_map[i] = n_ways;
             set_fifo_map[i] = queue<int>();
         }
