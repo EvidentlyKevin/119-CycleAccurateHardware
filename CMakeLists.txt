@@ -16,8 +16,13 @@ include_directories(${PROJECT_SOURCE_DIR}/include)
 
 # Source files for the project
 # src and lib directories contain the .cpp files
+file(GLOB LIB_SOURCES
+    ${PROJECT_SOURCE_DIR}/lib/*.cpp
+)
+
 set(SRC_FILES
     ${PROJECT_SOURCE_DIR}/src/main.cpp
+    ${LIB_SOURCES}
 )
 
 # Add the executable target
