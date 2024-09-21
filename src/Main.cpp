@@ -9,6 +9,7 @@
 using namespace std;
 
 
+
 // Channels to hold numbers for the MAC unit operations
 channel<int32_t> number_channelA(128);  // Holds numbers for MAC unit A
 channel<int32_t> number_channelB(128);  // Holds numbers for MAC unit B
@@ -69,19 +70,18 @@ void Mac_Cycle() {
 }*/ 
 
 int main() {
-    MACUnit<double> mac_unit(0, 0);
+Systolic_Array<int> systolic_array;
     // Push numbers into both channels
-    push_numberA(100);
+    push_numberA(20);
     cout << "Succesfully pushed numbers into channel A" << endl;
     cout << "--------------------------------" << endl;
-    push_numberB(100);
+    push_numberB(1);
     cout << "Succesfully Pushed numbers into channel B" << endl;
     cout << "" << endl;
     cout << "now performing MAC operation" << endl;
-
+    
    // Perform MAC operations
-    //Mac_Cycle();
-    cout << mac_unit.read_accumulator() << endl;
+    //mac_unit.cycle();
     cout << "Mac Operation Completed YAY!!" << endl;
     return 0;
 }
