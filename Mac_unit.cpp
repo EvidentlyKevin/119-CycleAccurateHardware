@@ -1,81 +1,17 @@
 #include <iostream>
 #include <deque>
 #include <vector>
-
+#include <array>
+#include "channel.h"
+#include "systolic_array.h"
+#include "mac_unit.h"
 using namespace std;
 
-// Generic channel class to simulate a buffer with a fixed capacity.
-template<typename T>
-class channel {
-public:
-    // Constructor that initializes the buffer with a given capacity
-    channel(size_t capacity) : capacity(capacity), is_full(false) {}
-
-    // Method to push an element into the channel if it's not full
-    void channel_push(T& element) {
-        if (buffer.size() >= capacity) {
-            cout << "Buffer full..." << endl;
-            return;
-        }
-        buffer.push_back(element);  // Push element to the buffer
-
-        // Update the full status of the buffer
-        is_full = buffer.size() == capacity;
-    }
-
-    // Method to pop and return the front element from the channel
-    T channel_pop() {
-        if (buffer.empty()) {
-            cout << "Buffer empty..." << endl;
-            return T();  // Return a default-constructed object if the buffer is empty
-        }
-
-        T ret_val = buffer.front();  // Get the front element
-        buffer.pop_front();  // Remove the front element
-        is_full = false;  // Buffer can't be full after a pop
-
-        return ret_val;
-    }
-    
-    T front(){
-        return buffer.front();
-    }
-    // Check if the buffer is full
-    bool channel_full() {
-        return is_full;
-    }
-
-    // Check if the buffer is empty
-    bool channel_empty() {
-        return buffer.empty();
-    }
-
-    // Return the current size of the buffer
-    size_t channel_size() {
-        return buffer.size();
-    }
-
-private:
-    deque<T> buffer;  // Buffer to hold the elements
-    size_t capacity;  // Maximum capacity of the buffer
-    bool is_full;  // Boolean flag indicating whether the buffer is full
-};
-
-// Structures for read request and acknowledgment (Unused in this specific code)
-struct read_request {
-    int32_t address;
-    int32_t id;
-};
-
-struct read_ack {
-    bool read_success;
-    int32_t address;
-    int32_t id;
-};
 
 // Channels to hold numbers for the MAC unit operations
 channel<int32_t> number_channelA(128);  // Holds numbers for MAC unit A
 channel<int32_t> number_channelB(128);  // Holds numbers for MAC unit B
+
 
 // Performance vector
 // [0]: Number of instructions/memory operations/requests processed
@@ -109,38 +45,9 @@ void push_numberB(int y) {
     }
 }
 
-// MAC (Multiply-Accumulate) Unit class
-template<typename T>
-class MACUnit {
-public:
-    MACUnit() : accumulator(0) {}
 
-    // Performs a multiply-and-accumulate operation
-    // void cycle(T a, T b) {
-    //     accumulator += a * b;
-    // }
 
-    void cycle() {
-        T a = number_channelA.channel_pop();
-        T b = number_channelB.channel_pop();
-        accumulator += a * b;
-    }
-
-    // Returns the accumulated result
-    T read_accumulator() const {
-        return accumulator;
-    }
-
-    // Clears the accumulated value
-    void clear_accumulator() {
-        accumulator = 0;
-    }
-
-private:
-    T accumulator;  // Stores the accumulated result
-};
-
-// Function to simulate the MAC operation cycle between number_channelA and number_channelB
+/*Function to simulate the MAC operation cycle between number_channelA and number_channelB
 void Mac_Cycle() {
     MACUnit<double> mac_unit;  // Instantiate a MAC unit
 
@@ -156,12 +63,12 @@ void Mac_Cycle() {
         /*cout << "--------------------------------" << endl;
         cout << "MAC Operation: " << numA << " * " << numB << " = " << numA * numB << endl;
         cout << "\033[1;34m"<< "Accumulated value: " << mac_unit.read_accumulator() << endl;
-        cout << "\033[1;37m"<<"--------------------------------" << endl;*/
+        cout << "\033[1;37m"<<"--------------------------------" << endl;
     }
-}
+}*/ 
 
 int main() {
-    MACUnit<double> mac_unit;
+    MACUnit<double> mac_unit(0, 0);
     // Push numbers into both channels
     push_numberA(100);
     cout << "Succesfully pushed numbers into channel A" << endl;
@@ -171,8 +78,8 @@ int main() {
     cout << "" << endl;
     cout << "now performing MAC operation" << endl;
 
-    // Perform MAC operations
-    Mac_Cycle();
+   // Perform MAC operations
+    //Mac_Cycle();
     cout << mac_unit.read_accumulator() << endl;
     cout << "Mac Operation Completed YAY!!" << endl;
     return 0;
