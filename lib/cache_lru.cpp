@@ -1,140 +1,153 @@
+// File: lib/cache_lru.cpp
+
 #include "cache_lru.h"
-#include "request_structs.h"
-#include "channel.h"
+#include "globals.h"
 #include <iostream>
-#include <cmath>
 #include <fstream>
 #include <sstream>
 
-cache_lru::cache_lru(size_t block_size, size_t cache_size, int n_ways)
-    : stall_rem(0) {
-    this->block_size = block_size;
-    this->cache_size = cache_size;
-    this->n_ways = n_ways;
-}
+cache_lru::cache_lru(size_t block_size, size_t cache_size, int n_ways, perf_counter* perf, int verbose)
+    : Cache(block_size, cache_size, n_ways, perf), verbose_level(verbose) {}
 
 void cache_lru::init_(const std::string& input_fname) {
-    int n_sets = cache_size/(n_ways*block_size); // calculate number of sets
+    int n_sets = cache_size / (n_ways * block_size * 4); // Assuming block_size in words (4 bytes per word)
 
-    block_offset_bits = get_bits(block_size*4); // block offset bits
-    index_bits = get_bits(n_sets); // index bits
-    tag_bits = 32 - (block_offset_bits + index_bits); // tag bits
+    block_offset_bits = get_bits(block_size * 4);
+    index_bits = get_bits(n_sets);
+    tag_bits = 32 - (block_offset_bits + index_bits);
 
-    set_index_mask = (1 << index_bits) - 1; // set index mask
+    set_index_mask = (1 << index_bits) - 1;
 
-    // track number of free lines in each set
-    // needed for line eviction and replacement in SA caches
-    for (int i = 0; i < n_sets; i++){
-        free_lines_map[i] = n_ways; // n-way set associativity
-        set_fifo_map[i] = queue<int>(); // initialize FIFO map for each set
+    for (int i = 0; i < n_sets; i++) {
+        free_lines_map[i] = n_ways;
+        set_lru_map[i] = std::list<int>();
     }
 
     stall_rem = 0;
 
-    // open the storage input file and populate the storage map with key-value pairs
-    ifstream input_file(input_fname);
-    string line;
-    while(getline(input_file, line)){
-        istringstream iss(line);
-        int first, second;
-        if (iss >> first >> second){
-            storage_map[first] = second;
+    std::ifstream input_file(input_fname);
+    if (!input_file.is_open()) {
+        std::cerr << "Error: Cannot open storage file " << input_fname << "\n";
+        return;
+    }
+    std::string line;
+    while (std::getline(input_file, line)) {
+        std::istringstream iss(line);
+        int address, data;
+        if (iss >> address >> data) {
+            storage_map[address] = data;
         }
     }
     input_file.close();
+
+    if (verbose_level > 1) {
+        std::cout << "Cache LRU Initialized with " << n_sets << " sets.\n";
+    }
 }
 
 void cache_lru::cycle() {
-
-    if (read_request_channel.channel_empty()) { // check if there are read requests
-        cout << "Cache starting up..." << endl;
+    if (read_request_channel.channel_empty()) {
+        if (verbose_level > 1) {
+            std::cout << "Cycle: Cache is idle.\n";
+        }
         return;
     }
 
-    if (stall_rem > 0){ // check memory stalls
+    if (stall_rem > 0) {
         stall_rem--;
-        // cout << "Memory stalled for " << stall_rem << " more cycles..." << endl;
+        perf->add_stall_cycles(1);
+        if (verbose_level > 1) {
+            std::cout << "Cycle: Memory stalled for " << stall_rem << " more cycles.\n";
+        }
         return;
     }
 
-    read_request req1 = read_request_channel.channel_pop(); // get read request from bus
-
-    if (cache_map.find(req1.address) != cache_map.end()){ // hit
-        // cout << "HIT! @ " << req1.address << " Val: "<< cache_map[req1.address] << endl;
-        read_ack ack1 = {true, req1.address, cache_map[req1.address]}; // send read acknowledgement (future support)
-        read_ack_channel.channel_push(ack1);
-        perf_vector[0]++; // increment total accesses
-        perf_vector[2]++; // increment hit count
-        move_to_back_lru(req1.address); // update LRU
+    read_request req;
+    if (!read_request_channel.channel_pop(req)) {
+        if (verbose_level > 1) {
+            std::cout << "Cycle: No read request to process.\n";
+        }
+        return; // No request to process
     }
-    else{ // miss
-        int set_index = get_set_index(req1.address);
-        // cout << "MISS @ " << req1.address << " Set Index: " << set_index << endl;
-        stall_rem += miss_penalty; // add miss penalty to stall count
-        perf_vector[3] += miss_penalty; // update number of cycles stalled due to memory
 
-        // comment this line out if you want only hits to count as "use" of a cache line
-        move_to_back_lru(req1.address); // update LRU
+    perf->increment_access();
 
-        // line eviction from set
-        if (free_lines_map[set_index] == 0){
-            int words_evicted = 0;
-            int addr = set_fifo_map[set_index].front(); // least recently used line from set
-            while (words_evicted < block_size){ // all words in the cache line
-                cache_map.erase(addr); // evict the address from the cache
-                addr += 4;
-                words_evicted++;
-            }
-            set_fifo_map[set_index].pop(); // remove the LRU line from queue
-            free_lines_map[set_index]++; // one more line is now available in the set
+    if (cache_map.find(req.address) != cache_map.end()) { // Hit
+        read_ack ack = {req.address, cache_map[req.address]};
+        if (!read_ack_channel.channel_push(ack)) {
+            // Handle full channel if necessary, e.g., retry in next cycle
+            std::cerr << "Read Ack Channel is full. Cannot push ack for address " << req.address << "\n";
+        }
+        perf->increment_hit();
+        move_to_back_lru(req.address);
+        if (verbose_level > 0) {
+            std::cout << "Cycle: HIT at address " << req.address << " with data " << cache_map[req.address] << "\n";
+        }
+    } else { // Miss
+        int set_index = get_set_index(req.address);
+        stall_rem += miss_penalty - 1; // We already decremented stall_rem once
+        perf->add_stall_cycles(miss_penalty);
+        perf->increment_miss();
+
+        if (verbose_level > 0) {
+            std::cout << "Cycle: MISS at address " << req.address << ". Loading block starting at address "
+                      << (req.address / (block_size * 4)) * (block_size * 4) << "\n";
         }
 
-        // fetch line from lower levels of memory hierarchy
-        // and place in cache set if free lines are available in set
-        if (free_lines_map[set_index] > 0){
-            int words_fetched = 0;
-            int addr = req1.address;
-            while (words_fetched < block_size){
-                cache_map[addr] = storage_map[addr]; // fetch data from storage
-                addr += 4;
-                words_fetched++;
+        // Line eviction
+        if (free_lines_map[set_index] == 0) {
+            int evict_block_addr = set_lru_map[set_index].front();
+            set_lru_map[set_index].pop_front();
+            free_lines_map[set_index]++;
+
+            for (size_t i = 0; i < block_size * 4; i += 4) {
+                cache_map.erase(evict_block_addr + i);
             }
-            free_lines_map[set_index]--; // one less line is now available in the set
-            set_fifo_map[set_index].push(addr); // most recently used line (new)
+
+            if (verbose_level > 1) {
+                std::cout << "Cycle: Evicted block starting at address " << evict_block_addr << "\n";
+            }
         }
-        
 
-        read_ack ack1 = {false, req1.address, req1.id};
-        read_ack_channel.channel_push(ack1);
+        // Load new block into cache
+        if (free_lines_map[set_index] > 0) {
+            int block_start_addr = (req.address / (block_size * 4)) * (block_size * 4);
+            for (size_t i = 0; i < block_size * 4; i += 4) {
+                int addr = block_start_addr + i;
+                auto it = storage_map.find(addr);
+                if (it != storage_map.end()) {
+                    cache_map[addr] = it->second;
+                } else {
+                    cache_map[addr] = 0; // Assign default value
+                    if (verbose_level > 0) {
+                        std::cerr << "Warning: Address " << addr << " not found in storage. Assigned default value 0.\n";
+                    }
+                }
+            }
+            free_lines_map[set_index]--;
+            set_lru_map[set_index].push_back(block_start_addr);
 
-        perf_vector[0]++; // increment total accesses
-        perf_vector[1]++; // increment miss count
+            if (verbose_level > 1) {
+                std::cout << "Cycle: Loaded block starting at address " << block_start_addr << "\n";
+            }
+        }
+
+        read_ack ack = {req.address, cache_map[req.address]};
+        if (!read_ack_channel.channel_push(ack)) {
+            // Handle full channel if necessary
+            std::cerr << "Read Ack Channel is full. Cannot push ack for address " << req.address << "\n";
+        }
     }
 }
 
 void cache_lru::move_to_back_lru(int addr) {
-    int set_index = get_set_index(addr); // get the set index of the address
-    int addr_tag = get_tag(addr); // get the tag of the address
-    // cout << "LRU" << endl;
-    // cout << addr_tag << endl;
+    int set_index = get_set_index(addr);
+    int block_start_addr = (addr / (block_size * 4)) * (block_size * 4);
 
-    queue<int> tmp_queue; // (future support) optimize using deque
-    // process the FIFO queue for the set for maintaing LRU order
-    while (!set_fifo_map[set_index].empty()){
-        int current_addr = set_fifo_map[set_index].front();
-        int current_addr_tag = get_tag(current_addr);
-        set_fifo_map[set_index].pop();
+    set_lru_map[set_index].remove(block_start_addr);
+    set_lru_map[set_index].push_back(block_start_addr);
 
-        // all addresses except the address being accessed (hit or miss)
-        if (current_addr_tag != addr_tag){
-            tmp_queue.push(current_addr);
-        }
+    if (verbose_level > 1) {
+        std::cout << "Cycle: Updated LRU for block starting at address " << block_start_addr << "\n";
     }
-
-    // the address being accessed is the MOST recently used
-    // hence it is at the end of the queue
-    // at the front of the queue si the address LEASE recently used
-    tmp_queue.push(addr);
-    set_fifo_map[set_index] = tmp_queue;
-    // cout << set_fifo_map[set_index].size() << endl;
 }

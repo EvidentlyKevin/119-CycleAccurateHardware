@@ -1,0 +1,64 @@
+Cycle: LoadStoreUnit sent read request for address 0
+Cycle: MISS at address 0. Loading block starting at address 0
+LSU received data for address 0: 100
+Cycle: LoadStoreUnit sent read request for address 8
+Cycle: LoadStoreUnit sent read request for address 16
+Cycle: LoadStoreUnit sent read request for address 4
+Cycle: LoadStoreUnit sent read request for address 24
+Cycle: HIT at address 8 with data 300
+LSU received data for address 8: 300
+Cycle: LoadStoreUnit sent read request for address 8
+Cycle: MISS at address 16. Loading block starting at address 16
+LSU received data for address 16: 500
+Cycle: LoadStoreUnit sent read request for address 32
+Cycle: HIT at address 4 with data 200
+LSU received data for address 4: 200
+Cycle: LoadStoreUnit sent read request for address 12
+Cycle: HIT at address 24 with data 700
+LSU received data for address 24: 700
+Cycle: LoadStoreUnit sent read request for address 40
+Cycle: HIT at address 8 with data 300
+LSU received data for address 8: 300
+Cycle: LoadStoreUnit sent read request for address 16
+Cycle: MISS at address 32. Loading block starting at address 32
+LSU received data for address 32: 900
+Cycle: LoadStoreUnit sent read request for address 48
+Cycle: HIT at address 12 with data 400
+LSU received data for address 12: 400
+Cycle: LoadStoreUnit sent read request for address 20
+Cycle: HIT at address 40 with data 1100
+LSU received data for address 40: 1100
+Cycle: LoadStoreUnit sent read request for address 56
+Cycle: HIT at address 16 with data 500
+LSU received data for address 16: 500
+Cycle: LoadStoreUnit sent read request for address 24
+Cycle: MISS at address 48. Loading block starting at address 48
+LSU received data for address 48: 1300
+Cycle: LoadStoreUnit sent read request for address 64
+Cycle: HIT at address 20 with data 600
+LSU received data for address 20: 600
+Cycle: LoadStoreUnit sent read request for address 28
+Cycle: HIT at address 56 with data 1500
+LSU received data for address 56: 1500
+Cycle: LoadStoreUnit sent read request for address 72
+Cycle: HIT at address 24 with data 700
+LSU received data for address 24: 700
+Cycle: LoadStoreUnit sent read request for address 32
+Cycle: MISS at address 64. Loading block starting at address 64
+LSU received data for address 64: 1700
+Cycle: LoadStoreUnit sent read request for address 80
+Cycle: HIT at address 28 with data 800
+LSU received data for address 28: 800
+Cycle: LoadStoreUnit sent read request for address 36
+Cycle: HIT at address 72 with data 1900
+Cycle: HIT at address 32 with data 900
+Cycle: MISS at address 80. Loading block starting at address 80
+Warning: Address 80 not found in storage. Assigned default value 0.
+Warning: Address 84 not found in storage. Assigned default value 0.
+Warning: Address 88 not found in storage. Assigned default value 0.
+Warning: Address 92 not found in storage. Assigned default value 0.
+Cycle: HIT at address 36 with data 1000
+Memory accesses: 40
+Hits: 14
+Misses: 6
+Memory stall cycles: 42

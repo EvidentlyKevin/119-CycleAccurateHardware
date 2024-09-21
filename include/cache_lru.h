@@ -1,20 +1,25 @@
+// File: include/cache_lru.h
+
 #ifndef CACHE_LRU_H
 #define CACHE_LRU_H
 
 #include "cache.h"
+#include <list>
 
-class cache_lru : public cache {
+class cache_lru : public Cache {
 public:
-    cache_lru(size_t block_size, size_t cache_size, int n_ways);
+    // Updated constructor to include 'int verbose'
+    cache_lru(size_t block_size, size_t cache_size, int n_ways, perf_counter* perf, int verbose);
+    
+    // Override virtual functions
     void init_(const std::string& input_fname) override;
     void cycle() override;
 
 private:
     void move_to_back_lru(int addr);
+    int verbose_level; // Verbosity level
 
-    std::unordered_map<int, int> storage_map, cache_map, free_lines_map;
-    std::unordered_map<int, std::queue<int>> set_fifo_map;
-    int stall_rem;
+    // Additional private members if necessary
 };
 
 #endif // CACHE_LRU_H
