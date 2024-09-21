@@ -1,7 +1,7 @@
 #ifndef PERF_COUNTER_H
 #define PERF_COUNTER_H
 
-#include <vector>
+#include <iostream>
 
 class perf_counter {
 public:
@@ -14,7 +14,10 @@ public:
     void print_summary() const;
 
 private:
-    std::vector<int> perf_vector;
+    int total_accesses;
+    int hits;
+    int misses;
+    int stall_cycles;
 };
 
 #endif // PERF_COUNTER_H

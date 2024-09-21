@@ -2,24 +2,24 @@
 #define CHANNEL_H
 
 #include <deque>
+#include <cstddef>
 
 template<typename T>
 class Channel {
 public:
-    Channel(size_t capacity);
+    explicit Channel(size_t capacity);
 
-    void channel_push(T& element);
-    T channel_pop();
-    bool channel_full();
-    bool channel_empty();
-    size_t channel_size();
+    bool channel_push(const T& element);
+    bool channel_pop(T& element);
+    bool channel_full() const;
+    bool channel_empty() const;
+    size_t channel_size() const;
 
 private:
     std::deque<T> buffer;
     size_t capacity;
-    bool is_full;
 };
 
-#include "channel.tpp" 
+#include "channel.tpp"
 
 #endif // CHANNEL_H

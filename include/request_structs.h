@@ -5,11 +5,9 @@
 
 struct read_request {
     int32_t address;
-    int32_t id;
 };
 
 struct read_ack {
-    bool read_success;
     int32_t address;
     int32_t data;
 };
