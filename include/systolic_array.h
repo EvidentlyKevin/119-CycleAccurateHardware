@@ -14,7 +14,7 @@ public:
     std::array<std::array<MACUnit<T>*, SIZE>, SIZE> array; // Use pointers to MACUnit
 
     // Constructor to initialize MAC units dynamically
-    Systolic_Array() {
+    initialize() {
         for (int i = 0; i < SIZE; ++i) {
             for (int j = 0; j < SIZE; ++j) {
                 array[i][j] = new MACUnit<T>(i, j);  // Dynamically allocate MACUnit
