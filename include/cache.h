@@ -36,6 +36,14 @@ protected:
 
     perf_counter* perf; // Pointer to performance counter
 
+    struct read_request {
+        int address;
+    };
+
+    struct read_ack {
+        int data;
+    };
+
     int get_bits(int val) {
         return static_cast<int>(std::log2(val));
     }

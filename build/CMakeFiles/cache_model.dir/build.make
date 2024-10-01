@@ -69,10 +69,24 @@ include CMakeFiles/cache_model.dir/progress.make
 # Include the compile flags for this target's objects.
 include CMakeFiles/cache_model.dir/flags.make
 
+CMakeFiles/cache_model.dir/lib/cache.cpp.o: CMakeFiles/cache_model.dir/flags.make
+CMakeFiles/cache_model.dir/lib/cache.cpp.o: ../lib/cache.cpp
+CMakeFiles/cache_model.dir/lib/cache.cpp.o: CMakeFiles/cache_model.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/kevin/git/119-CycleAccurateHardware/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/cache_model.dir/lib/cache.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/cache_model.dir/lib/cache.cpp.o -MF CMakeFiles/cache_model.dir/lib/cache.cpp.o.d -o CMakeFiles/cache_model.dir/lib/cache.cpp.o -c /home/kevin/git/119-CycleAccurateHardware/lib/cache.cpp
+
+CMakeFiles/cache_model.dir/lib/cache.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/cache_model.dir/lib/cache.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/kevin/git/119-CycleAccurateHardware/lib/cache.cpp > CMakeFiles/cache_model.dir/lib/cache.cpp.i
+
+CMakeFiles/cache_model.dir/lib/cache.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/cache_model.dir/lib/cache.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/kevin/git/119-CycleAccurateHardware/lib/cache.cpp -o CMakeFiles/cache_model.dir/lib/cache.cpp.s
+
 CMakeFiles/cache_model.dir/lib/cache_fifo.cpp.o: CMakeFiles/cache_model.dir/flags.make
 CMakeFiles/cache_model.dir/lib/cache_fifo.cpp.o: ../lib/cache_fifo.cpp
 CMakeFiles/cache_model.dir/lib/cache_fifo.cpp.o: CMakeFiles/cache_model.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/kevin/git/119-CycleAccurateHardware/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/cache_model.dir/lib/cache_fifo.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/kevin/git/119-CycleAccurateHardware/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/cache_model.dir/lib/cache_fifo.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/cache_model.dir/lib/cache_fifo.cpp.o -MF CMakeFiles/cache_model.dir/lib/cache_fifo.cpp.o.d -o CMakeFiles/cache_model.dir/lib/cache_fifo.cpp.o -c /home/kevin/git/119-CycleAccurateHardware/lib/cache_fifo.cpp
 
 CMakeFiles/cache_model.dir/lib/cache_fifo.cpp.i: cmake_force
@@ -86,7 +100,7 @@ CMakeFiles/cache_model.dir/lib/cache_fifo.cpp.s: cmake_force
 CMakeFiles/cache_model.dir/lib/cache_lru.cpp.o: CMakeFiles/cache_model.dir/flags.make
 CMakeFiles/cache_model.dir/lib/cache_lru.cpp.o: ../lib/cache_lru.cpp
 CMakeFiles/cache_model.dir/lib/cache_lru.cpp.o: CMakeFiles/cache_model.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/kevin/git/119-CycleAccurateHardware/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/cache_model.dir/lib/cache_lru.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/kevin/git/119-CycleAccurateHardware/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/cache_model.dir/lib/cache_lru.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/cache_model.dir/lib/cache_lru.cpp.o -MF CMakeFiles/cache_model.dir/lib/cache_lru.cpp.o.d -o CMakeFiles/cache_model.dir/lib/cache_lru.cpp.o -c /home/kevin/git/119-CycleAccurateHardware/lib/cache_lru.cpp
 
 CMakeFiles/cache_model.dir/lib/cache_lru.cpp.i: cmake_force
@@ -97,10 +111,24 @@ CMakeFiles/cache_model.dir/lib/cache_lru.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/cache_model.dir/lib/cache_lru.cpp.s"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/kevin/git/119-CycleAccurateHardware/lib/cache_lru.cpp -o CMakeFiles/cache_model.dir/lib/cache_lru.cpp.s
 
+CMakeFiles/cache_model.dir/lib/globals.cpp.o: CMakeFiles/cache_model.dir/flags.make
+CMakeFiles/cache_model.dir/lib/globals.cpp.o: ../lib/globals.cpp
+CMakeFiles/cache_model.dir/lib/globals.cpp.o: CMakeFiles/cache_model.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/kevin/git/119-CycleAccurateHardware/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/cache_model.dir/lib/globals.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/cache_model.dir/lib/globals.cpp.o -MF CMakeFiles/cache_model.dir/lib/globals.cpp.o.d -o CMakeFiles/cache_model.dir/lib/globals.cpp.o -c /home/kevin/git/119-CycleAccurateHardware/lib/globals.cpp
+
+CMakeFiles/cache_model.dir/lib/globals.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/cache_model.dir/lib/globals.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/kevin/git/119-CycleAccurateHardware/lib/globals.cpp > CMakeFiles/cache_model.dir/lib/globals.cpp.i
+
+CMakeFiles/cache_model.dir/lib/globals.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/cache_model.dir/lib/globals.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/kevin/git/119-CycleAccurateHardware/lib/globals.cpp -o CMakeFiles/cache_model.dir/lib/globals.cpp.s
+
 CMakeFiles/cache_model.dir/lib/load_store_unit.cpp.o: CMakeFiles/cache_model.dir/flags.make
 CMakeFiles/cache_model.dir/lib/load_store_unit.cpp.o: ../lib/load_store_unit.cpp
 CMakeFiles/cache_model.dir/lib/load_store_unit.cpp.o: CMakeFiles/cache_model.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/kevin/git/119-CycleAccurateHardware/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/cache_model.dir/lib/load_store_unit.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/kevin/git/119-CycleAccurateHardware/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/cache_model.dir/lib/load_store_unit.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/cache_model.dir/lib/load_store_unit.cpp.o -MF CMakeFiles/cache_model.dir/lib/load_store_unit.cpp.o.d -o CMakeFiles/cache_model.dir/lib/load_store_unit.cpp.o -c /home/kevin/git/119-CycleAccurateHardware/lib/load_store_unit.cpp
 
 CMakeFiles/cache_model.dir/lib/load_store_unit.cpp.i: cmake_force
@@ -111,10 +139,24 @@ CMakeFiles/cache_model.dir/lib/load_store_unit.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/cache_model.dir/lib/load_store_unit.cpp.s"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/kevin/git/119-CycleAccurateHardware/lib/load_store_unit.cpp -o CMakeFiles/cache_model.dir/lib/load_store_unit.cpp.s
 
+CMakeFiles/cache_model.dir/lib/mac_unit.cpp.o: CMakeFiles/cache_model.dir/flags.make
+CMakeFiles/cache_model.dir/lib/mac_unit.cpp.o: ../lib/mac_unit.cpp
+CMakeFiles/cache_model.dir/lib/mac_unit.cpp.o: CMakeFiles/cache_model.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/kevin/git/119-CycleAccurateHardware/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building CXX object CMakeFiles/cache_model.dir/lib/mac_unit.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/cache_model.dir/lib/mac_unit.cpp.o -MF CMakeFiles/cache_model.dir/lib/mac_unit.cpp.o.d -o CMakeFiles/cache_model.dir/lib/mac_unit.cpp.o -c /home/kevin/git/119-CycleAccurateHardware/lib/mac_unit.cpp
+
+CMakeFiles/cache_model.dir/lib/mac_unit.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/cache_model.dir/lib/mac_unit.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/kevin/git/119-CycleAccurateHardware/lib/mac_unit.cpp > CMakeFiles/cache_model.dir/lib/mac_unit.cpp.i
+
+CMakeFiles/cache_model.dir/lib/mac_unit.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/cache_model.dir/lib/mac_unit.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/kevin/git/119-CycleAccurateHardware/lib/mac_unit.cpp -o CMakeFiles/cache_model.dir/lib/mac_unit.cpp.s
+
 CMakeFiles/cache_model.dir/lib/perf_counter.cpp.o: CMakeFiles/cache_model.dir/flags.make
 CMakeFiles/cache_model.dir/lib/perf_counter.cpp.o: ../lib/perf_counter.cpp
 CMakeFiles/cache_model.dir/lib/perf_counter.cpp.o: CMakeFiles/cache_model.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/kevin/git/119-CycleAccurateHardware/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/cache_model.dir/lib/perf_counter.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/kevin/git/119-CycleAccurateHardware/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building CXX object CMakeFiles/cache_model.dir/lib/perf_counter.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/cache_model.dir/lib/perf_counter.cpp.o -MF CMakeFiles/cache_model.dir/lib/perf_counter.cpp.o.d -o CMakeFiles/cache_model.dir/lib/perf_counter.cpp.o -c /home/kevin/git/119-CycleAccurateHardware/lib/perf_counter.cpp
 
 CMakeFiles/cache_model.dir/lib/perf_counter.cpp.i: cmake_force
@@ -125,10 +167,24 @@ CMakeFiles/cache_model.dir/lib/perf_counter.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/cache_model.dir/lib/perf_counter.cpp.s"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/kevin/git/119-CycleAccurateHardware/lib/perf_counter.cpp -o CMakeFiles/cache_model.dir/lib/perf_counter.cpp.s
 
+CMakeFiles/cache_model.dir/lib/systolic_array.cpp.o: CMakeFiles/cache_model.dir/flags.make
+CMakeFiles/cache_model.dir/lib/systolic_array.cpp.o: ../lib/systolic_array.cpp
+CMakeFiles/cache_model.dir/lib/systolic_array.cpp.o: CMakeFiles/cache_model.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/kevin/git/119-CycleAccurateHardware/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Building CXX object CMakeFiles/cache_model.dir/lib/systolic_array.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/cache_model.dir/lib/systolic_array.cpp.o -MF CMakeFiles/cache_model.dir/lib/systolic_array.cpp.o.d -o CMakeFiles/cache_model.dir/lib/systolic_array.cpp.o -c /home/kevin/git/119-CycleAccurateHardware/lib/systolic_array.cpp
+
+CMakeFiles/cache_model.dir/lib/systolic_array.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/cache_model.dir/lib/systolic_array.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/kevin/git/119-CycleAccurateHardware/lib/systolic_array.cpp > CMakeFiles/cache_model.dir/lib/systolic_array.cpp.i
+
+CMakeFiles/cache_model.dir/lib/systolic_array.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/cache_model.dir/lib/systolic_array.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/kevin/git/119-CycleAccurateHardware/lib/systolic_array.cpp -o CMakeFiles/cache_model.dir/lib/systolic_array.cpp.s
+
 CMakeFiles/cache_model.dir/src/main.cpp.o: CMakeFiles/cache_model.dir/flags.make
 CMakeFiles/cache_model.dir/src/main.cpp.o: ../src/main.cpp
 CMakeFiles/cache_model.dir/src/main.cpp.o: CMakeFiles/cache_model.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/kevin/git/119-CycleAccurateHardware/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/cache_model.dir/src/main.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/kevin/git/119-CycleAccurateHardware/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_9) "Building CXX object CMakeFiles/cache_model.dir/src/main.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/cache_model.dir/src/main.cpp.o -MF CMakeFiles/cache_model.dir/src/main.cpp.o.d -o CMakeFiles/cache_model.dir/src/main.cpp.o -c /home/kevin/git/119-CycleAccurateHardware/src/main.cpp
 
 CMakeFiles/cache_model.dir/src/main.cpp.i: cmake_force
@@ -141,23 +197,31 @@ CMakeFiles/cache_model.dir/src/main.cpp.s: cmake_force
 
 # Object files for target cache_model
 cache_model_OBJECTS = \
+"CMakeFiles/cache_model.dir/lib/cache.cpp.o" \
 "CMakeFiles/cache_model.dir/lib/cache_fifo.cpp.o" \
 "CMakeFiles/cache_model.dir/lib/cache_lru.cpp.o" \
+"CMakeFiles/cache_model.dir/lib/globals.cpp.o" \
 "CMakeFiles/cache_model.dir/lib/load_store_unit.cpp.o" \
+"CMakeFiles/cache_model.dir/lib/mac_unit.cpp.o" \
 "CMakeFiles/cache_model.dir/lib/perf_counter.cpp.o" \
+"CMakeFiles/cache_model.dir/lib/systolic_array.cpp.o" \
 "CMakeFiles/cache_model.dir/src/main.cpp.o"
 
 # External object files for target cache_model
 cache_model_EXTERNAL_OBJECTS =
 
+cache_model: CMakeFiles/cache_model.dir/lib/cache.cpp.o
 cache_model: CMakeFiles/cache_model.dir/lib/cache_fifo.cpp.o
 cache_model: CMakeFiles/cache_model.dir/lib/cache_lru.cpp.o
+cache_model: CMakeFiles/cache_model.dir/lib/globals.cpp.o
 cache_model: CMakeFiles/cache_model.dir/lib/load_store_unit.cpp.o
+cache_model: CMakeFiles/cache_model.dir/lib/mac_unit.cpp.o
 cache_model: CMakeFiles/cache_model.dir/lib/perf_counter.cpp.o
+cache_model: CMakeFiles/cache_model.dir/lib/systolic_array.cpp.o
 cache_model: CMakeFiles/cache_model.dir/src/main.cpp.o
 cache_model: CMakeFiles/cache_model.dir/build.make
 cache_model: CMakeFiles/cache_model.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/kevin/git/119-CycleAccurateHardware/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Linking CXX executable cache_model"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/kevin/git/119-CycleAccurateHardware/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_10) "Linking CXX executable cache_model"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/cache_model.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.

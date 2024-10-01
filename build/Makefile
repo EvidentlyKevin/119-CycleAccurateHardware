@@ -129,6 +129,30 @@ cache_model/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/cache_model.dir/build.make CMakeFiles/cache_model.dir/build
 .PHONY : cache_model/fast
 
+lib/cache.o: lib/cache.cpp.o
+.PHONY : lib/cache.o
+
+# target to build an object file
+lib/cache.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/cache_model.dir/build.make CMakeFiles/cache_model.dir/lib/cache.cpp.o
+.PHONY : lib/cache.cpp.o
+
+lib/cache.i: lib/cache.cpp.i
+.PHONY : lib/cache.i
+
+# target to preprocess a source file
+lib/cache.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/cache_model.dir/build.make CMakeFiles/cache_model.dir/lib/cache.cpp.i
+.PHONY : lib/cache.cpp.i
+
+lib/cache.s: lib/cache.cpp.s
+.PHONY : lib/cache.s
+
+# target to generate assembly for a file
+lib/cache.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/cache_model.dir/build.make CMakeFiles/cache_model.dir/lib/cache.cpp.s
+.PHONY : lib/cache.cpp.s
+
 lib/cache_fifo.o: lib/cache_fifo.cpp.o
 .PHONY : lib/cache_fifo.o
 
@@ -177,6 +201,30 @@ lib/cache_lru.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/cache_model.dir/build.make CMakeFiles/cache_model.dir/lib/cache_lru.cpp.s
 .PHONY : lib/cache_lru.cpp.s
 
+lib/globals.o: lib/globals.cpp.o
+.PHONY : lib/globals.o
+
+# target to build an object file
+lib/globals.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/cache_model.dir/build.make CMakeFiles/cache_model.dir/lib/globals.cpp.o
+.PHONY : lib/globals.cpp.o
+
+lib/globals.i: lib/globals.cpp.i
+.PHONY : lib/globals.i
+
+# target to preprocess a source file
+lib/globals.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/cache_model.dir/build.make CMakeFiles/cache_model.dir/lib/globals.cpp.i
+.PHONY : lib/globals.cpp.i
+
+lib/globals.s: lib/globals.cpp.s
+.PHONY : lib/globals.s
+
+# target to generate assembly for a file
+lib/globals.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/cache_model.dir/build.make CMakeFiles/cache_model.dir/lib/globals.cpp.s
+.PHONY : lib/globals.cpp.s
+
 lib/load_store_unit.o: lib/load_store_unit.cpp.o
 .PHONY : lib/load_store_unit.o
 
@@ -201,6 +249,30 @@ lib/load_store_unit.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/cache_model.dir/build.make CMakeFiles/cache_model.dir/lib/load_store_unit.cpp.s
 .PHONY : lib/load_store_unit.cpp.s
 
+lib/mac_unit.o: lib/mac_unit.cpp.o
+.PHONY : lib/mac_unit.o
+
+# target to build an object file
+lib/mac_unit.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/cache_model.dir/build.make CMakeFiles/cache_model.dir/lib/mac_unit.cpp.o
+.PHONY : lib/mac_unit.cpp.o
+
+lib/mac_unit.i: lib/mac_unit.cpp.i
+.PHONY : lib/mac_unit.i
+
+# target to preprocess a source file
+lib/mac_unit.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/cache_model.dir/build.make CMakeFiles/cache_model.dir/lib/mac_unit.cpp.i
+.PHONY : lib/mac_unit.cpp.i
+
+lib/mac_unit.s: lib/mac_unit.cpp.s
+.PHONY : lib/mac_unit.s
+
+# target to generate assembly for a file
+lib/mac_unit.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/cache_model.dir/build.make CMakeFiles/cache_model.dir/lib/mac_unit.cpp.s
+.PHONY : lib/mac_unit.cpp.s
+
 lib/perf_counter.o: lib/perf_counter.cpp.o
 .PHONY : lib/perf_counter.o
 
@@ -224,6 +296,30 @@ lib/perf_counter.s: lib/perf_counter.cpp.s
 lib/perf_counter.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/cache_model.dir/build.make CMakeFiles/cache_model.dir/lib/perf_counter.cpp.s
 .PHONY : lib/perf_counter.cpp.s
+
+lib/systolic_array.o: lib/systolic_array.cpp.o
+.PHONY : lib/systolic_array.o
+
+# target to build an object file
+lib/systolic_array.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/cache_model.dir/build.make CMakeFiles/cache_model.dir/lib/systolic_array.cpp.o
+.PHONY : lib/systolic_array.cpp.o
+
+lib/systolic_array.i: lib/systolic_array.cpp.i
+.PHONY : lib/systolic_array.i
+
+# target to preprocess a source file
+lib/systolic_array.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/cache_model.dir/build.make CMakeFiles/cache_model.dir/lib/systolic_array.cpp.i
+.PHONY : lib/systolic_array.cpp.i
+
+lib/systolic_array.s: lib/systolic_array.cpp.s
+.PHONY : lib/systolic_array.s
+
+# target to generate assembly for a file
+lib/systolic_array.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/cache_model.dir/build.make CMakeFiles/cache_model.dir/lib/systolic_array.cpp.s
+.PHONY : lib/systolic_array.cpp.s
 
 src/main.o: src/main.cpp.o
 .PHONY : src/main.o
@@ -258,18 +354,30 @@ help:
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
 	@echo "... cache_model"
+	@echo "... lib/cache.o"
+	@echo "... lib/cache.i"
+	@echo "... lib/cache.s"
 	@echo "... lib/cache_fifo.o"
 	@echo "... lib/cache_fifo.i"
 	@echo "... lib/cache_fifo.s"
 	@echo "... lib/cache_lru.o"
 	@echo "... lib/cache_lru.i"
 	@echo "... lib/cache_lru.s"
+	@echo "... lib/globals.o"
+	@echo "... lib/globals.i"
+	@echo "... lib/globals.s"
 	@echo "... lib/load_store_unit.o"
 	@echo "... lib/load_store_unit.i"
 	@echo "... lib/load_store_unit.s"
+	@echo "... lib/mac_unit.o"
+	@echo "... lib/mac_unit.i"
+	@echo "... lib/mac_unit.s"
 	@echo "... lib/perf_counter.o"
 	@echo "... lib/perf_counter.i"
 	@echo "... lib/perf_counter.s"
+	@echo "... lib/systolic_array.o"
+	@echo "... lib/systolic_array.i"
+	@echo "... lib/systolic_array.s"
 	@echo "... src/main.o"
 	@echo "... src/main.i"
 	@echo "... src/main.s"
