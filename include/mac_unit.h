@@ -1,10 +1,8 @@
 #ifndef MAC_UNIT_H
 #define MAC_UNIT_H
 
-//#include "../include/channel.h"
 #include "systolic_array.h"
-#include <chrono>  // For time duration
-#include <Windows.h>
+
 
 
 template<typename T>
