@@ -14,13 +14,13 @@ using namespace std;
 
 
 
-
+    
 
 int main() {
 Systolic_Array<double> systolic_array;
 int loop = 0;
 systolic_array.Construct("C:\\Users\\Henry\\C++Code\\RandomNumOutput\\0801008n0");
-systolic_array.ConstructA("C:\\Users\\Henry\\C++Code\\RandomNumOutput(inputA)\\0801008n0");
+systolic_array.loadWeightsFromFileA("C:\\Users\\Henry\\C++Code\\RandomNumOutput(inputA)\\0801008n0");
 
 int max_cycle = 256, cycle_count = 0, array_size = 8;
 

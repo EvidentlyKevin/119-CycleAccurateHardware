@@ -82,7 +82,7 @@ int main() {
     std::string directory = "C:\\Users\\Henry\\C++Code\\RandomNumOutput(inputA)";  // Specify the directory where files should be saved
     int num_files = 5;
     int num_batches = 8;
-    int samples_per_batch = 1;
+    int samples_per_batch = 1   ;
     int vector_size = 8;
 
     generate_multiple_files(directory, num_files, num_batches, samples_per_batch, vector_size);
