@@ -19,9 +19,10 @@ def generate_multiple_files(num_files, num_batches, samples_per_batch, vector_si
         print(f"Generated file: 0801008n{i}")
 
 def main():
+
     num_files = 5
     num_batches = 8
-    samples_per_batch = 10
+    samples_per_batch = 1
     vector_size = 8
 
     generate_multiple_files(num_files, num_batches, samples_per_batch, vector_size)

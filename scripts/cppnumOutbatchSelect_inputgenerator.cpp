@@ -42,7 +42,7 @@ void generate_vector_file(int file_number, int num_batches, int samples_per_batc
 void generate_multiple_files(int num_files, int num_batches, int samples_per_batch, int vector_size) {
     for (int i = 0; i < num_files; ++i) {
         generate_vector_file(i, num_batches, samples_per_batch, vector_size);
-        std::cout << "Generated file: 0801008n" << i << std::endl;
+        std::cout << "Generated file: 0801008n0" << i << std::endl;
     }
 }
 
@@ -63,6 +63,7 @@ void preview_file(const std::string& filename, std::size_t preview_size = 500) {
 }
 
 int main() {
+    std::string directory = "/home/kevin/git/119-CycleAccurateHardware/weight";
     int num_files = 5;
     int num_batches = 8;
     int samples_per_batch = 10;
