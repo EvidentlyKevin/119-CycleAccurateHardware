@@ -5,7 +5,7 @@
 #include "systolic_array.h"
 
 template<typename T>
-class Channel;
+class channelM;
 
 template<typename T>
 class Systolic_Array;
@@ -19,9 +19,9 @@ public:
     T accumulator; // Stores the accumulated result
     T rowID = 0;
     T colID = 0;
-    Channel<T> rightOut;
-    Channel<T> downOut;
-    Channel<T> inputA;
+    channelM<T> rightOut;
+    channelM<T> downOut;
+    channelM<T> inputA;
     int clk = 0;
     int clk_Period = 1;
     

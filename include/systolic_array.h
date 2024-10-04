@@ -9,7 +9,7 @@
 #include <stdexcept>
 #include <vector>
 template<typename T>
-class Channel;
+class channelM;
 
 // Forward declaration of MACUnit
 template<typename T>

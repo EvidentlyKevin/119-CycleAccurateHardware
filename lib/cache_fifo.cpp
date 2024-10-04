@@ -1,7 +1,7 @@
 // File: lib/cache_fifo.cpp
 
-#include "cache_fifo.h"
-#include "globals.h"
+#include "../include/cache_fifo.h"
+#include "../include/globals.h"
 #include <iostream>
 #include <fstream>
 #include <sstream>

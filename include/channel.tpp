@@ -1,28 +1,23 @@
-#include <iostream>
-#include <deque>
-using namespace std;
 template<typename T>
-Channel<T>::Channel(size_t capacity) : capacity(capacity){}
+Channel<T>::Channel(size_t capacity) : capacity(capacity) {}
 
 template<typename T>
-void Channel<T>::channel_push(const T& element){
+bool Channel<T>::channel_push(const T& element) {
     if (buffer.size() >= capacity) {
-        std::cout << "Channel is full!" << std::endl;
-        return;
-         // Channel is full
+        return false; // Channel is full
     }
     buffer.push_back(element);
+    return true;
 }
 
 template<typename T>
-T channel_pop(T& element) {
+bool Channel<T>::channel_pop(T& element) {
     if (buffer.empty()) {
-        return T(); // Channel is empty
-        // return read_request();
+        return false; // Channel is empty
     }
     element = buffer.front();
     buffer.pop_front();
-    return element;
+    return true;
 }
 
 template<typename T>
