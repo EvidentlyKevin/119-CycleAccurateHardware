@@ -19,6 +19,3 @@ target_compile_options(cache_model PRIVATE
     $<$<CXX_COMPILER_ID:GNU>:-Wall -Wextra -Werror>  # GCC/Clang options
     $<$<CXX_COMPILER_ID:MSVC>:/W4 /WX>                # MSVC options
 )
-
-# If you have any libraries to link, you can do it here
-# target_link_libraries(cache_model <your_library>)

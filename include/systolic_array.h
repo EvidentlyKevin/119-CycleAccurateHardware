@@ -1,13 +1,14 @@
 #ifndef SYSTOLIC_ARRAY_H
 #define SYSTOLIC_ARRAY_H
 
-#include <array> // For std::array
-#include <random> // For std::random_device, std::mt19937, std::uniform_int_distribution
+#include <array> 
+#include <random> 
 #include <iostream>
 #include <fstream>
 #include <sstream>
 #include <stdexcept>
 #include <vector>
+
 template<typename T>
 class channelM;
 
@@ -21,8 +22,11 @@ public:
     static const int SIZE = 8; // Define the size of the array
     std::array<std::array<MACUnit<T>*, SIZE>, SIZE> array; // Use pointers to MACUnit
     std::array<std::array<int, 8>, 8> weights;
-    std::array<std::array<int, 1>, 8> A; 
+    std::array<std::array<int, 1>, 8> A;
+    std::array<std::array<int, SIZE>, SIZE> bank; 
 
+
+ 
 // Constructor to initialize MAC units dynamically
     void Construct(const std::string& filename) { // DC
     

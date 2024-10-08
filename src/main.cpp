@@ -22,43 +22,6 @@
 using namespace std;    
 
 int main(int argc, char* argv[]) {
-
-
-    /*Systolic_Array<double> systolic_array;
-    systolic_array.Construct("C:\\Users\\Henry\\C++Code\\119-CycleAccurateHardware\\weight\\0801008n1");
-    systolic_array.ConstructA("C:\\Users\\Henry\\C++Code\\119-CycleAccurateHardware\\0801008n1");
-
-    int max_cycle = 256, cycle_count = 0, array_size = 8;
-
-
-
-for (int i = 0; i < array_size; i++){
-    systolic_array[0][i]->inputA.channel_push(systolic_array.A[0][i]);
-}
-
-
-
-while (cycle_count < max_cycle){
-    for (int i = array_size-1; i > -1; i--) { 
-        for (int j = array_size-1; j > -1; j--) {
-            cout << "Clock: " << systolic_array[i][j]->clk << endl;
-            cout << "" << endl;
-            cout << "Performing MAC operation at position: " << i << ", " << j << endl;
-            cout << "operand B: " << systolic_array[i][j]->b << endl;
-            cout << "operand A: " << systolic_array[i][j]->a << endl;
-            cout << "Weight: " << systolic_array[i][j]->w << endl;
-                        cout << "" << endl;
-            systolic_array[i][j]->cycle(systolic_array);
-                        cout << "Accumulated value: " << systolic_array[i][j]->read_accumulator() << endl;
-                                    cout << "" << endl;
-
-
-        }
-    }
-cycle_count++;
-
-}*/
-
     // Check for correct number of arguments
     if (argc != 6 && argc != 7) { // Allow 5 or 6 arguments + program name
         std::cerr << "Usage: " << argv[0] << " <cache_policy> <storage_file> <requests_file> <num_cycles> <verbose> [<output_file>]\n";
@@ -75,9 +38,9 @@ cycle_count++;
     int num_cycles;
     int verbose;
 
-   try {
+    try {
         num_cycles = std::stoi(argv[4]);
-    } catch (const std::invalid_argument& e) {
+    } catch (const std::invalid_argument&) {
         std::cerr << "Error: <num_cycles> must be an integer.\n";
         return 1;
     }
@@ -88,8 +51,8 @@ cycle_count++;
             std::cerr << "Error: <verbose> must be 0 (silent), 1 (verbose), or 2 (very verbose).\n";
             return 1;
         }
-    } catch (const std::invalid_argument& e) {
-        std::cerr << "Error: <verbose> must be an integer (0, 1, or 2).\n";
+    } catch (const std::invalid_argument&) {
+        std::cerr << "Error: <verbose> must be an integer (0 or 1).\n";
         return 1;
     }
 
@@ -141,18 +104,10 @@ cycle_count++;
     LoadStoreUnit lsu(8, verbose); // ls_queue_size=8, pass verbosity
     lsu.init_(requests_file);
 
-    
     // Simulation loop
     for (int cycle = 0; cycle < num_cycles; ++cycle) {
-        // Cache simulation cycle
         cache->cycle();
         lsu.cycle();
-
-       
-
-        // Optionally, synchronize or handle dependencies between cache and systolic array here
-            return 0;
-
     }
 
     // Print performance summary

@@ -1,5 +1,3 @@
-// File: lib/cache_lru.cpp
-
 #include "cache_lru.h"
 #include "globals.h"
 #include <iostream>
@@ -10,9 +8,9 @@ cache_lru::cache_lru(size_t block_size, size_t cache_size, int n_ways, perf_coun
     : Cache(block_size, cache_size, n_ways, perf), verbose_level(verbose) {}
 
 void cache_lru::init_(const std::string& input_fname) {
-    int n_sets = cache_size / (n_ways * block_size * 4); // Assuming block_size in words (4 bytes per word)
+    int n_sets = static_cast<int>(cache_size / (n_ways * block_size * 4)); // Cast size_t to int
 
-    block_offset_bits = get_bits(block_size * 4);
+    block_offset_bits = get_bits(static_cast<int>(block_size * 4)); // Cast size_t to int
     index_bits = get_bits(n_sets);
     tag_bits = 32 - (block_offset_bits + index_bits);
 
@@ -91,7 +89,7 @@ void cache_lru::cycle() {
 
         if (verbose_level > 0) {
             std::cout << "Cycle: MISS at address " << req.address << ". Loading block starting at address "
-                      << (req.address / (block_size * 4)) * (block_size * 4) << "\n";
+                      << (req.address / static_cast<int>(block_size * 4)) * static_cast<int>(block_size * 4) << "\n";
         }
 
         // Line eviction
@@ -101,7 +99,7 @@ void cache_lru::cycle() {
             free_lines_map[set_index]++;
 
             for (size_t i = 0; i < block_size * 4; i += 4) {
-                cache_map.erase(evict_block_addr + i);
+                cache_map.erase(evict_block_addr + static_cast<int>(i)); // Cast size_t to int
             }
 
             if (verbose_level > 1) {
@@ -111,9 +109,9 @@ void cache_lru::cycle() {
 
         // Load new block into cache
         if (free_lines_map[set_index] > 0) {
-            int block_start_addr = (req.address / (block_size * 4)) * (block_size * 4);
+            int block_start_addr = (req.address / static_cast<int>(block_size * 4)) * static_cast<int>(block_size * 4);
             for (size_t i = 0; i < block_size * 4; i += 4) {
-                int addr = block_start_addr + i;
+                int addr = block_start_addr + static_cast<int>(i); // Cast size_t to int
                 auto it = storage_map.find(addr);
                 if (it != storage_map.end()) {
                     cache_map[addr] = it->second;
@@ -142,7 +140,7 @@ void cache_lru::cycle() {
 
 void cache_lru::move_to_back_lru(int addr) {
     int set_index = get_set_index(addr);
-    int block_start_addr = (addr / (block_size * 4)) * (block_size * 4);
+    int block_start_addr = (addr / static_cast<int>(block_size * 4)) * static_cast<int>(block_size * 4); // Cast size_t to int
 
     set_lru_map[set_index].remove(block_start_addr);
     set_lru_map[set_index].push_back(block_start_addr);
