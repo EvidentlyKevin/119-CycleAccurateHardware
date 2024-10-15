@@ -9,18 +9,15 @@
 using namespace std;
 
 struct MemBank {
-    unsigned int BANK_ROWS = 0;
-    unsigned int BANK_COLS = 0;
-    unsigned int BankID;
     unsigned int Data[BANK_ROWS][BANK_COLS];
 };
 
 class Memory {
     public: 
-        MemBank();
+        int MemBanks = 1024; // Define the number of memory banks
+        MemBank MemoryBanks[MemBanks];
         unsigned int bankTraverse(); 
-        MemBank MemoryBanks[];
-        void initBanks(int numBanks);
+        int initBanks(int numBanks, int BANK_ROWS, int BANK_COLS);
 };
 
 #endif // MEMORY_H

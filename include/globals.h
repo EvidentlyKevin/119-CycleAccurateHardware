@@ -11,4 +11,9 @@ extern int global_verbose_level;
 extern Channel<read_request> read_request_channel;
 extern Channel<read_ack> read_ack_channel;
 
+// Declare global memory banks size
+
+extern const int BANK_ROWS;
+extern const int BANK_COLS;
+
 #endif // GLOBALS_H
