@@ -22,11 +22,11 @@ using namespace std;
 
 void memoryFunction() {
     Memory mem;
-    mem.initBanks(15, 8, 8);
+    mem.initBanks(15, 20, 20); //Rows and Cols Have to match with global variables
 
 for(int i = 0; i < mem.MemBanks; i++){
-    for(int j = 0; j < MemBank::BANK_ROWS; j++){
-        for(int k = 0; k < MemBank::BANK_COLS; k++){
+    for(int j = 0; j < BANK_ROWS; j++){
+        for(int k = 0; k < BANK_COLS; k++){
             cout << mem.MemoryBanks[i].Data[j][k] << " ";
         }
         

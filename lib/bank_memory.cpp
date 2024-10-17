@@ -12,15 +12,15 @@ using namespace std;
 
 
 
-  static const int numBanks = 15;
+  int numBanks = 15;
 
   
 
     void Memory::initBanks(int numBanks, int BANK_ROWS, int BANK_COLS){
 // call random num gen and use output to initialize banks 
         for(int i = 0; i < numBanks; i++){
-            for(int j = 0; j < MemBank::BANK_ROWS; j++){
-                for(int k = 0; k< MemBank::BANK_COLS; k++){
+            for(int j = 0; j < BANK_ROWS; j++){
+                for(int k = 0; k< BANK_COLS; k++){
                     MemoryBanks[i].Data[j][k] = rand() % 256;
                 }
             }

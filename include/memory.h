@@ -11,16 +11,14 @@ using namespace std;
 
 
 struct MemBank {
-    static const int BANK_ROWS = 8;
-    static const int BANK_COLS = 8;
     unsigned int Data[BANK_ROWS][BANK_COLS];
 };
 
 
 class Memory {
     public: 
-    int BANK_ROWS = 8;
-    int BANK_COLS = 8;
+    //int BANK_ROWS = 8;
+   // int BANK_COLS = 8;
 
 
     static const int MemBanks = 15; // Define the number of memory banks
