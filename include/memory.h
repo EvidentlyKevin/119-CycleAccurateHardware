@@ -8,16 +8,28 @@
 
 using namespace std;
 
+
+
 struct MemBank {
+    static const int BANK_ROWS = 8;
+    static const int BANK_COLS = 8;
     unsigned int Data[BANK_ROWS][BANK_COLS];
 };
 
+
 class Memory {
     public: 
-        int MemBanks = 1024; // Define the number of memory banks
-        MemBank MemoryBanks[MemBanks];
-        unsigned int bankTraverse(); 
-        int initBanks(int numBanks, int BANK_ROWS, int BANK_COLS);
+    int BANK_ROWS = 8;
+    int BANK_COLS = 8;
+
+
+    static const int MemBanks = 15; // Define the number of memory banks
+    MemBank MemoryBanks[MemBanks];
+    //unsigned int bankTraverse(); 
+    void initBanks(int numBanks, int BANK_ROWS, int BANK_COLS);
+
 };
+
+
 
 #endif // MEMORY_H

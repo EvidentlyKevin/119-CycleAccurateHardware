@@ -4,6 +4,7 @@
 #include "channel.h"
 #include "request_structs.h"
 
+
 // Declare a global verbosity level
 extern int global_verbose_level;
 
@@ -13,7 +14,7 @@ extern Channel<read_ack> read_ack_channel;
 
 // Declare global memory banks size
 
-extern const int BANK_ROWS;
-extern const int BANK_COLS;
+static const int BANK_ROWS = 256;
+static const int BANK_COLS = 256;
 
 #endif // GLOBALS_H

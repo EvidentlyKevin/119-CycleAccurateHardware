@@ -1,7 +1,7 @@
 // File: lib/load_store_unit.cpp
 
-#include "load_store_unit.h"
-#include "globals.h"
+#include "../include/load_store_unit.h"
+#include "../include/globals.h"
 #include <iostream>
 #include <fstream>
 #include <sstream>

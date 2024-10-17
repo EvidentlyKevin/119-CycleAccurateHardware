@@ -1,17 +1,47 @@
-// File: src/main.cpp
-
-#include "cache_lru.h"
-#include "cache_fifo.h"
-#include "load_store_unit.h"
-#include "perf_counter.h"
-#include "globals.h"
+#include "../include/cache_lru.h"
+#include "../include/cache_fifo.h"
+#include "../include/load_store_unit.h"
+#include "../include/perf_counter.h"
+#include "../include/globals.h"
+#include "../include/memory.h"
+#include <iostream>
+#include <deque>
+#include <array>
+#include <vector>
 #include <iostream>
 #include <fstream>
 #include <string>
 #include <cstdlib>
 #include <filesystem>
+#include "../include/channel.h"
+//#include "../include/channelM.h"
+//#include "../include/systolic_array.h"
+//#include "../include/mac_unit.h"
 
-int main(int argc, char* argv[]) {
+using namespace std;
+
+void memoryFunction() {
+    Memory mem;
+    mem.initBanks(15, 8, 8);
+
+for(int i = 0; i < mem.MemBanks; i++){
+    for(int j = 0; j < MemBank::BANK_ROWS; j++){
+        for(int k = 0; k < MemBank::BANK_COLS; k++){
+            cout << mem.MemoryBanks[i].Data[j][k] << " ";
+        }
+        
+        cout << endl;
+    }
+            cout << endl;
+}
+}
+
+int cache(int argc, char* argv[]) {
+
+    // Define test cases
+    const int MEMORY_TEST = 0;
+    const int SYSTOLIC_TEST = 1;
+
     // Check for correct number of arguments
     if (argc != 6 && argc != 7) { // Allow 5 or 6 arguments + program name
         std::cerr << "Usage: " << argv[0] << " <cache_policy> <storage_file> <requests_file> <num_cycles> <verbose> [<output_file>]\n";
@@ -30,7 +60,7 @@ int main(int argc, char* argv[]) {
 
     try {
         num_cycles = std::stoi(argv[4]);
-    } catch (const std::invalid_argument& e) {
+    } catch (const std::invalid_argument&) {
         std::cerr << "Error: <num_cycles> must be an integer.\n";
         return 1;
     }
@@ -41,7 +71,7 @@ int main(int argc, char* argv[]) {
             std::cerr << "Error: <verbose> must be 0 (silent), 1 (verbose), or 2 (very verbose).\n";
             return 1;
         }
-    } catch (const std::invalid_argument& e) {
+    } catch (const std::invalid_argument&) {
         std::cerr << "Error: <verbose> must be an integer (0 or 1).\n";
         return 1;
     }
@@ -112,6 +142,29 @@ int main(int argc, char* argv[]) {
 
     // Close the output file
     out_stream.close();
+
+    return 0;
+}
+
+int main(){
+     int testOption;
+
+    // Ask the user to input a test option
+    std::cout << "Enter a test option (1-3): ";
+    std::cin >> testOption;
+
+    // Use switch-case to handle different options
+    switch (testOption) {
+        case 1:
+            memoryFunction();
+            break;
+        case 2:
+            
+            break;
+        default:
+            std::cout << "Invalid option selected!" << std::endl;
+            break;
+    }
 
     return 0;
 }

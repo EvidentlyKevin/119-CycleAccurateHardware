@@ -1,4 +1,4 @@
-#include "globals.h"
+#include "../include/globals.h"
 
 // Initialize channels without verbosity
 Channel<read_request> read_request_channel(4);

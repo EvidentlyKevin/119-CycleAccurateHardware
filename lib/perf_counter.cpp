@@ -1,4 +1,4 @@
-#include "perf_counter.h"
+#include "../include/perf_counter.h"
 
 perf_counter::perf_counter() : total_accesses(0), hits(0), misses(0), stall_cycles(0) {}
 
