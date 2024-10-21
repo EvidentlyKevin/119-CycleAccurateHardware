@@ -39,8 +39,8 @@ for(int i = 0; i < mem.MemBanks; i++){
 int cache(int argc, char* argv[]) {
 
     // Define test cases
-    const int MEMORY_TEST = 0;
-    const int SYSTOLIC_TEST = 1;
+    // const int MEMORY_TEST = 0;
+    // const int SYSTOLIC_TEST = 1;
 
     // Check for correct number of arguments
     if (argc != 6 && argc != 7) { // Allow 5 or 6 arguments + program name
@@ -155,10 +155,10 @@ int main(){
 
     // Use switch-case to handle different options
     switch (testOption) {
-        case 1:
+        case 1: // Memory case
             memoryFunction();
             break;
-        case 2:
+        case 2: // Systolic case
             
             break;
         default:

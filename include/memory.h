@@ -6,17 +6,14 @@
 #include <sstream>
 #include <array>
 
-using namespace std;
-
-
-
 struct MemBank {
     unsigned int Data[BANK_ROWS][BANK_COLS];
 };
 
 
 class Memory {
-    public: 
+    public:
+    int numBanks = 15;
     //int BANK_ROWS = 8;
    // int BANK_COLS = 8;
 
