@@ -1,30 +1,25 @@
+// memory.h
 #ifndef MEMORY_H
 #define MEMORY_H
+
 #include "globals.h"
 #include <iostream>
 #include <fstream>
 #include <sstream>
 #include <array>
 
+using namespace std;
+
 struct MemBank {
     unsigned int Data[BANK_ROWS][BANK_COLS];
 };
 
-
 class Memory {
-    public:
-    int numBanks = 15;
-    // int BANK_ROWS = 8;
-    // int BANK_COLS = 8;
-
-
-    static const int MemBanks = 15; // Define the number of memory banks
+public:
+    static const int MemBanks = 15; // Number of memory banks
     MemBank MemoryBanks[MemBanks];
-    //unsigned int bankTraverse(); 
-    void initBanks(int numBanks, int BANK_ROWS, int BANK_COLS);
 
+    void initBanks();
 };
-
-
 
 #endif // MEMORY_H

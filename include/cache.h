@@ -1,3 +1,5 @@
+// File: include/cache.h
+
 #ifndef CACHE_H
 #define CACHE_H
 
@@ -7,7 +9,7 @@
 #include <cmath>
 #include <list>
 
-#include "channel.h"
+// #include "channelM.h"
 #include "request_structs.h"
 #include "perf_counter.h"
 

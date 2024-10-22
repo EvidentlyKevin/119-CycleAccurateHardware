@@ -1,3 +1,5 @@
+// File: channel.h
+
 #ifndef CHANNEL_H
 #define CHANNEL_H
 
