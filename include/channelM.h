@@ -13,7 +13,7 @@
 template<typename T>
 class channelM {
 public:
-    static const size_t DEFAULT_CAPACITY = 128; // Add a default capacity
+    static const size_t DEFAULT_CAPACITY = 128; // Make this easily changeable
 
     // Constructor with default capacity
     channelM(size_t capacity = DEFAULT_CAPACITY) : capacity(capacity) {}

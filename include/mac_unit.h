@@ -14,7 +14,7 @@ public:
         : rowID(i), colID(j), accumulator(0), a(0), b(0), w(0), clk(0),
           rightOut(CHANNEL_CAPACITY), downOut(CHANNEL_CAPACITY), inputA(CHANNEL_CAPACITY_INPUT) {}
 
-    // Set the weight for the MAC unit
+    // *** Set the weight for the MAC unit ***
     void setWeight(T weight) {
         w = weight;
     }

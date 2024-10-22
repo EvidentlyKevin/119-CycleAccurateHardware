@@ -31,9 +31,9 @@ void systolicArrayFunction() {
     std::vector<std::vector<int>> weights(SIZE, std::vector<int>(SIZE));
     std::vector<int> activations(SIZE);
 
-    // Example initialization
+    // Initialization
     for (int i = 0; i < SIZE; ++i) {
-        activations[i] = i + 1; // Activations: 1, 2, ..., 8
+        activations[i] = i + 1; // Activations: 1, 2, 3, ..., SIZE
         for (int j = 0; j < SIZE; ++j) {
             weights[i][j] = (i + 1) * (j + 1); // Weights: multiplication table
         }
@@ -65,7 +65,7 @@ void systolicArrayFunction() {
 int main() {
     int testOption;
 
-    // Ask the user to input a test option
+    // What do you want to test
     std::cout << "Enter a test option (1-2):\n";
     std::cout << "1: Test Memory Function\n";
     std::cout << "2: Test Systolic Array Function\n";
