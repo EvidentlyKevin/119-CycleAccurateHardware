@@ -148,6 +148,9 @@ int cache(int argc, char* argv[]) {
 
 int main(){
      int testOption;
+    const char* args[] = {"program_name", "lru", "storage.txt", "requests.txt", "100", "1", "output.txt"};
+    int argc = sizeof(args) / sizeof(args[0]);
+
 
     // Ask the user to input a test option
     std::cout << "Enter a test option (1-3): ";
@@ -159,8 +162,8 @@ int main(){
             memoryFunction();
             break;
         case 2:
-            
-            break;
+    cache(argc, const_cast<char**>(args));
+        break;
         default:
             std::cout << "Invalid option selected!" << std::endl;
             break;
