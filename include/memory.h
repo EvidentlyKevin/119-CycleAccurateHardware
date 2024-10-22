@@ -14,8 +14,8 @@ struct MemBank {
 class Memory {
     public:
     int numBanks = 15;
-    //int BANK_ROWS = 8;
-    //int BANK_COLS = 8;
+    // int BANK_ROWS = 8;
+    // int BANK_COLS = 8;
 
 
     static const int MemBanks = 15; // Define the number of memory banks
