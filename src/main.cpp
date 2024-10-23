@@ -1,159 +1,75 @@
-#include "../include/cache_lru.h"
-#include "../include/cache_fifo.h"
-#include "../include/load_store_unit.h"
-#include "../include/perf_counter.h"
-#include "../include/globals.h"
-#include "../include/memory.h"
 #include <iostream>
-#include <deque>
-#include <array>
 #include <vector>
-#include <iostream>
-#include <fstream>
-#include <string>
-#include <cstdlib>
-#include <filesystem>
-#include "../include/channel.h"
-//#include "../include/channelM.h"
-//#include "../include/systolic_array.h"
-//#include "../include/mac_unit.h"
-
-using namespace std;
+#include "../include/memory.h"
+#include "../include/systolic_array.h"
 
 void memoryFunction() {
     Memory mem;
-    mem.initBanks(15, 20, 20); //Rows and Cols Have to match with global variables
+    mem.initBanks(); // No parameters needed
 
-for(int i = 0; i < mem.MemBanks; i++){
-    for(int j = 0; j < BANK_ROWS; j++){
-        for(int k = 0; k < BANK_COLS; k++){
-            cout << mem.MemoryBanks[i].Data[j][k] << " ";
+    // Display the contents of the memory banks
+    for (int i = 0; i < mem.MemBanks; i++) {
+        std::cout << "Memory Bank " << i << ":\n";
+        for (int j = 0; j < BANK_ROWS; j++) {
+            for (int k = 0; k < BANK_COLS; k++) {
+                std::cout << mem.MemoryBanks[i].Data[j][k] << " ";
+            }
+            std::cout << std::endl;
         }
-        
-        cout << endl;
+        std::cout << "---------------------------\n";
     }
-            cout << endl;
-}
 }
 
-int cache(int argc, char* argv[]) {
+void systolicArrayFunction() {
+    // Define the size of the systolic array
+    const int SIZE = 8;
 
-    // Define test cases
-    const int MEMORY_TEST = 0;
-    const int SYSTOLIC_TEST = 1;
+    // Create an instance of the systolic array
+    Systolic_Array<int> systolicArray(SIZE);
 
-    // Check for correct number of arguments
-    if (argc != 6 && argc != 7) { // Allow 5 or 6 arguments + program name
-        std::cerr << "Usage: " << argv[0] << " <cache_policy> <storage_file> <requests_file> <num_cycles> <verbose> [<output_file>]\n";
-        std::cerr << "cache_policy: lru or fifo\n";
-        std::cerr << "verbose: 1 for verbose, 0 for silent\n";
-        std::cerr << "[<output_file>]: (Optional) Name of the output file. Defaults to 'outfile.txt' if not provided.\n";
-        return 1;
-    }
+    // Initialize weights and activations
+    std::vector<std::vector<int>> weights(SIZE, std::vector<int>(SIZE));
+    std::vector<int> activations(SIZE);
 
-    // Parse command-line arguments
-    std::string cache_policy = argv[1];
-    std::string storage_file = argv[2];
-    std::string requests_file = argv[3];
-    int num_cycles;
-    int verbose;
-
-    try {
-        num_cycles = std::stoi(argv[4]);
-    } catch (const std::invalid_argument&) {
-        std::cerr << "Error: <num_cycles> must be an integer.\n";
-        return 1;
-    }
-
-    try {
-        verbose = std::stoi(argv[5]);
-        if (verbose < 0 || verbose > 2) {
-            std::cerr << "Error: <verbose> must be 0 (silent), 1 (verbose), or 2 (very verbose).\n";
-            return 1;
+    // Example initialization
+    for (int i = 0; i < SIZE; ++i) {
+        activations[i] = i + 1; // Activations: 1, 2, ..., 8
+        for (int j = 0; j < SIZE; ++j) {
+            weights[i][j] = (i + 1) * (j + 1); // Weights: multiplication table
         }
-    } catch (const std::invalid_argument&) {
-        std::cerr << "Error: <verbose> must be an integer (0 or 1).\n";
-        return 1;
     }
 
-    // Determine output file name
-    std::string output_file;
-    if (argc == 7) {
-        output_file = argv[6];
-    } else {
-        output_file = "outfile.txt";
-    }
+    // Set weights in the systolic array
+    systolicArray.setWeights(weights);
 
-    // Create the output directory if it doesn't exist
-    std::filesystem::create_directory("../output");
+    // Set input activations
+    systolicArray.setInputActivations(activations);
 
-    // Open the output file for redirection
-    std::ofstream out_stream("../output/" + output_file);
-    if (!out_stream.is_open()) {
-        std::cerr << "Error: Could not open output file: " << output_file << "\n";
-        return 1;
-    }
-
-    // Redirect std::cout and std::cerr to the output file
-    std::streambuf* cout_buf = std::cout.rdbuf(); // Save original buffer
-    std::streambuf* cerr_buf = std::cerr.rdbuf(); // Save original buffer
-    std::cout.rdbuf(out_stream.rdbuf());
-    std::cerr.rdbuf(out_stream.rdbuf());
-
-    // Initialize performance counter
-    perf_counter counter;
-
-    // Create cache based on policy
-    Cache* cache = nullptr;
-    if (cache_policy == "lru") {
-        cache = new cache_lru(4, 1024, 4, &counter, verbose); // block_size=4, cache_size=1024 bytes, n_ways=4
-    } else if (cache_policy == "fifo") {
-        cache = new cache_fifo(4, 1024, 4, &counter, verbose); // block_size=4, cache_size=1024 bytes, n_ways=4
-    } else {
-        std::cerr << "Invalid cache policy. Use 'lru' or 'fifo'.\n";
-        // Restore original buffers before exiting
-        std::cout.rdbuf(cout_buf);
-        std::cerr.rdbuf(cerr_buf);
-        return 1;
-    }
-
-    // Initialize cache
-    cache->init_(storage_file);
-
-    // Create Load Store Unit
-    LoadStoreUnit lsu(8, verbose); // ls_queue_size=8, pass verbosity
-    lsu.init_(requests_file);
-
-    // Simulation loop
+    // Run the systolic array for sufficient cycles
+    int num_cycles = 2 * SIZE; // Adjust as needed
     for (int cycle = 0; cycle < num_cycles; ++cycle) {
-        cache->cycle();
-        lsu.cycle();
+        systolicArray.cycle();
     }
 
-    // Print performance summary
-    counter.print_summary();
+    // Get the outputs
+    std::vector<int> outputs = systolicArray.getOutputs();
 
-    // Clean up
-    delete cache;
-
-    // Restore original buffers
-    std::cout.rdbuf(cout_buf);
-    std::cerr.rdbuf(cerr_buf);
-
-    // Close the output file
-    out_stream.close();
-
-    return 0;
+    // Print the outputs
+    std::cout << "Systolic Array Outputs:\n";
+    for (const auto& val : outputs) {
+        std::cout << val << " ";
+    }
+    std::cout << std::endl;
 }
 
-int main(){
-     int testOption;
-    const char* args[] = {"program_name", "lru", "storage.txt", "requests.txt", "100", "1", "output.txt"};
-    int argc = sizeof(args) / sizeof(args[0]);
-
+int main() {
+    int testOption;
 
     // Ask the user to input a test option
-    std::cout << "Enter a test option (1-3): ";
+    std::cout << "Enter a test option (1-2):\n";
+    std::cout << "1: Test Memory Function\n";
+    std::cout << "2: Test Systolic Array Function\n";
+    std::cout << "Option: ";
     std::cin >> testOption;
 
     // Use switch-case to handle different options
@@ -162,8 +78,8 @@ int main(){
             memoryFunction();
             break;
         case 2:
-    cache(argc, const_cast<char**>(args));
-        break;
+            systolicArrayFunction();
+            break;
         default:
             std::cout << "Invalid option selected!" << std::endl;
             break;
