@@ -5,11 +5,6 @@
 #include <stdexcept>
 #include <cstddef> // For size_t
 
-/**
- * @brief A channel class implementing a FIFO buffer with capacity constraints using std::deque.
- *
- * @tparam T The type of elements stored in the channel.
- */
 template<typename T>
 class channelM {
 public:
@@ -17,6 +12,22 @@ public:
 
     // Constructor with default capacity
     channelM(size_t capacity = DEFAULT_CAPACITY) : capacity(capacity) {}
+
+    // Move constructor
+    channelM(channelM<T>&& other) noexcept
+        : buffer(std::move(other.buffer)), capacity(other.capacity) {
+        other.capacity = 0;
+    }
+
+    // Move assignment operator
+    channelM<T>& operator=(channelM<T>&& other) noexcept {
+        if (this != &other) {
+            buffer = std::move(other.buffer);
+            capacity = other.capacity;
+            other.capacity = 0;
+        }
+        return *this;
+    }
 
     // Push an element into the channel
     bool push(const T& element) {

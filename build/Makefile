@@ -129,6 +129,54 @@ cache_model/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/cache_model.dir/build.make CMakeFiles/cache_model.dir/build
 .PHONY : cache_model/fast
 
+lib/bank_memory.o: lib/bank_memory.cpp.o
+.PHONY : lib/bank_memory.o
+
+# target to build an object file
+lib/bank_memory.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/cache_model.dir/build.make CMakeFiles/cache_model.dir/lib/bank_memory.cpp.o
+.PHONY : lib/bank_memory.cpp.o
+
+lib/bank_memory.i: lib/bank_memory.cpp.i
+.PHONY : lib/bank_memory.i
+
+# target to preprocess a source file
+lib/bank_memory.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/cache_model.dir/build.make CMakeFiles/cache_model.dir/lib/bank_memory.cpp.i
+.PHONY : lib/bank_memory.cpp.i
+
+lib/bank_memory.s: lib/bank_memory.cpp.s
+.PHONY : lib/bank_memory.s
+
+# target to generate assembly for a file
+lib/bank_memory.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/cache_model.dir/build.make CMakeFiles/cache_model.dir/lib/bank_memory.cpp.s
+.PHONY : lib/bank_memory.cpp.s
+
+lib/cache.o: lib/cache.cpp.o
+.PHONY : lib/cache.o
+
+# target to build an object file
+lib/cache.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/cache_model.dir/build.make CMakeFiles/cache_model.dir/lib/cache.cpp.o
+.PHONY : lib/cache.cpp.o
+
+lib/cache.i: lib/cache.cpp.i
+.PHONY : lib/cache.i
+
+# target to preprocess a source file
+lib/cache.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/cache_model.dir/build.make CMakeFiles/cache_model.dir/lib/cache.cpp.i
+.PHONY : lib/cache.cpp.i
+
+lib/cache.s: lib/cache.cpp.s
+.PHONY : lib/cache.s
+
+# target to generate assembly for a file
+lib/cache.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/cache_model.dir/build.make CMakeFiles/cache_model.dir/lib/cache.cpp.s
+.PHONY : lib/cache.cpp.s
+
 lib/cache_fifo.o: lib/cache_fifo.cpp.o
 .PHONY : lib/cache_fifo.o
 
@@ -176,6 +224,30 @@ lib/cache_lru.s: lib/cache_lru.cpp.s
 lib/cache_lru.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/cache_model.dir/build.make CMakeFiles/cache_model.dir/lib/cache_lru.cpp.s
 .PHONY : lib/cache_lru.cpp.s
+
+lib/globals.o: lib/globals.cpp.o
+.PHONY : lib/globals.o
+
+# target to build an object file
+lib/globals.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/cache_model.dir/build.make CMakeFiles/cache_model.dir/lib/globals.cpp.o
+.PHONY : lib/globals.cpp.o
+
+lib/globals.i: lib/globals.cpp.i
+.PHONY : lib/globals.i
+
+# target to preprocess a source file
+lib/globals.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/cache_model.dir/build.make CMakeFiles/cache_model.dir/lib/globals.cpp.i
+.PHONY : lib/globals.cpp.i
+
+lib/globals.s: lib/globals.cpp.s
+.PHONY : lib/globals.s
+
+# target to generate assembly for a file
+lib/globals.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/cache_model.dir/build.make CMakeFiles/cache_model.dir/lib/globals.cpp.s
+.PHONY : lib/globals.cpp.s
 
 lib/load_store_unit.o: lib/load_store_unit.cpp.o
 .PHONY : lib/load_store_unit.o
@@ -258,12 +330,21 @@ help:
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
 	@echo "... cache_model"
+	@echo "... lib/bank_memory.o"
+	@echo "... lib/bank_memory.i"
+	@echo "... lib/bank_memory.s"
+	@echo "... lib/cache.o"
+	@echo "... lib/cache.i"
+	@echo "... lib/cache.s"
 	@echo "... lib/cache_fifo.o"
 	@echo "... lib/cache_fifo.i"
 	@echo "... lib/cache_fifo.s"
 	@echo "... lib/cache_lru.o"
 	@echo "... lib/cache_lru.i"
 	@echo "... lib/cache_lru.s"
+	@echo "... lib/globals.o"
+	@echo "... lib/globals.i"
+	@echo "... lib/globals.s"
 	@echo "... lib/load_store_unit.o"
 	@echo "... lib/load_store_unit.i"
 	@echo "... lib/load_store_unit.s"

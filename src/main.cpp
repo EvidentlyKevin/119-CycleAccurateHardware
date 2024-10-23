@@ -46,7 +46,7 @@ void systolicArrayFunction() {
     systolicArray.setInputActivations(activations);
 
     // Run the systolic array for sufficient cycles
-    int num_cycles = 2 * SIZE; // Adjust as needed
+    int num_cycles = 100 * SIZE; // Adjust as needed
     for (int cycle = 0; cycle < num_cycles; ++cycle) {
         systolicArray.cycle();
     }
@@ -60,6 +60,74 @@ void systolicArrayFunction() {
         std::cout << val << " ";
     }
     std::cout << std::endl;
+}
+
+void systolicArrayFunctionWithMemory() {
+    // Define the size of the systolic array
+    const int SIZE = 8;
+
+    // Define CHANNEL_CAPACITY
+    const size_t CHANNEL_CAPACITY = 10;
+
+    // Create an instance of the memory
+    Memory mem;
+    mem.initBanks();
+
+    // Create an instance of the systolic array
+    Systolic_Array<int> systolicArray(SIZE);
+
+    // Set weights for the systolic array
+    std::vector<std::vector<int>> weights(SIZE, std::vector<int>(SIZE));
+    for (int i = 0; i < SIZE; ++i) {
+        for (int j = 0; j < SIZE; ++j) {
+            // REVIEW HOW WEIGHTS ARE SET
+            weights[i][j] = 1; // Simple weights
+            // weights[i][j] = (i + 1) * (j + 1); // Complex weights
+        }
+    }
+    systolicArray.setWeights(weights);
+
+    std::vector<channelM<int>> memoryToSystolicChannels;
+    // Reserve is expensive, use emplace_back instead
+    // emplace_back constructs the object in place, no need to copy
+    // meaning that the object is constructed directly in the vector
+    //memoryToSystolicChannels.reserve(SIZE);
+    for (int i = 0; i < SIZE; ++i) {
+        memoryToSystolicChannels.emplace_back(CHANNEL_CAPACITY);
+    }
+
+    // NUMBER OF CYCLES FOR SIMULATION, REVIEW THIS
+    int num_cycles = 2 * SIZE; // Must be sufficient cycles for data to propagate
+
+    // Simulation loop
+    // Make this a function in a utility file?
+    for (int cycle = 0; cycle < num_cycles; ++cycle) {
+        // Memory pushes data into channels
+        mem.pushData(memoryToSystolicChannels, cycle, true);
+
+        // Systolic array reads activations from channels
+        systolicArray.setInputActivationsFromChannels(memoryToSystolicChannels, true);
+
+        // Run one cycle of the systolic array
+        systolicArray.cycle();
+
+        // Debugging: Print activations read by the systolic array
+        std::cout << "Cycle " << cycle << " - Activations read by the systolic array:\n";
+        for (int j = 0; j < SIZE; ++j) {
+            int activation = systolicArray.getMACUnit(0, j)->getLastActivation();
+            std::cout << "MAC[0][" << j << "] activation: " << activation << "\n";
+        }
+        std::cout << "---------------------------------------------\n";
+    }
+
+    // Get the outputs from the systolic array
+    std::vector<int> outputs = systolicArray.getOutputs();
+
+    // Print the outputs
+    std::cout << "Systolic Array Outputs with Memory Input:\n";
+    for (size_t i = 0; i < outputs.size(); ++i) {
+        std::cout << "Output[" << i << "]: " << outputs[i] << "\n";
+    }
 }
 
 int main() {

@@ -7,6 +7,8 @@
 #include <fstream>
 #include <sstream>
 #include <array>
+#include <vector>
+#include "channelM.h"
 
 using namespace std;
 
@@ -20,6 +22,7 @@ public:
     MemBank MemoryBanks[MemBanks];
 
     void initBanks();
+    void pushData(std::vector<channelM<int>>&, int cycle, bool debug = false);
 };
 
 #endif // MEMORY_H
