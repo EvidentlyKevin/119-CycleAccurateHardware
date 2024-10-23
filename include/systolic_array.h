@@ -38,6 +38,28 @@ public:
         }
     }
 
+    void setInputActivationsFromChannels(std::vector<channelM<T>>& channels,  int current_cycle = 0, bool debug = false) {
+        for (int j = 0; j < SIZE; ++j) {
+            T activation;
+            if (channels[j].pop(activation)) {
+                array[0][j]->setInputActivation(activation);
+
+                // Debugging: Print the activation read
+                if (debug) {
+                    std::cout << "Cycle " << current_cycle << ": MAC[0][" << j 
+                              << "] received activation " << activation << "\n";
+                }
+            }
+        }
+    }
+
+    std::unique_ptr<MACUnit<T>>& getMACUnit(int row, int col) {
+        if (row < 0 || row >= SIZE || col < 0 || col >= SIZE) {
+            throw std::out_of_range("Invalid MAC unit coordinates");
+        }
+        return array[row][col];
+    }
+
     // Run one cycle
     void cycle() {
         // All MAC units perform cycle simultaneously

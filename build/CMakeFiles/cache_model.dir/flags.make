@@ -6,5 +6,5 @@ CXX_DEFINES =
 
 CXX_INCLUDES = -I/home/kevin/git/119-CycleAccurateHardware/include
 
-CXX_FLAGS = -Wall -Wextra -Werror -std=gnu++17
+CXX_FLAGS = -Wall -Wextra -pedantic -Werror -std=gnu++17
 

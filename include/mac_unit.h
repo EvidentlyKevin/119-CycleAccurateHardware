@@ -1,3 +1,5 @@
+// File: include/mac_unit.h
+
 #ifndef MAC_UNIT_H
 #define MAC_UNIT_H
 
@@ -10,61 +12,54 @@ template<typename T>
 class MACUnit {
 public:
     // Constructor
-    MACUnit(int i, int j)
-        : rowID(i), colID(j), accumulator(0), a(0), b(0), w(0), clk(0),
-          rightOut(CHANNEL_CAPACITY), downOut(CHANNEL_CAPACITY), inputA(CHANNEL_CAPACITY_INPUT) {}
+    MACUnit(int row, int col);
 
     // Set the weight for the MAC unit
-    void setWeight(T weight) {
-        w = weight;
-    }
+    void setWeight(T weight);
 
     // Set the input activation (only for the first row)
-    void setInputActivation(T activation) {
-        if (rowID == 0) {
-            inputA.push(activation);
-        }
-    }
+    void setInputActivation(T activation);
 
     // Perform one cycle of computation
     void cycle(Systolic_Array<T>& systolic_array);
 
     // Read the accumulator value
-    T readAccumulator() const {
-        return accumulator;
-    }
+    T readAccumulator() const;
 
-    // Clear the accumulator
-    void clearAccumulator() {
-        accumulator = 0;
-    }
+    // Debugging method to get the last activation
+    T getLastActivation() const;
+
+    /*
+    // Channels for data movement
+    channelM<T> rightOut;
+    channelM<T> downOut;
+    channelM<T> inputA;
+    */
+
+private:
+    // DO NOT MOVE INITIALIZATIONS PLEASE
+    int rowID;
+    int colID;
+    T accumulator;
+    T a; // Activation input
+    T b; // Partial sum input
+    T w; // Weight
+    int clk;
+
+    // Channels for data movement
+    channelM<T> rightOut;
+    channelM<T> downOut;
+    channelM<T> inputA;
+
+    // Helper functions
+    bool fetchInputs(Systolic_Array<T>& systolic_array, bool debug = false);
+    void computeMAC(bool debug = false);
+    void sendOutputs(bool debug = false);
 
     // Constants
     static const int MAX_CLK_STATE = 2;
     static const size_t CHANNEL_CAPACITY = 128;
     static const size_t CHANNEL_CAPACITY_INPUT = 10;
-
-private:
-    // Member variables in the order they are initialized
-    int rowID;
-    int colID;
-    T accumulator;
-    T a;
-    T b;
-    T w;
-    int clk;
-
-public:
-    // Channels are public to allow access from Systolic_Array
-    channelM<T> rightOut;
-    channelM<T> downOut;
-    channelM<T> inputA; // Only used for the first row
-
-private:
-    // Helper functions
-    bool fetchInputs(Systolic_Array<T>& systolic_array);
-    void computeMAC();
-    void sendOutputs();
 };
 
 #include "mac_unit.tpp"
