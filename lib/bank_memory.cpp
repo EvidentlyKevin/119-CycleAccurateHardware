@@ -1,4 +1,5 @@
-// lib/bank_memory.cpp
+// File: lib/bank_memory.cpp
+
 #include "../include/memory.h"
 #include <random>
 

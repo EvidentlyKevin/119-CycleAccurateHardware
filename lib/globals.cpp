@@ -1,3 +1,5 @@
+// File: lib/globals.cpp
+
 #include "../include/globals.h"
 
 // Initialize channels without verbosity
