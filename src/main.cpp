@@ -105,7 +105,7 @@ void systolicArrayFunctionWithMemory() {
         // Memory pushes data into channels
         mem.pushData(memoryToSystolicChannels, cycle, true);
 
-        // Systolic array reads activations from channels
+        // Set input activations from memory channels
         systolicArray.setInputActivationsFromChannels(memoryToSystolicChannels, true);
 
         // Run one cycle of the systolic array
