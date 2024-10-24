@@ -14,6 +14,14 @@ public:
     // Constructor
     MACUnit(int row, int col);
 
+    void setUpIn(channelM<T>* upChannel);
+
+    void setLeftIn(channelM<T>* leftChannel);
+
+    channelM<T>& getRightOut();
+
+    channelM<T>& getDownOut();
+
     // Set the weight for the MAC unit
     void setWeight(T weight);
 
@@ -21,20 +29,14 @@ public:
     void setInputActivation(T activation);
 
     // Perform one cycle of computation
-    void cycle(Systolic_Array<T>& systolic_array);
+    //void cycle(Systolic_Array<T>& systolic_array);
+    void cycle();
 
     // Read the accumulator value
     T readAccumulator() const;
 
     // Debugging method to get the last activation
     T getLastActivation() const;
-
-    /*
-    // Channels for data movement
-    channelM<T> rightOut;
-    channelM<T> downOut;
-    channelM<T> inputA;
-    */
 
 private:
     // DO NOT MOVE INITIALIZATIONS PLEASE
@@ -50,9 +52,13 @@ private:
     channelM<T> rightOut;
     channelM<T> downOut;
     channelM<T> inputA;
+    // Input channels from neighboring MAC units
+    channelM<T>* leftIn = nullptr; // Left input channel
+    channelM<T>* upIn = nullptr;   // Up input channel
 
     // Helper functions
-    bool fetchInputs(Systolic_Array<T>& systolic_array, bool debug = false);
+    // bool fetchInputs(Systolic_Array<T>& systolic_array, bool debug = false);
+    bool fetchInputs(bool debug = false);
     void computeMAC(bool debug = false);
     void sendOutputs(bool debug = false);
 
