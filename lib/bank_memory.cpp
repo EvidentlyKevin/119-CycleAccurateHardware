@@ -22,9 +22,9 @@ void Memory::pushData(std::vector<channelM<int>>& channels, int cycle, bool debu
 
     for (int i = 0; i < numChannels; ++i) {
         // Determine the bank and column index for this channel
-        int bankIndex = i % numBanks; // Channel i maps to bank (i % numBanks)
-        int colIndex = i / numBanks;  // Channel i maps to column (i / numBanks)
-        int rowIndex = cycle % BANK_ROWS; // Cycle through rows
+        int bankIndex = i / numBanks;       // Channel i maps to bank (i % numBanks)
+        int colIndex = i % numBanks;        // Channel i maps to column (i / numBanks)
+        int rowIndex = cycle % BANK_ROWS;   // Cycle through rows
 
         // Ensure indices are within bounds
         if (colIndex < BANK_COLS && rowIndex < BANK_ROWS && bankIndex < MemBanks) {
