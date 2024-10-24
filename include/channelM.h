@@ -1,3 +1,5 @@
+// File: include/channelM.h
+
 #ifndef CHANNELM_H
 #define CHANNELM_H
 

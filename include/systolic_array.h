@@ -1,3 +1,5 @@
+// File: include/systolic_array.h
+
 #ifndef SYSTOLIC_ARRAY_H
 #define SYSTOLIC_ARRAY_H
 
@@ -17,6 +19,21 @@ public:
             array[i].reserve(SIZE); // Reserve space to avoid reallocations
             for (int j = 0; j < SIZE; ++j) {
                 array[i].push_back(std::make_unique<MACUnit<T>>(i, j));
+            }
+
+            // Connect the MAC units to their neighbors
+            for (int i = 0; i < SIZE; ++i) {
+                for (int j = 0; j < SIZE; ++j) {
+                    // Connect leftIn to the rightOut of the left neighbor
+                    if (j > 0) {
+                        array[i][j]->setLeftIn(&(array[i][j - 1]->getRightOut()));
+                    }
+
+                    // Connect upIn to the downOut of the upper neighbor
+                    if (i > 0) {
+                        array[i][j]->setUpIn(&(array[i - 1][j]->getDownOut()));
+                    }
+                }
             }
         }
     }
@@ -65,7 +82,7 @@ public:
         // All MAC units perform cycle simultaneously
         for (int i = SIZE - 1; i >= 0; --i) {
             for (int j = SIZE - 1; j >= 0; --j) {
-                array[i][j]->cycle(*this);
+                array[i][j]->cycle();
             }
         }
     }

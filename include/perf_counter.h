@@ -1,3 +1,5 @@
+// File: include/globals.h
+
 #ifndef PERF_COUNTER_H
 #define PERF_COUNTER_H
 

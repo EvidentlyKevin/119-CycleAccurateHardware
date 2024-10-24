@@ -5,6 +5,26 @@ MACUnit<T>::MACUnit(int row, int col)
     : rowID(row), colID(col), accumulator(0), a(0), b(0), w(0), clk(0),
       rightOut(CHANNEL_CAPACITY), downOut(CHANNEL_CAPACITY), inputA(CHANNEL_CAPACITY) {}
 
+
+// Set input channels
+template<typename T>
+void MACUnit<T>::setUpIn(channelM<T>* upChannel) {
+    upIn = upChannel;
+}
+template<typename T>
+void MACUnit<T>::setLeftIn(channelM<T>* leftChannel) {
+    leftIn = leftChannel;
+}
+// Get output channels
+template<typename T>
+channelM<T>& MACUnit<T>::getRightOut() {
+    return rightOut;
+}
+template<typename T>
+channelM<T>& MACUnit<T>::getDownOut() {
+    return downOut;
+}
+
 template<typename T>
 void MACUnit<T>::setWeight(T weight) {
     w = weight;
@@ -18,7 +38,7 @@ void MACUnit<T>::setInputActivation(T activation) {
 }
 
 template<typename T>
-void MACUnit<T>::cycle(Systolic_Array<T>& systolic_array) {
+void MACUnit<T>::cycle() {
     // Reset clk if it exceeds the max state
     if (clk > MAX_CLK_STATE) {
         clk = 0;
@@ -26,7 +46,7 @@ void MACUnit<T>::cycle(Systolic_Array<T>& systolic_array) {
 
     switch (clk) {
         case 0:
-            if (!fetchInputs(systolic_array, true)) {
+            if (!fetchInputs(true)) {
                 // Inputs not ready, wait
                 return;
             }
@@ -46,26 +66,25 @@ void MACUnit<T>::cycle(Systolic_Array<T>& systolic_array) {
     }
 }
 
+// Modify the fetchInputs method to use the input channels
 template<typename T>
-bool MACUnit<T>::fetchInputs(Systolic_Array<T>& systolic_array, bool debug) {
+bool MACUnit<T>::fetchInputs(bool debug) {
     // Fetch activation 'a'
     if (rowID == 0) {
         if (!inputA.pop(a)) {
             return false; // Activation not ready
         }
     } else {
-        auto& upperMAC = systolic_array.getMACUnit(rowID - 1, colID);
-        if (!upperMAC->downOut.pop(a)) {
+        if (!upIn || !upIn->pop(a)) {
             return false; // Activation not ready
         }
     }
 
     // Fetch partial sum 'b'
     if (colID == 0) {
-        b = 0; // First column has no incoming partial sum
+        b = 0; // No incoming partial sum
     } else {
-        auto& leftMAC = systolic_array.getMACUnit(rowID, colID - 1);
-        if (!leftMAC->rightOut.pop(b)) {
+        if (!leftIn || !leftIn->pop(b)) {
             return false; // Partial sum not ready
         }
     }
