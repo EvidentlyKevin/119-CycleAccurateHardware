@@ -6,7 +6,9 @@
 #include <vector>
 #include <memory>
 #include <stdexcept>
+#include <iostream> // Only include if needed for debug output
 #include "mac_unit.h"
+#include "channelM.h" // Assuming this is where channelM is defined
 
 template<typename T>
 class Systolic_Array {
@@ -21,7 +23,7 @@ public:
                 array[i].push_back(std::make_unique<MACUnit<T>>(i, j));
             }
 
-            /*// Connect the MAC units to their neighbors
+            // Connect the MAC units to their neighbors
             for (int i = 0; i < SIZE; ++i) {
                 for (int j = 0; j < SIZE; ++j) {
                     // Connect leftIn to the rightOut of the left neighbor
@@ -35,71 +37,30 @@ public:
                     }
                 }
             }
-        }*/
-       }
+        }
     }
+
 
     // Set weights from a 2D vector
-    void setWeights(const std::vector<std::vector<T>>& weights) {
-        for (int i = 0; i < SIZE; ++i) {
-            for (int j = 0; j < SIZE; ++j) {
-                array[i][j]->setWeight(weights[i][j]);
-            }
-        }
-    }
+    void setWeights(const std::vector<std::vector<T>>& weights);
 
     // Set input activations from a vector
-    void setInputActivations(const std::vector<T>& activations) {
-        for (int j = 0; j < SIZE; ++j) {
-            array[0][j]->setInputActivation(activations[j]);
-        }
-    }
+    void setInputActivations(const std::vector<T>& activations);
 
-    void setInputActivationsFromChannels(std::vector<channelM<T>>& channels,  int current_cycle = 0, bool debug = false) {
-        for (int j = 0; j < SIZE; ++j) {
-            T activation;
-            if (channels[j].pop(activation)) {
-                array[0][j]->setInputActivation(activation);
+    // Set input activations from channels
+    void setInputActivationsFromChannels(std::vector<channelM<T>>& channels, int current_cycle = 0, bool debug = false);
 
-                // Debugging: Print the activation read
-                if (debug) {
-                    std::cout << "Cycle " << current_cycle << ": MAC[0][" << j 
-                              << "] received activation " << activation << "\n";
-                }
-            }
-        }
-    }
-
-    std::unique_ptr<MACUnit<T>>& getMACUnit(int row, int col) {
-        if (row < 0 || row >= SIZE || col < 0 || col >= SIZE) {
-            throw std::out_of_range("Invalid MAC unit coordinates");
-        }
-        return array[row][col];
-    }
+    // Access a specific MAC unit
+    std::unique_ptr<MACUnit<T>>& getMACUnit(int row, int col);
 
     // Run one cycle
-    void cycle() {
-        // All MAC units perform cycle simultaneously
-        for (int i = SIZE - 1; i >= 0; --i) {
-            for (int j = SIZE - 1; j >= 0; --j) {
-                array[i][j]->cycle();
-            }
-        }
-    }
+    void cycle();
 
     // Get the outputs from the last column of MAC units
-    std::vector<T> getOutputs() const {
-        std::vector<T> outputs(SIZE);
-        for (int i = 0; i < SIZE; ++i) {
-            outputs[i] = array[i][SIZE - 1]->readAccumulator();
-        }
-        return outputs;
-    }
+    std::vector<T> getOutputs() const;
 
-    // Access operator to allow MAC units to access their neighbors
-    std::unique_ptr<MACUnit<T>>& operator()(int row, int col) {
-        return array[row][col];
-    }
+    // Access operator for MAC units
+    std::unique_ptr<MACUnit<T>>& operator()(int row, int col);
 
     // Constants
     static const int DEFAULT_SIZE = 8;
@@ -108,5 +69,7 @@ private:
     int SIZE;
     std::vector<std::vector<std::unique_ptr<MACUnit<T>>>> array;
 };
+
+#include "systolic_array.tpp" // Include implementation
 
 #endif // SYSTOLIC_ARRAY_H
