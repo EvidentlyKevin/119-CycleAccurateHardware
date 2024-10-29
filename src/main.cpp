@@ -97,7 +97,7 @@ void systolicArrayFunctionWithMemory() {
     }
 
     // NUMBER OF CYCLES FOR SIMULATION, REVIEW THIS
-    int num_cycles = 2 * SIZE; // Must be sufficient cycles for data to propagate
+    int num_cycles = 1000; // Must be sufficient cycles for data to propagate
 
     // Simulation loop
     // Make this a function in a utility file?
@@ -146,7 +146,7 @@ int main() {
             memoryFunction();
             break;
         case 2:
-            systolicArrayFunction();
+            systolicArrayFunctionWithMemory();
             break;
         default:
             std::cout << "Invalid option selected!" << std::endl;

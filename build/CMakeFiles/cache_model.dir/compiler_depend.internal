@@ -1668,4 +1668,6 @@ CMakeFiles/cache_model.dir/src/main.cpp.o
  /usr/include/c++/11/pstl/execution_defs.h
  /home/kevin/git/119-CycleAccurateHardware/include/mac_unit.h
  /home/kevin/git/119-CycleAccurateHardware/include/mac_unit.tpp
+ /home/kevin/git/119-CycleAccurateHardware/include/systolic_array.tpp
+ /home/kevin/git/119-CycleAccurateHardware/include/systolic_array.h
 

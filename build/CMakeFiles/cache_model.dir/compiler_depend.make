@@ -1659,7 +1659,9 @@ CMakeFiles/cache_model.dir/src/main.cpp.o: ../src/main.cpp \
   /usr/include/c++/11/pstl/glue_memory_defs.h \
   /usr/include/c++/11/pstl/execution_defs.h \
   ../include/mac_unit.h \
-  ../include/mac_unit.tpp
+  ../include/mac_unit.tpp \
+  ../include/systolic_array.tpp \
+  ../include/systolic_array.h
 
 
 ../include/mac_unit.tpp:
@@ -2127,6 +2129,8 @@ CMakeFiles/cache_model.dir/src/main.cpp.o: ../src/main.cpp \
 /usr/include/x86_64-linux-gnu/c++/11/bits/ctype_inline.h:
 
 /usr/include/c++/11/random:
+
+../include/systolic_array.tpp:
 
 /usr/include/x86_64-linux-gnu/bits/types/struct_tm.h:
 
