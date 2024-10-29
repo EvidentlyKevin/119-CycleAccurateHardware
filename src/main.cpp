@@ -111,6 +111,7 @@ void systolicArrayFunctionWithMemory() {
         // Run one cycle of the systolic array
         systolicArray.cycle();
 
+
         // Debugging: Print activations read by the systolic array
         std::cout << "Cycle " << cycle << " - Activations read by the systolic array:\n";
         for (int j = 0; j < SIZE; ++j) {
@@ -146,7 +147,7 @@ int main() {
             memoryFunction();
             break;
         case 2:
-            systolicArrayFunction();
+            systolicArrayFunctionWithMemory();
             break;
         default:
             std::cout << "Invalid option selected!" << std::endl;

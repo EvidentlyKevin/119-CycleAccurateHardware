@@ -21,7 +21,7 @@ public:
                 array[i].push_back(std::make_unique<MACUnit<T>>(i, j));
             }
 
-            // Connect the MAC units to their neighbors
+            /*// Connect the MAC units to their neighbors
             for (int i = 0; i < SIZE; ++i) {
                 for (int j = 0; j < SIZE; ++j) {
                     // Connect leftIn to the rightOut of the left neighbor
@@ -35,9 +35,9 @@ public:
                     }
                 }
             }
-        }
+        }*/
+       }
     }
-
 
     // Set weights from a 2D vector
     void setWeights(const std::vector<std::vector<T>>& weights) {
