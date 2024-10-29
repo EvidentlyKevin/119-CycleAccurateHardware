@@ -14,32 +14,7 @@ template<typename T>
 class Systolic_Array {
 public:
     // Constructor
-    Systolic_Array(int size = DEFAULT_SIZE) : SIZE(size) {
-        // Initialize the array of MACUnits using smart pointers
-        array.resize(SIZE);
-        for (int i = 0; i < SIZE; ++i) {
-            array[i].reserve(SIZE); // Reserve space to avoid reallocations
-            for (int j = 0; j < SIZE; ++j) {
-                array[i].push_back(std::make_unique<MACUnit<T>>(i, j));
-            }
-
-            // Connect the MAC units to their neighbors
-            for (int i = 0; i < SIZE; ++i) {
-                for (int j = 0; j < SIZE; ++j) {
-                    // Connect leftIn to the rightOut of the left neighbor
-                    if (j > 0) {
-                        array[i][j]->setLeftIn(&(array[i][j - 1]->getRightOut()));
-                    }
-
-                    // Connect upIn to the downOut of the upper neighbor
-                    if (i > 0) {
-                        array[i][j]->setUpIn(&(array[i - 1][j]->getDownOut()));
-                    }
-                }
-            }
-        }
-    }
-
+    Systolic_Array(int size = DEFAULT_SIZE);
 
     // Set weights from a 2D vector
     void setWeights(const std::vector<std::vector<T>>& weights);

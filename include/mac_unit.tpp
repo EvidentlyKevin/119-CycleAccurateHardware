@@ -1,4 +1,4 @@
-#include "mac_unit.h"
+// File include/mac_unit.tpp
 
 template<typename T>
 MACUnit<T>::MACUnit(int row, int col)

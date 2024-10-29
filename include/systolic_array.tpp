@@ -1,8 +1,29 @@
+
 // File: include/systolic_array.tpp
 
 #include "systolic_array.h"
 
-// Constructor definition removed to avoid redefinition error
+template<typename T>
+Systolic_Array<T>::Systolic_Array(int size) : SIZE(size) {
+    array.resize(SIZE);
+    for (int i = 0; i < SIZE; ++i) {
+        array[i].reserve(SIZE);
+        for (int j = 0; j < SIZE; ++j) {
+            array[i].push_back(std::make_unique<MACUnit<T>>(i, j));
+        }
+    }
+
+    for (int i = 0; i < SIZE; ++i) {
+        for (int j = 0; j < SIZE; ++j) {
+            if (j > 0) {
+                array[i][j]->setLeftIn(&(array[i][j - 1]->getRightOut()));
+            }
+            if (i > 0) {
+                array[i][j]->setUpIn(&(array[i - 1][j]->getDownOut()));
+            }
+        }
+    }
+}
 
 template<typename T>
 void Systolic_Array<T>::setWeights(const std::vector<std::vector<T>>& weights) {

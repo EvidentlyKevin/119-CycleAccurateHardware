@@ -1,3 +1,4 @@
+
 #include <iostream>
 #include <vector>
 #include "../include/memory.h"
@@ -97,7 +98,7 @@ void systolicArrayFunctionWithMemory() {
     }
 
     // NUMBER OF CYCLES FOR SIMULATION, REVIEW THIS
-    int num_cycles = 1000; // Must be sufficient cycles for data to propagate
+    int num_cycles = 44; // Must be sufficient cycles for data to propagate
 
     // Simulation loop
     // Make this a function in a utility file?
@@ -110,7 +111,6 @@ void systolicArrayFunctionWithMemory() {
 
         // Run one cycle of the systolic array
         systolicArray.cycle();
-
 
         // Debugging: Print activations read by the systolic array
         std::cout << "Cycle " << cycle << " - Activations read by the systolic array:\n";
