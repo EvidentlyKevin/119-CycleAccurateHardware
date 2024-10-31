@@ -36,6 +36,7 @@ void systolicArrayFunction() {
         activations[i] = i + 1; // Activations: 1, 2, 3, ..., SIZE
         for (int j = 0; j < SIZE; ++j) {
             weights[i][j] = (i + 1) * (j + 1); // Weights: multiplication table
+            weights[i][j] = 1; // Simple weights
         }
     }
 
@@ -97,7 +98,9 @@ void systolicArrayFunctionWithMemory() {
     }
 
     // NUMBER OF CYCLES FOR SIMULATION, REVIEW THIS
-    int num_cycles = 1000; // Must be sufficient cycles for data to propagate
+    // Must be sufficient cycles for data to propagate
+    // int num_cycles = 2 * SIZE + 1;
+    int num_cycles = SIZE * SIZE; // Adjust as needed
 
     // Simulation loop
     // Make this a function in a utility file?
