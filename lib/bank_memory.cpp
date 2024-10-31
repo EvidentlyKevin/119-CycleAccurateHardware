@@ -8,9 +8,8 @@ void Memory::initBanks() {
     std::mt19937 gen(rd());
     std::uniform_int_distribution<> dis(0, 255);
 
-    int foo = 0;
     for (int i = 0; i < MemBanks; i++) {
-        foo = 0;
+        int foo = 0;
         for (int j = 0; j < BANK_ROWS; j++) {
             ++foo;
             for (int k = 0; k < BANK_COLS; k++) {
@@ -27,25 +26,29 @@ void Memory::pushData(std::vector<channelM<int>>& channels, int cycle, bool debu
     int numChannels = channels.size();
 
     for (int i = 0; i < numChannels; ++i) {
-        // Determine the bank and column index for this channel
-        int bankIndex = i / numBanks;       // Channel i maps to bank (i % numBanks)
-        int colIndex = i % numBanks;        // Channel i maps to column (i / numBanks)
-        int rowIndex = cycle % BANK_ROWS;   // Cycle through rows
+        int bankIndex = i % BANK_COLS;       // Channel i maps to bank (i % numBanks)
+        for(int j = 0; j < numChannels; ++j) {
+            // Determine the bank and column index for this channel
 
-        // Ensure indices are within bounds
-        if (colIndex < BANK_COLS && rowIndex < BANK_ROWS && bankIndex < MemBanks) {
-            // Get the data from the memory bank
-            int data = MemoryBanks[bankIndex].Data[rowIndex][colIndex];
+            
+            int colIndex = j % numBanks;        // Channel i maps to column (i / numBanks)
+            int rowIndex = cycle / (numBanks*BANK_ROWS);   // Cycle through rows
 
-            // Push data into the channel if it's not full
-            if (!channels[i].is_full()) {
-                channels[i].push(data);
+            // Ensure indices are within bounds
+            if (colIndex < BANK_COLS && rowIndex < BANK_ROWS) {
+                // Get the data from the memory bank
+                int data = MemoryBanks[bankIndex].Data[rowIndex][colIndex];
 
-                // Debugging to ensure data is pushed
-                if (debug) {
-                    std::cout << "Cycle " << cycle << ": Pushed data " << data
-                              << " from Bank " << bankIndex << ", Row " << rowIndex
-                              << ", Column " << colIndex << " into Channel " << i << "\n";
+                // Push data into the channel if it's not full
+                if (!channels[i].is_full()) {
+                    channels[i].push(data);
+
+                    // Debugging to ensure data is pushed
+                    if (debug) {
+                        std::cout << "Cycle " << cycle << ": Pushed data " << data
+                                << " from Bank " << bankIndex << ", Row " << rowIndex
+                                << ", Column " << colIndex << " into Channel " << i << "\n";
+                    }
                 }
             }
         }

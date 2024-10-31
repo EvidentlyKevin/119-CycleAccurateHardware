@@ -68,7 +68,7 @@ void systolicArrayFunctionWithMemory() {
     const int SIZE = 8;
 
     // Define CHANNEL_CAPACITY
-    const size_t CHANNEL_CAPACITY = 10;
+    const size_t CHANNEL_CAPACITY = 4;
 
     // Create an instance of the memory
     Memory mem;
@@ -100,7 +100,7 @@ void systolicArrayFunctionWithMemory() {
     // NUMBER OF CYCLES FOR SIMULATION, REVIEW THIS
     // Must be sufficient cycles for data to propagate
     // int num_cycles = 2 * SIZE + 1;
-    int num_cycles = SIZE * SIZE; // Adjust as needed
+    int num_cycles = 44; // Adjust as needed
 
     // Simulation loop
     // Make this a function in a utility file?
