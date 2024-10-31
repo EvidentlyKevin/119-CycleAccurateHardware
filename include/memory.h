@@ -1,3 +1,4 @@
+/*
 #ifndef MEMORY_H
 #define MEMORY_H
 #include "globals.h"
@@ -21,3 +22,5 @@ class Memory {
 };
 
 #endif // MEMORY_H
+
+*/

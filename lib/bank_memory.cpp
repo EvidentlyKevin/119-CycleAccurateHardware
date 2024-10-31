@@ -1,3 +1,4 @@
+/*
 #include "globals.h"
 #include "memory.h"
 #include <iostream>
@@ -9,7 +10,7 @@ using namespace std;
 class MemoryModule {
 public:
     
-    int initBanks(numBanks, BANK_ROWS, BANK_COLS){
+    int initBanks(){
 // call random num gen and use output to initialize banks 
 
         for(int i = 0; i < BANK_ROWS; i++){
@@ -32,3 +33,5 @@ public:
         }
     }
 }
+
+*/

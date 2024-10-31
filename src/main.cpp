@@ -1,3 +1,4 @@
+/*
 // File: src/main.cpp
 
 #include "cache_lru.h"
@@ -9,9 +10,9 @@
 #include <fstream>
 #include <string>
 #include <cstdlib>
-#include <filesystem>
+//#include <filesystem>
 
-int main(int argc, char* argv[]) {
+int Maine(int argc, char* argv[]) { //CHANGE BACK TO MAIN 
     // Check for correct number of arguments
     if (argc != 6 && argc != 7) { // Allow 5 or 6 arguments + program name
         std::cerr << "Usage: " << argv[0] << " <cache_policy> <storage_file> <requests_file> <num_cycles> <verbose> [<output_file>]\n";
@@ -115,3 +116,6 @@ int main(int argc, char* argv[]) {
 
     return 0;
 }
+
+
+*/
