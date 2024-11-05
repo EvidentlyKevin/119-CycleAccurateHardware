@@ -97,10 +97,10 @@ void systolicArrayFunctionWithMemory() {
         memoryToSystolicChannels.emplace_back(CHANNEL_CAPACITY);
     }
 
-    // NUMBER OF CYCLES FOR SIMULATION, REVIEW THIS
+    // NUMBER OF CYCLES FOR SIMULATION
     // Must be sufficient cycles for data to propagate
-    // int num_cycles = 2 * SIZE + 1;
-    int num_cycles = 44; // Adjust as needed
+    // 8 x 8 -> 44 cycles for 1st row, 149 cycles for 2nd row, 245 cycles for 3rd row
+    int num_cycles = 245;
 
     // Simulation loop
     // Make this a function in a utility file?
