@@ -16,7 +16,7 @@ extern Channel<read_ack> read_ack_channel;
 
 // Declare global memory banks size
 
-static const int BANK_ROWS = 20;
-static const int BANK_COLS = 20;
+static const int BANK_ROWS = 8;
+static const int BANK_COLS = 8;
 
 #endif // GLOBALS_H

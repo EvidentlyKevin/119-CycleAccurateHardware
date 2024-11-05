@@ -36,6 +36,7 @@ void systolicArrayFunction() {
         activations[i] = i + 1; // Activations: 1, 2, 3, ..., SIZE
         for (int j = 0; j < SIZE; ++j) {
             weights[i][j] = (i + 1) * (j + 1); // Weights: multiplication table
+            weights[i][j] = 1; // Simple weights
         }
     }
 
@@ -99,7 +100,7 @@ void systolicArrayFunctionWithMemory() {
     // NUMBER OF CYCLES FOR SIMULATION
     // Must be sufficient cycles for data to propagate
     // 8 x 8 -> 44 cycles for 1st row, 149 cycles for 2nd row, 245 cycles for 3rd row
-    int num_cycles = 149;
+    int num_cycles = 245;
 
     // Simulation loop
     // Make this a function in a utility file?
@@ -148,7 +149,7 @@ int main() {
             memoryFunction();
             break;
         case 2:
-           systolicArrayFunctionWithMemory();
+            systolicArrayFunctionWithMemory();
             break;
         default:
             std::cout << "Invalid option selected!" << std::endl;
