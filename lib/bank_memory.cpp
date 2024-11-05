@@ -28,7 +28,7 @@ void Memory::pushData(std::vector<channelM<int>>& channels, int cycle, bool debu
 
     for (int i = 0; i < numChannels; ++i) {
         int bankIndex = i % BANK_COLS;       // Channel i maps to bank (i % numBanks)
-        for(int j = 0; j < numChannels; ++j) {
+        for(int j = 0; j < numBanks; ++j) {
             // Determine the bank and column index for this channel
 
             

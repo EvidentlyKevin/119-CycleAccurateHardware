@@ -100,7 +100,7 @@ void systolicArrayFunctionWithMemory() {
     // NUMBER OF CYCLES FOR SIMULATION
     // Must be sufficient cycles for data to propagate
     // 8 x 8 -> 44 cycles for 1st row, 149 cycles for 2nd row, 245 cycles for 3rd row
-    int num_cycles = 245;
+    int num_cycles = 24;
 
     // Simulation loop
     // Make this a function in a utility file?
