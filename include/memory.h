@@ -19,7 +19,8 @@ struct MemBank {
 
 class Memory {
 public:
-    static const int MemBanks = 15; // Number of memory banks
+    // Number of memory banks
+    static const int MemBanks = 4;
     MemBank MemoryBanks[MemBanks];
 
     void initBanks();

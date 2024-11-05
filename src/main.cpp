@@ -1,4 +1,3 @@
-
 #include <iostream>
 #include <vector>
 #include "../include/memory.h"
@@ -68,7 +67,7 @@ void systolicArrayFunctionWithMemory() {
     const int SIZE = 8;
 
     // Define CHANNEL_CAPACITY
-    const size_t CHANNEL_CAPACITY = 10;
+    const size_t CHANNEL_CAPACITY = 4;
 
     // Create an instance of the memory
     Memory mem;
@@ -97,8 +96,10 @@ void systolicArrayFunctionWithMemory() {
         memoryToSystolicChannels.emplace_back(CHANNEL_CAPACITY);
     }
 
-    // NUMBER OF CYCLES FOR SIMULATION, REVIEW THIS
-    int num_cycles = 44; // Must be sufficient cycles for data to propagate
+    // NUMBER OF CYCLES FOR SIMULATION
+    // Must be sufficient cycles for data to propagate
+    // 8 x 8 -> 44 cycles for 1st row, 149 cycles for 2nd row, 245 cycles for 3rd row
+    int num_cycles = 149;
 
     // Simulation loop
     // Make this a function in a utility file?
@@ -147,7 +148,7 @@ int main() {
             memoryFunction();
             break;
         case 2:
-            systolicArrayFunctionWithMemory();
+           systolicArrayFunctionWithMemory();
             break;
         default:
             std::cout << "Invalid option selected!" << std::endl;
