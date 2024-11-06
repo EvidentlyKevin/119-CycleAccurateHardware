@@ -43,7 +43,15 @@ void Memory::pushData(std::vector<channelM<int>>& channels, int cycle, bool debu
             // Ensure indices are within bounds
             if (colIndex < BANK_COLS && rowIndex < BANK_ROWS) {
                 // Get the data from the memory bank
-                int data = MemoryBanks[bankIndex].Data[rowIndex][colIndex];
+
+                int data;
+
+                // For accurate pipelining
+                if (i < maxAddrIndex && rowIndex < BANK_ROWS-1) {
+                    data = MemoryBanks[bankIndex].Data[rowIndex+1][colIndex];
+                } else {
+                    data = MemoryBanks[bankIndex].Data[rowIndex][colIndex];
+                }
 
                 // Push data into the channel if it's not full
                 if (!channels[i].is_full()) {
