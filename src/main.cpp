@@ -98,14 +98,14 @@ void systolicArrayFunctionWithMemory() {
     }
 
     // NUMBER OF CYCLES FOR SIMULATION
-    int num_cycles = 24;
+    int num_cycles = 25;
 
     // Simulation loop
     // Make this a function in a utility file?
     for (int cycle = 0; cycle < num_cycles; ++cycle) {
         // Memory pushes data into channels
-       
-                      mem.pushData(memoryToSystolicChannels, cycle, true);
+        mem.pushData(memoryToSystolicChannels, cycle, true);
+
 
         // Set input activations from memory channels
         systolicArray.setInputActivationsFromChannels(memoryToSystolicChannels, true);
@@ -121,8 +121,9 @@ void systolicArrayFunctionWithMemory() {
         }
         std::cout << "---------------------------------------------\n";
 
-        if(cycle % 1 == 0){
+        if(cycle % 3 == 0){
              // Get the outputs from the systolic array
+
     std::vector<int> outputs = systolicArray.getOutputs();
     // Print the outputs
     std::cout << "Systolic Array Outputs with Memory Input:\n";
