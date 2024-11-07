@@ -2,6 +2,7 @@
 #include <vector>
 #include "../include/memory.h"
 #include "../include/systolic_array.h"
+#include "../lib/ISA.cpp"
 
 void memoryFunction() {
     Memory mem;
@@ -98,7 +99,7 @@ void systolicArrayFunctionWithMemory() {
     }
 
     // NUMBER OF CYCLES FOR SIMULATION
-    int num_cycles = 25;
+    int num_cycles = 44;
 
     // Simulation loop
     // Make this a function in a utility file?
@@ -143,13 +144,39 @@ void systolicArrayFunctionWithMemory() {
    
 }
 
+void iSAtest() {
+    OpCalls opCalls;
+
+    // Create an 85-bit instruction example using bitset. Adjust bits as necessary for your desired opcode and parameters.
+    // For this example, let's set opcode = 0b010 (matrix_multiply), addrMode = 1, deviceID = 0b10101,
+    // sourceAddr = 0x00000010, destAddr = 0x00000020, and ImmSize = 0x100
+    bitset<84> exampleInstruction("010110101000000000000000000000000000000100000000000000000000000000001000000001000100");
+
+    bitset<84> exampleInstruction2("01100000000000000000000000000000000000000000000000000000000000000000000000000000000");
+
+    //opCalls.reverse(exampleInstruction);
+
+    cout << "Instruction: " << exampleInstruction << endl;
+          
+
+    // Load the instruction into the OpCalls class
+    //opCalls.loadInstruction(exampleInstruction, 0);
+    opCalls.loadInstruction(exampleInstruction, 0);
+
+    // Run the instruction pipeline (fetch, decode, execute)
+    opCalls.runPipeline();
+
+
+} 
+
 int main() {
     int testOption;
 
     // What do you want to test
-    std::cout << "Enter a test option (1-2):\n";
+    std::cout << "Enter a test option (1-3):\n";
     std::cout << "1: Test Memory Function\n";
     std::cout << "2: Test Systolic Array Function\n";
+    std::cout << "3: Test ISA Function\n";
     std::cout << "Option: ";
     std::cin >> testOption;
 
@@ -160,6 +187,9 @@ int main() {
             break;
         case 2:
             systolicArrayFunctionWithMemory();
+            break;
+        case 3:
+            iSAtest();
             break;
         default:
             std::cout << "Invalid option selected!" << std::endl;

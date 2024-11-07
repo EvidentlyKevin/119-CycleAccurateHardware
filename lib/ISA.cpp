@@ -2,159 +2,166 @@
 #include <fstream>
 #include <array>
 #include <bitset>
-#include <cstdint>
-
+#include <string>
+#include "../include/ISA.h"
+//#include "../include/systolic_array.h"
+//#include "../include/systolic_array.tpp"
 using namespace std; 
 
-struct Instruction{
-    uint8_t opcode : 3;
-    uint8_t addrMode: 1; 
-    uint8_t deviceID : 5;
-    uint32_t sourceAddr : 32;
-    uint32_t destAddr : 32;
-    uint32_t ImmSize : 12;
-};
+//7.14b neural nets/systolic array figure and explanation in textbook 
 
-
-class instrFunctions{
+class instrFunctions {
+    private:
+        Systolic_Array<int> systolicArray; // Provide appropriate template arguments
+        std::vector<int> activations; // Assuming activations is a vector of integers
     public:
-        void read_host_memory(uint32_t sourceAddr, uint32_t destAddr, uint32_t ImmSize) {
+        void read_host_memory(bitset<32> sourceAddr, bitset<32> destAddr, bitset<12> ImmSize) {
             // Implementation of reading from host memory
+            // reading memory via pushing the data?
         }
 
-        void read_weights(uint32_t sourceAddr, uint32_t destAddr, uint32_t ImmSize) {
+        void read_weights(bitset<32> sourceAddr, bitset<32> destAddr, bitset<12> ImmSize) {
             // Implementation of reading weights
+            // call set/read weights function of systolic array functions
         }
 
-        void matrix_multiply(uint32_t sourceAddr, uint32_t destAddr, uint32_t ImmSize) {
+        void matrix_multiply(bitset<32> sourceAddr, bitset<32> destAddr, bitset<12> ImmSize) {
             // Implementation of matrix multiplication
         }
-
-        void activate(uint32_t sourceAddr, uint32_t destAddr, uint32_t ImmSize) {
-            // Implementation of activation function
+        void activate(bitset<32> sourceAddr, bitset<32> destAddr, bitset<12> ImmSize) {
+                systolicArray.setInputActivations(activations);     //why? included needed systolic header and tpp file
         }
 
-        void write_host_memory(uint32_t sourceAddr, uint32_t destAddr, uint32_t ImmSize) {
+        void write_host_memory(bitset<32> sourceAddr, bitset<32> destAddr, bitset<12> ImmSize) {
             // Implementation of writing to host memory
+            // no clue tbf 
         }
 
         void nop() {
+            cout << "No Operation!" << endl;
             // No operation
         }
-};
+        };
 
 
 class OpCalls {
-std::bitset<85> exampleInstruction; // 85-bit bitset
+bitset<84> exampleInstruction; // 85-bit bitset
     private:
         int pc = 0; // program counter
         instrFunctions instrFuncs; // Create an instance of instrFunctions
+        Instruction<int> parseInstr(bitset<84> memInstrRawInstr) {
+            Instruction<int> instr;
 
-        Instruction parseInstr(bitset<85> memInstrRawInstr){
-            Instruction instr;
+            // Extract opcode (bits 84 to 81, 3 bits)
+            for (int i = 0; i < 3; i++) {
+            instr.opcode[i] = memInstrRawInstr[83 - i];
+            }
 
-        // Extract opcode (bits 84 to 82, 3 bits)
-            instr.opcode = static_cast<uint8_t>((memInstrRawInstr >> 81).to_ulong() & 0x7);
+            // Extract addrMode (bit 80, 1 bit)
+            instr.addrMode.set(0, memInstrRawInstr[80]);
 
-        // Extract addrMode (bit 81, 1 bit)
-            instr.addrMode = memInstrRawInstr[81];
+            // Extract deviceID (bits 79 to 75, 5 bits)
+            for (int i = 0; i < 5; i++) {
+            instr.deviceID[i] = memInstrRawInstr[79 - i];
+            }
 
-        // Extract deviceID (bits 80 to 76, 5 bits)
-            instr.deviceID = static_cast<uint8_t>((memInstrRawInstr >> 76).to_ulong() & 0x1F);
+            // Extract sourceAddr (bits 74 to 43, 32 bits)
+            for (int i = 0; i < 32; i++) {
+            instr.sourceAddr[i] = memInstrRawInstr[75 - i + 1];
+            }
 
-        // Extract sourceAddr (bits 75 to 44, 32 bits)
-            instr.sourceAddr = static_cast<uint32_t>((memInstrRawInstr >> 44).to_ulong() & 0xFFFFFFFF);
+            // Extract destAddr (bits 42 to 11, 32 bits)
+            for (int i = 0; i < 32; i++) {
+            instr.destAddr[i] = memInstrRawInstr[43 - i + 1];
+            }
 
-        // Extract destAddr (bits 43 to 12, 32 bits)
-            instr.destAddr = static_cast<uint32_t>((memInstrRawInstr >> 12).to_ulong() & 0xFFFFFFFF);
-
-        // Extract ImmSize (bits 11 to 0, 12 bits)
-            instr.ImmSize = static_cast<uint16_t>(memInstrRawInstr.to_ulong() & 0xFFF);
+            // Extract ImmSize (bits 10 to 0, 12 bits)
+            for (int i = 0; i < 11; i++) {
+            instr.ImmSize[i] = memInstrRawInstr[11 - i + 1];
+            }
 
             return instr;
         }
 
-        void opcodeSelect(const Instruction& instr){    
-            switch (instr.opcode) {
-                case 0b000: instrFuncs.read_host_memory(instr.sourceAddr, instr.destAddr, instr.ImmSize);   
-                break;
-                case 0b001: instrFuncs.read_weights(instr.sourceAddr, instr.destAddr, instr.ImmSize);     
-                break; 
-                case 0b010: instrFuncs.matrix_multiply(instr.sourceAddr, instr.destAddr, instr.ImmSize); //call systolic array operations with 256 x 256 instead //need buffer address and destination in accumulator?
-                break;
-                case 0b011: instrFuncs.activate(instr.sourceAddr, instr.destAddr, instr.ImmSize );   
-                break; 
-                case 0b100: instrFuncs.write_host_memory(instr.sourceAddr, instr.destAddr, instr.ImmSize ); 
-                break;
-                default: instrFuncs.nop(); 
-                break;
+        void opcodeSelect(const Instruction<int>& instr){    
+            bitset<3> opcode = instr.opcode;
+            bitset<32> sourceAddr = instr.sourceAddr;
+            bitset<32> destAddr = instr.destAddr;
+            bitset<12> ImmSize = instr.ImmSize;
+
+            if (opcode == bitset<3>("000")) {
+                instrFuncs.read_host_memory(sourceAddr, destAddr, ImmSize);
+            } else if (opcode == bitset<3>("001")) {
+                instrFuncs.read_weights(sourceAddr, destAddr, ImmSize);
+            } else if (opcode == bitset<3>("010")) {
+                instrFuncs.matrix_multiply(sourceAddr, destAddr, ImmSize);
+            } else if (opcode == bitset<3>("011")) {
+                instrFuncs.activate(sourceAddr, destAddr, ImmSize);
+            } else if (opcode == bitset<3>("100")) {
+                instrFuncs.write_host_memory(sourceAddr, destAddr, ImmSize);
+            } else {
+                instrFuncs.nop();
             }
+            
         }
 
 
 
     public:
-        int currInstr[1024];
+        bitset<84> currInstr[1024];
 
-        bitset<85> fetch() {
+        bitset<84> fetch() {
             // Fetch instruction from instruction memory
-            bitset<85> raw_instruction(currInstr[pc]);
+            bitset<84> raw_instruction(currInstr[pc]);
             pc++;
             return raw_instruction;
         }
 
-        Instruction decode(bitset<85>& raw_instruction) {
+        Instruction<int> decode(bitset<84>& raw_instruction) {
             // Decode the raw instruction into structured format
             return parseInstr(raw_instruction);
         }
 
-        void execute(const Instruction& instr) {
+        void execute(const Instruction<int>& instr) {
             // Execute the decoded instruction
             if (instr.addrMode == 0) {
                 cout << "Host to Device transfer" << endl;
             } else {
                 cout << "Device to Host transfer" << endl;
             }
-            cout << "Device ID: " << instr.deviceID << endl;
+            cout << "Device ID: " << bitset<5>(instr.deviceID) << endl;
+
             opcodeSelect(instr);
-            cout << "Operation: " << instr.opcode << endl;
+
+            cout << "Operation: " << bitset<3>(instr.opcode) << endl;
         }
 
         // Method to load an instruction into memory
-        void loadInstruction(bitset<85> instruction, int address) {
+        void loadInstruction(bitset<84> instruction, int address) {
             for (address=0; address < 1024; address++) {
-                currInstr[address] = instruction.to_ulong();
+                 currInstr[address] = instruction;
             }
         }
 
-        void setMemInstrRawInstr(bitset<85> instruction) {
+        void setMemInstrRawInstr(bitset<84> instruction) {
             for(int i = 0; i< 1024; i++){
-            bitset<85> memInstrRawInstr = currInstr[i];
+            bitset<84> memInstrRawInstr = currInstr[i];
             }
         }
 
         // Method to run the instruction pipeline
         void runPipeline() {
-            bitset<85> raw_inst = fetch();
-            Instruction decoded_inst = decode(raw_inst);
+            bitset<84> raw_inst = fetch();
+            Instruction<int> decoded_inst = decode(raw_inst);
             execute(decoded_inst);
         }
+
+       /* template<std::size_t N>
+        void reverse(std::bitset<N> &b) {
+            for(std::size_t i = 0; i < N/2; ++i) {
+                bool t = b[i];
+                b[i] = b[N-i-1];
+                b[N-i-1] = t;
+            }
+        } */
 };
-
-
-int maine() {
-    OpCalls opCalls;
-
-    // Create an 85-bit instruction example using bitset. Adjust bits as necessary for your desired opcode and parameters.
-    // For this example, let's set opcode = 0b010 (matrix_multiply), addrMode = 1, deviceID = 0b10101,
-    // sourceAddr = 0x00000010, destAddr = 0x00000020, and ImmSize = 0x100
-    bitset<85> exampleInstruction("01010100000000000000000000000000000000010000000000000000000000000000100000000100");
-
-    // Load the instruction into the OpCalls class
-    opCalls.loadInstruction(exampleInstruction, 0);
-
-    // Run the instruction pipeline (fetch, decode, execute)
-    opCalls.runPipeline();
-
-    return 0;
-} 

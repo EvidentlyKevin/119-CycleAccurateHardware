@@ -31,9 +31,8 @@ void Memory::pushData(std::vector<channelM<int>>& channels, int cycle, bool debu
         for(int j = 0; j < numBanks; ++j) {
             // Determine the bank and column index for this channel
 
-            
             int colIndex = j % numBanks;
-            int rowIndex = cycle / 3;
+            int rowIndex = cycle / (numBanks*BANK_ROWS);
 
             // KEVIN WORK
             // Max row and col index that do not need to be pushed to the channel
@@ -47,12 +46,15 @@ void Memory::pushData(std::vector<channelM<int>>& channels, int cycle, bool debu
 
                 int data;
 
+
+                 data = MemoryBanks[bankIndex].Data[rowIndex][colIndex];
+
                 // For accurate pipelining
-                //if (i < maxAddrIndex && rowIndex < BANK_ROWS-1) {
-                   // data = MemoryBanks[bankIndex].Data[rowIndex+1][colIndex];
-                //} else {
+                if (i < maxAddrIndex && rowIndex < BANK_ROWS-1) {
+                    data = MemoryBanks[bankIndex].Data[rowIndex+1][colIndex];
+                } else {
                     data = MemoryBanks[bankIndex].Data[rowIndex][colIndex];
-               // }
+                }
 
                 // Push data into the channel if it's not full
                 if (!channels[i].is_full()) {
