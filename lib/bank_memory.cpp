@@ -25,72 +25,62 @@ void Memory::pushData(std::vector<channelM<int>>& channels, int cycle, bool debu
     int numBanks = MemBanks;
     int numChannels = channels.size();
 
-    // vector for what data to push to each channel
+    // Vector for what data to push to each channel
     std::vector<int> data(numChannels);
-
 
     for (int i = 0; i < numChannels; ++i) {
         int bankIndex = i % numBanks;
-        for(int j = 0; j < numBanks; ++j) {
-            // Determine the bank and column index for this channel
 
-            
-            int colIndex = j % BANK_COLS;
-            int rowIndex = cycle / (numBanks*BANK_ROWS);
+        // for (int j = 0; j < numBanks; ++j) {
+            int colIndex = i % BANK_COLS;
+            int rowIndex = cycle / (numBanks * BANK_ROWS);
 
-            // KEVIN WORK
-            // Max row and col index that do not need to be pushed to the channel
+            // Max address index for pipelining logic
             int maxAddrIndex = (cycle / 3) % (BANK_COLS * numBanks);
-            // KEVIN WORK
-            
+
+            int rowOffset = 0;
+            int delta = 0;
+
+            // Adjust rowIndex to pipeline data efficiently
+            if (i < maxAddrIndex) {
+                delta = maxAddrIndex - i;
+
+                // Compute rowOffset based on delta and numBanks
+                // This allows rowIndex to be incremented by 1 or 2
+                rowOffset = ((delta) / numBanks) + 1;
+
+                // Ensure we don't exceed the maximum number of rows
+                if (rowIndex + rowOffset >= BANK_ROWS) {
+                    rowOffset = BANK_ROWS - 1 - rowIndex;
+                }
+            }
+
+            int actualRowIndex = rowIndex + rowOffset;
 
             // Ensure indices are within bounds
-            if (colIndex < BANK_COLS && rowIndex < BANK_ROWS) {
+            if (colIndex < BANK_COLS && actualRowIndex < BANK_ROWS) {
                 // Get the data from the memory bank
-
-                // For accurate pipelining
-                if (i < maxAddrIndex && rowIndex < BANK_ROWS-1) {
-                    // data = MemoryBanks[bankIndex].Data[rowIndex+1][colIndex];
-                    switch (maxAddrIndex) {
-                        case 3:
-                            data[0] = MemoryBanks[bankIndex].Data[rowIndex+1][colIndex];
-                            break;
-                        case 4:
-                            data[1] = MemoryBanks[bankIndex].Data[rowIndex+1][colIndex];
-                            break;
-                        case 5:
-                            data[2] = MemoryBanks[bankIndex].Data[rowIndex+1][colIndex];
-                            break;
-                        case 6:
-                            data[3] = MemoryBanks[bankIndex].Data[rowIndex+1][colIndex];
-                            // Need to check bounds for rowIndex+2
-                            data[0] = MemoryBanks[bankIndex].Data[rowIndex+2][colIndex];
-                            break;
-                        case 7:
-                            data[4] = MemoryBanks[bankIndex].Data[rowIndex+1][colIndex];
-                            // Need to check bounds for rowIndex+2
-                            data[1] = MemoryBanks[bankIndex].Data[rowIndex+2][colIndex];
-                            break;
-                        default:
-                            break;
-                    }
-                } else {
-                    data[i] = MemoryBanks[bankIndex].Data[rowIndex][colIndex];
+                if (actualRowIndex != rowIndex) {
+                    // actualRowIndex = rowIndex;
+                    data[delta] = MemoryBanks[bankIndex].Data[actualRowIndex][colIndex];
                 }
+                data[i] = MemoryBanks[bankIndex].Data[rowIndex][colIndex];
 
                 // Push data into the channel if it's not full
                 if (!channels[i].is_full()) {
                     channels[i].push(data[i]);
+                    if (delta > 0) {
+                        channels[delta].push(data[delta]);
+                    }
 
                     // Debugging to ensure data is pushed
                     if (debug) {
                         std::cout << "Cycle " << cycle << ": Pushed data " << data[i]
-                                << " from Bank " << bankIndex << ", Row " << rowIndex
-                                << ", Column " << colIndex << " into Channel " << i << "\n";
+                                  << " from Bank " << bankIndex << ", Row " << actualRowIndex
+                                  << ", Column " << colIndex << " into Channel " << i << "\n";
                     }
                 }
             }
-        }
+        //}
     }
 }
-
