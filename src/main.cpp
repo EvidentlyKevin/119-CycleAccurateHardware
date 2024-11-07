@@ -99,7 +99,7 @@ void systolicArrayFunctionWithMemory() {
     }
 
     // NUMBER OF CYCLES FOR SIMULATION
-    int num_cycles = 88;
+    int num_cycles = 23;
 
     // Simulation loop
     // Make this a function in a utility file?
