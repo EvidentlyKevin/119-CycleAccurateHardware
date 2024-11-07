@@ -29,25 +29,25 @@ void Memory::pushData(std::vector<channelM<int>>& channels, int cycle, bool debu
     std::vector<int> data(numChannels);
 
     for (int i = 0; i < numChannels; ++i) {
-        int bankIndex = i % numBanks;
+        int bankIndex = i / BANK_COLS;
 
         // for (int j = 0; j < numBanks; ++j) {
             int colIndex = i % BANK_COLS;
-            int rowIndex = cycle / (numBanks * BANK_ROWS);
+            int rowIndex = (cycle / 3) / (numBanks * BANK_COLS);
 
             // Max address index for pipelining logic
-            int maxAddrIndex = (cycle / 3) % (BANK_COLS * numBanks);
+            int plWindow = (cycle % (BANK_COLS * numBanks) / 3);
 
             int rowOffset = 0;
             int delta = 0;
 
             // Adjust rowIndex to pipeline data efficiently
-            if (i < maxAddrIndex) {
-                delta = maxAddrIndex - i;
+            if (i < plWindow) {
+                delta = plWindow - i;
 
                 // Compute rowOffset based on delta and numBanks
                 // This allows rowIndex to be incremented by 1 or 2
-                rowOffset = ((delta) / numBanks) + 1;
+                rowOffset = ((delta) / 3) + 1;
 
                 // Ensure we don't exceed the maximum number of rows
                 if (rowIndex + rowOffset >= BANK_ROWS) {
@@ -68,10 +68,13 @@ void Memory::pushData(std::vector<channelM<int>>& channels, int cycle, bool debu
 
                 // Push data into the channel if it's not full
                 if (!channels[i].is_full()) {
-                    channels[i].push(data[i]);
-                    if (delta > 0) {
-                        channels[delta].push(data[delta]);
+                    if (i == (cycle / 3) % numChannels) {
+                        channels[i].push(data[i]);
+                        if (delta > 0) {
+                            channels[delta].push(data[delta]);
+                        }
                     }
+                    
 
                     // Debugging to ensure data is pushed
                     if (debug) {
