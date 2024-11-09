@@ -33,7 +33,7 @@ void Memory::pushData(std::vector<channelM<int>>& channels, int cycle, bool debu
 
         // for (int j = 0; j < numBanks; ++j) {
             int colIndex = i % BANK_COLS;
-            int rowIndex = cycle / (numBanks * BANK_ROWS);
+            int rowIndex = (cycle / 3) / (numBanks * BANK_COLS);
 
             // Max address index for pipelining logic
             int maxAddrIndex = (cycle / 3) % (BANK_COLS * numBanks);
@@ -68,9 +68,11 @@ void Memory::pushData(std::vector<channelM<int>>& channels, int cycle, bool debu
 
                 // Push data into the channel if it's not full
                 if (!channels[i].is_full()) {
-                    channels[i].push(data[i]);
+                    if(i == (cycle / 3) % numChannels){
+                    channels[i].push(data[i]);    
                     if (delta > 0) {
                         channels[delta].push(data[delta]);
+                    }
                     }
 
                     // Debugging to ensure data is pushed

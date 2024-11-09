@@ -38,6 +38,7 @@ void systolicArrayFunction() {
         for (int j = 0; j < SIZE; ++j) {
             weights[i][j] = (i + 1) * (j + 1); // Weights: multiplication table
             weights[i][j] = 1; // Simple weights
+            cout << weights[i][j] << " ";   
         }
     }
 
@@ -99,8 +100,9 @@ void systolicArrayFunctionWithMemory() {
     }
 
     // NUMBER OF CYCLES FOR SIMULATION
-    int num_cycles = 23;
+    int num_cycles = 24;
 
+    
     // Simulation loop
     // Make this a function in a utility file?
     for (int cycle = 0; cycle < num_cycles; ++cycle) {
@@ -111,28 +113,17 @@ void systolicArrayFunctionWithMemory() {
         // Set input activations from memory channels
         systolicArray.setInputActivationsFromChannels(memoryToSystolicChannels, true);
 
+
         // Run one cycle of the systolic array
         systolicArray.cycle();
 
-        // Debugging: Print activations read by the systolic array
+       /* // Debugging: Print activations read by the systolic array
         std::cout << "Cycle " << cycle << " - Activations read by the systolic array:\n";
         for (int j = 0; j < SIZE; ++j) {
             int activation = systolicArray.getMACUnit(0, j)->getLastActivation();
             std::cout << "MAC[0][" << j << "] activation: " << activation << "\n";
-        }
+        }*/
         std::cout << "---------------------------------------------\n";
-
-        if(cycle % 3 == 0){
-             // Get the outputs from the systolic array
-
-    std::vector<int> outputs = systolicArray.getOutputs();
-    // Print the outputs
-    std::cout << "Systolic Array Outputs with Memory Input:\n";
-    for (size_t i = 0; i < outputs.size(); ++i) {
-        std::cout << "Output[" << i << "]: " << outputs[i] << "\n";
-    }
-
-        }
     }
  std::vector<int> outputs = systolicArray.getOutputs();
 
@@ -150,21 +141,59 @@ void iSAtest() {
     // Create an 85-bit instruction example using bitset. Adjust bits as necessary for your desired opcode and parameters.
     // For this example, let's set opcode = 0b010 (matrix_multiply), addrMode = 1, deviceID = 0b10101,
     // sourceAddr = 0x00000010, destAddr = 0x00000020, and ImmSize = 0x100
-    bitset<84> exampleInstruction("010110101000000000000000000000000000000100000000000000000000000000001000000001000100");
+    //opcode in reverse
 
-    bitset<84> exampleInstruction2("01100000000000000000000000000000000000000000000000000000000000000000000000000000000");
+    //readHostMemory
+    bitset<84> exampleInstruction("000110101000000000000000000000000000000100000000000000000000000000001000000001000100");
+
+    //writeHostMemory
+    bitset<84> exampleInstruction2("001000000000000000000000000000000000000000000000000000000000000000000000000000000000");
+
+    //Reading weights
+    bitset<84> exampleInstruction3("100000000000000000000000000000000000000000000000000000000000000000000000000000000000");
+    
+    //Matrix Multiply
+    bitset<84> exampleInstruction4("010000000000000000000000000000000000000000000000000000000000000000000000000000000000");
+
+
+
 
     //opCalls.reverse(exampleInstruction);
 
     cout << "Instruction: " << exampleInstruction << endl;
-          
-
     // Load the instruction into the OpCalls class
     //opCalls.loadInstruction(exampleInstruction, 0);
     opCalls.loadInstruction(exampleInstruction, 0);
 
     // Run the instruction pipeline (fetch, decode, execute)
     opCalls.runPipeline();
+
+    cout << "" << endl;
+
+    cout << "Instruction2: " << exampleInstruction2 << endl;
+
+    opCalls.loadInstruction(exampleInstruction2, 0);
+
+    opCalls.runPipeline();
+
+    cout << "" << endl;
+
+    cout << "Instruction3: " << exampleInstruction3 << endl;
+
+    opCalls.loadInstruction(exampleInstruction3, 0);
+
+    opCalls.runPipeline();
+
+    cout << "" << endl;
+
+    cout << "Instruction4: " << exampleInstruction4 << endl;
+
+
+    opCalls.loadInstruction(exampleInstruction4, 0);
+
+    opCalls.runPipeline();
+
+
 
 
 } 

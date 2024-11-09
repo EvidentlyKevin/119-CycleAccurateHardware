@@ -3,7 +3,9 @@
 #include <array>
 #include <bitset>
 #include <string>
+#include "../include/memory.h"
 #include "../include/ISA.h"
+#include "../include/systolic_array.h"
 //#include "../include/systolic_array.h"
 //#include "../include/systolic_array.tpp"
 using namespace std; 
@@ -12,27 +14,82 @@ using namespace std;
 
 class instrFunctions {
     private:
-        Systolic_Array<int> systolicArray; // Provide appropriate template arguments
+        int num_cycles = 44;
+        const int SIZE = 8;
+        const size_t CHANNEL_CAPACITY = 4;
+        Systolic_Array<int> systolicArray;
         std::vector<int> activations; // Assuming activations is a vector of integers
+        Memory mem;
+        std::vector<std::vector<int>> weights;
+        std::vector<channelM<int>> memoryToSystolicChannels;
     public:
+        instrFunctions() : systolicArray(SIZE), weights(SIZE, std::vector<int>(SIZE)) {}
+
         void read_host_memory(bitset<32> sourceAddr, bitset<32> destAddr, bitset<12> ImmSize) {
+             mem.initBanks();
+            // Display the contents of the memory banks
+        for (int i = 0; i < mem.MemBanks; i++) {
+        std::cout << "Memory Bank " << i << ":\n";
+        for (int j = 0; j < BANK_ROWS; j++) {
+            for (int k = 0; k < BANK_COLS; k++) {
+                std::cout << mem.MemoryBanks[i].Data[j][k] << " ";
+            }
+            std::cout << std::endl;
+        }
+        std::cout << "---------------------------\n";
+    }
+
             // Implementation of reading from host memory
             // reading memory via pushing the data?
         }
 
         void read_weights(bitset<32> sourceAddr, bitset<32> destAddr, bitset<12> ImmSize) {
+            for (int i = 0; i < 8; ++i) {
+            for (int j = 0; j < 8; ++j) {
+            weights[i][j] = 1; // Simple weights
+            cout << weights[i][j] << " ";
+            }
+            cout << "\n";
+    }
+        systolicArray.setWeights(weights);
             // Implementation of reading weights
             // call set/read weights function of systolic array functions
         }
 
         void matrix_multiply(bitset<32> sourceAddr, bitset<32> destAddr, bitset<12> ImmSize) {
             // Implementation of matrix multiplication
+        for (int cycle = 0; cycle < num_cycles; ++cycle) {
+        // Memory pushes data into channels
+        mem.pushData(memoryToSystolicChannels, cycle, true);
+
+
+        // Set input activations from memory channels
+        systolicArray.setInputActivationsFromChannels(memoryToSystolicChannels, true);
+
+
+        // Run one cycle of the systolic array
+        systolicArray.cycle();
+        std::cout << "---------------------------------------------\n";
+    }
+    std::vector<int> outputs = systolicArray.getOutputs();
+
+    // Print the outputs
+    std::cout << "Systolic Array Outputs with Memory Input:\n";
+    for (size_t i = 0; i < outputs.size(); ++i) {
+        std::cout << "Output[" << i << "]: " << outputs[i] << "\n";
+    }
         }
-        void activate(bitset<32> sourceAddr, bitset<32> destAddr, bitset<12> ImmSize) {
-                systolicArray.setInputActivations(activations);     //why? included needed systolic header and tpp file
+
+        void activate(bitset<32> sourceAddr, bitset<32> destAddr, bitset<12> ImmSize) {                
+                //why? included needed systolic header and tpp file
         }
 
         void write_host_memory(bitset<32> sourceAddr, bitset<32> destAddr, bitset<12> ImmSize) {
+
+        for (int i = 0; i < SIZE; ++i) {
+
+        memoryToSystolicChannels.emplace_back(CHANNEL_CAPACITY);
+    }
             // Implementation of writing to host memory
             // no clue tbf 
         }
@@ -90,18 +147,25 @@ bitset<84> exampleInstruction; // 85-bit bitset
             bitset<12> ImmSize = instr.ImmSize;
 
             if (opcode == bitset<3>("000")) {
+                cout << "Read Host Memory" << endl;
                 instrFuncs.read_host_memory(sourceAddr, destAddr, ImmSize);
             } else if (opcode == bitset<3>("001")) {
+                cout << "Read Weights" << endl;     
                 instrFuncs.read_weights(sourceAddr, destAddr, ImmSize);
             } else if (opcode == bitset<3>("010")) {
+                cout << "Matrix Multiply" << endl;  
                 instrFuncs.matrix_multiply(sourceAddr, destAddr, ImmSize);
             } else if (opcode == bitset<3>("011")) {
+                cout << "Activate" << endl;
                 instrFuncs.activate(sourceAddr, destAddr, ImmSize);
             } else if (opcode == bitset<3>("100")) {
+                cout << "Write Host Memory" << endl;
                 instrFuncs.write_host_memory(sourceAddr, destAddr, ImmSize);
             } else {
                 instrFuncs.nop();
             }
+
+
             
         }
 
@@ -134,6 +198,12 @@ bitset<84> exampleInstruction; // 85-bit bitset
             opcodeSelect(instr);
 
             cout << "Operation: " << bitset<3>(instr.opcode) << endl;
+
+            cout << "Source Address: " << bitset<32>(instr.sourceAddr) << endl;
+
+            cout << "Destination Address: " << bitset<32>(instr.destAddr) << endl;
+
+            cout << "Immediate Size: " << bitset<12>(instr.ImmSize) << endl;    
         }
 
         // Method to load an instruction into memory
