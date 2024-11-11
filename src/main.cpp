@@ -1,6 +1,6 @@
 #include <iostream>
 #include <vector>
-#include "../include/memory.h"
+#include "../lib/bank_memory.cpp"
 #include "../include/systolic_array.h"
 #include "../lib/ISA.cpp"
 
@@ -100,7 +100,7 @@ void systolicArrayFunctionWithMemory() {
     }
 
     // NUMBER OF CYCLES FOR SIMULATION
-    int num_cycles = 24;
+    int num_cycles = 44;
 
     
     // Simulation loop
