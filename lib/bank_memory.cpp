@@ -35,50 +35,20 @@ void Memory::pushData(std::vector<channelM<int>>& channels, int cycle, bool debu
             int colIndex = i % BANK_COLS;
             int rowIndex = (cycle / 3) / (numBanks * BANK_COLS);
 
-            // Max address index for pipelining logic
-            int plWindow = (cycle % (BANK_COLS * numBanks) / 3);
-
-            int rowOffset = 0;
-            int delta = 0;
-
-            // Adjust rowIndex to pipeline data efficiently
-            if (i < plWindow) {
-                delta = plWindow - i;
-
-                // Compute rowOffset based on delta and numBanks
-                // This allows rowIndex to be incremented by 1 or 2
-                rowOffset = ((delta) / 3) + 1;
-
-                // Ensure we don't exceed the maximum number of rows
-                if (rowIndex + rowOffset >= BANK_ROWS) {
-                    rowOffset = BANK_ROWS - 1 - rowIndex;
-                }
-            }
-
-            int actualRowIndex = rowIndex + rowOffset;
-
             // Ensure indices are within bounds
-            if (colIndex < BANK_COLS && actualRowIndex < BANK_ROWS) {
-                // Get the data from the memory bank
-                if (actualRowIndex != rowIndex) {
-                    // actualRowIndex = rowIndex;
-                    data[delta] = MemoryBanks[bankIndex].Data[actualRowIndex][colIndex];
-                }
+            if (colIndex < BANK_COLS && rowIndex < BANK_ROWS) {
                 data[i] = MemoryBanks[bankIndex].Data[rowIndex][colIndex];
 
                 // Push data into the channel if it's not full
                 if (!channels[i].is_full()) {
-                    if(i == (cycle / 3) % numChannels){
-                    channels[i].push(data[i]);    
-                    if (delta > 0) {
-                        channels[delta].push(data[delta]);
-                    }
+                    if (i == (cycle / 3) % numChannels) {
+                        channels[i].push(data[i]);
                     }
 
                     // Debugging to ensure data is pushed
                     if (debug) {
                         std::cout << "Cycle " << cycle << ": Pushed data " << data[i]
-                                  << " from Bank " << bankIndex << ", Row " << actualRowIndex
+                                  << " from Bank " << bankIndex << ", Row " << rowIndex
                                   << ", Column " << colIndex << " into Channel " << i << "\n";
                     }
                 }
