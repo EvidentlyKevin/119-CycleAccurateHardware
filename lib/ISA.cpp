@@ -14,6 +14,7 @@ using namespace std;
 
 class instrFunctions {
     private:
+        int max;
         int num_cycles = 44;
         const int SIZE = 8;
         const size_t CHANNEL_CAPACITY = 4;
@@ -26,21 +27,33 @@ class instrFunctions {
         instrFunctions() : systolicArray(SIZE), weights(SIZE, std::vector<int>(SIZE)) {}
 
         void read_host_memory(bitset<32> sourceAddr, bitset<32> destAddr, bitset<12> ImmSize) {
+            int decImmSize = ImmSize.to_ulong();
+             unsigned long BI = decImmSize / 16;
              mem.initBanks();
-            // Display the contents of the memory banks
-        for (int i = 0; i < mem.MemBanks; i++) {
+    for (int i = 0; i <= 3; i++) {
         std::cout << "Memory Bank " << i << ":\n";
         for (int j = 0; j < BANK_ROWS; j++) {
             for (int k = 0; k < BANK_COLS; k++) {
+                max++;
+                if(max == decImmSize){
+                   break;
+                }
+
                 std::cout << mem.MemoryBanks[i].Data[j][k] << " ";
+                
             }
+             if (max == decImmSize) {
+                break;  // Break the outer loop after printing 10 elements
+             }
             std::cout << std::endl;
         }
+        cout << endl << endl;
+        
         std::cout << "---------------------------\n";
     }
+    
+    cout << "max: " << max << endl;
 
-            // Implementation of reading from host memory
-            // reading memory via pushing the data?
         }
 
         void read_weights(bitset<32> sourceAddr, bitset<32> destAddr, bitset<12> ImmSize) {
