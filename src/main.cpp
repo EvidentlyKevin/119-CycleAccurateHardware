@@ -7,18 +7,32 @@
 void memoryFunction() {
     Memory mem;
     mem.initBanks(); // No parameters needed
+    int max = 0;
 
     // Display the contents of the memory banks
-    for (int i = 0; i < mem.MemBanks; i++) {
+    for (int i = 0; i <= 1; i++) {
         std::cout << "Memory Bank " << i << ":\n";
         for (int j = 0; j < BANK_ROWS; j++) {
             for (int k = 0; k < BANK_COLS; k++) {
+                max++;
+                if(max == 24){
+                   break;
+                }
+
                 std::cout << mem.MemoryBanks[i].Data[j][k] << " ";
+                
             }
+             if (max == 24) {
+                break;  // Break the outer loop after printing 10 elements
+             }
             std::cout << std::endl;
         }
+        cout << endl << endl;
+        
         std::cout << "---------------------------\n";
     }
+    
+    cout << "max: " <<max << endl;
 }
 
 void systolicArrayFunction() {
