@@ -1,6 +1,6 @@
 #include <iostream>
 #include <vector>
-#include "../include/memory.h"
+#include "../lib/bank_memory.cpp"
 #include "../include/systolic_array.h"
 
 void memoryFunction() {
@@ -98,19 +98,47 @@ void systolicArrayFunctionWithMemory() {
     }
 
     // NUMBER OF CYCLES FOR SIMULATION
-    int num_cycles = 23;
+    int num_cycles = 47;
 
     // Simulation loop
     // Make this a function in a utility file?
     for (int cycle = 0; cycle < num_cycles; ++cycle) {
+
+        if((cycle - 2) % 3 == 0 && cycle > 2){      
+        mem.increment();
+        }
+        
         // Memory pushes data into channels
         mem.pushData(memoryToSystolicChannels, cycle, true);
+        
+        
+        
+
+       /*if(cycle >= 23 && cycle <= 44){
+            // Set input activations from memory channels   
+       }2
+
+       else if(cycle >= 45){
+
+            // Set input activations from memory channels
+            systolicArray.setInputActivationsFromChannels(memoryToSystolicChannels, cycle, true);
+            
+        
+       }
+        else{*/
+            // Set input activations from memory channels
+            systolicArray.setInputActivationsFromChannels(memoryToSystolicChannels, cycle, true);
+
+        
 
         // Set input activations from memory channels
-        systolicArray.setInputActivationsFromChannels(memoryToSystolicChannels, true);
+        
 
         // Run one cycle of the systolic array
-        systolicArray.cycle();
+
+            systolicArray.cycle();
+
+        //systolicArray.cycle();
 
         // Debugging: Print activations read by the systolic array
         std::cout << "Cycle " << cycle << " - Activations read by the systolic array:\n";
@@ -119,8 +147,19 @@ void systolicArrayFunctionWithMemory() {
             std::cout << "MAC[0][" << j << "] activation: " << activation << "\n";
         }
         std::cout << "---------------------------------------------\n";
-    }
+        if (cycle % 3 == 0){
+             // Get the outputs from the systolic array
+    std::vector<int> outputs = systolicArray.getOutputs();
 
+    // Print the outputs
+    std::cout << "Systolic Array Outputs with Memory Input:\n";
+    for (size_t i = 0; i < outputs.size(); ++i) {
+        std::cout << "Output[" << i << "]: " << outputs[i] << "\n";
+
+
+        }
+    }
+    }
     // Get the outputs from the systolic array
     std::vector<int> outputs = systolicArray.getOutputs();
 

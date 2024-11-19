@@ -2,6 +2,10 @@
 
 #include "../include/memory.h"
 #include <random>
+int z = 0;
+int x = 0;
+int y = 0;
+
 
 void Memory::initBanks() {
     std::random_device rd;
@@ -21,33 +25,48 @@ void Memory::initBanks() {
     }
 }
 
+void Memory::increment(){
+    x++;
+    y++;
+    z = y - 1;
+
+    cout << "x: " << x << " y: " << y << " z: " << z << endl;
+}
+
 void Memory::pushData(std::vector<channelM<int>>& channels, int cycle, bool debug) {
     int numBanks = MemBanks;
     int numChannels = channels.size();
+   
+    
+
+
+    
+
 
     // Vector for what data to push to each channel
     std::vector<int> data(numChannels);
 
     for (int i = 0; i < numChannels; ++i) {
+       
         int bankIndex = i / BANK_COLS;
 
         // for (int j = 0; j < numBanks; ++j) {
             int colIndex = i % BANK_COLS;
-            int rowIndex = (cycle / 3) / (numBanks * BANK_COLS);
+            int rowIndex = 0;
 
             // Max address index for pipelining logic
-            int maxAddrIndex = (cycle / 3) % (BANK_COLS * numBanks);
+            int plWindow = (cycle % (BANK_COLS * numBanks) / 3);
 
             int rowOffset = 0;
             int delta = 0;
 
             // Adjust rowIndex to pipeline data efficiently
-            if (i < maxAddrIndex) {
-                delta = maxAddrIndex - i;
+            if (i < plWindow) {
+                delta = plWindow - i;
 
                 // Compute rowOffset based on delta and numBanks
                 // This allows rowIndex to be incremented by 1 or 2
-                rowOffset = ((delta) / numBanks) + 1;
+                rowOffset = ((delta) / 3) + 1;
 
                 // Ensure we don't exceed the maximum number of rows
                 if (rowIndex + rowOffset >= BANK_ROWS) {
@@ -63,24 +82,118 @@ void Memory::pushData(std::vector<channelM<int>>& channels, int cycle, bool debu
                 if (actualRowIndex != rowIndex) {
                     // actualRowIndex = rowIndex;
                     data[delta] = MemoryBanks[bankIndex].Data[actualRowIndex][colIndex];
+                    
                 }
+
                 data[i] = MemoryBanks[bankIndex].Data[rowIndex][colIndex];
+
+
+
+
+
+
+
+
+                  /*if(cycle == 2){
+                            data[0] = 2;
+                        }
+
+                        if(cycle == 5){
+                            data[1] = 2;
+                            data[0] = 3;
+                        }
+                        if(cycle == 8){
+                            data[2] = 2;
+                            data[1] = 3;
+                        }
+                        if(cycle == 11){
+                            data[3] = 2;
+                            data[2] = 3;
+                        }
+                        if(cycle == 14){
+                            data[4] = 2;
+                            data[3] = 3;
+                        }
+                        if(cycle == 17){
+                            data[5] = 2;
+                            data[4] = 3;
+                        }
+                        if(cycle == 20){
+                            data[6] = 2;
+                            data[5] = 3;
+                        }
+                        if(cycle == 23){
+                            data[7] = 2;
+                            data[6] = 3;
+                        }
+                        if(cycle == 26){
+                            data[7] = 3;
+                        }*/
+
+                        if(cycle == 2){
+                            data[0] = MemoryBanks[bankIndex].Data[rowIndex + 1][colIndex];
+
+                        }
+                        if((cycle - 2) % 3 == 0 && cycle > 2){   
+
+                                                    
+                            data[z] = MemoryBanks[bankIndex].Data[rowIndex + 2][colIndex];
+                            data[x] = MemoryBanks[bankIndex].Data[rowIndex + 1][colIndex];
+                            
+                            if (y > 7){
+                                y = 0;
+                                z = 1;
+                            }
+                            if (x > 7){
+                                x = 0;
+                            }
+                            }
+                            
+
+
+
+
+                            
+
+
+                           
+
+
+
+            
+
 
                 // Push data into the channel if it's not full
                 if (!channels[i].is_full()) {
+                    if(i == (cycle / 3) % numChannels){
                     channels[i].push(data[i]);
-                    if (maxAddrIndex > 0) {
-                        channels[delta].push(data[delta]);
                     }
+                   // Check for data values of 3 to push into channels
+            for (int j = 0; j < numChannels; ++j) {
+                if (data[j] == 3 && !channels[j].is_full()) {
+                    channels[j].push(data[j]);
+                }
+            }
+                     
+
+
+                    
+                
 
                     // Debugging to ensure data is pushed
-                    if (debug) {
+                    
                         std::cout << "Cycle " << cycle << ": Pushed data " << data[i]
                                   << " from Bank " << bankIndex << ", Row " << actualRowIndex
                                   << ", Column " << colIndex << " into Channel " << i << "\n";
-                    }
+
+                                  // Increment x, y, and z only once per cycle
+    
                 }
             }
         //}
     }
 }
+
+
+
+
