@@ -30,6 +30,7 @@ void Memory::increment() {
     y++;
     z = y - 1;
 
+                 
     cout << "x: " << x << " y: " << y << " z: " << z << endl;
 }
 
@@ -86,16 +87,24 @@ void Memory::pushData(std::vector<channelM<int>>& channels, int cycle, bool debu
             if((cycle - 2) % 3 == 0 && cycle > 2){
                                         
                 data[z] = MemoryBanks[bankIndex].Data[rowIndex + 2][colIndex];
-                data[x] = MemoryBanks[bankIndex].Data[rowIndex + 1][colIndex];
                 
-                if (y > 7) { // GET RID OF MAGIC NUMBER
+                data[x] = MemoryBanks[bankIndex].Data[rowIndex + 1][colIndex];
+
+            if (y > 7) { // GET RID OF MAGIC NUMBER
                     y = 0;
                     z = 1;
                 }
                 if (x > 7) { // USE EXPRESSION OR CONSTANT
                     x = 0;
                 }
+
             }
+
+            if(cycle  == 8){
+                data[0] = 4;
+            }
+
+            
             
             // Push data into the channel if it's not full
             if (!channels[i].is_full()) {
@@ -103,15 +112,23 @@ void Memory::pushData(std::vector<channelM<int>>& channels, int cycle, bool debu
                 channels[i].push(data[i]);
                 }
                 // Check for data values of 3 to push into channels
-                for (int j = 0; j < numChannels; ++j) {
+                for (int j = 0; j < numChannels; j++) {
                     if (data[j] == 3 && !channels[j].is_full()) {
                         channels[j].push(data[j]);
                     }
+                    if (data[0] == 4 && !channels[0].is_full()) {
+                        channels[0].push(data[0]);
+                    }
                 }
+
+                
+                
+
+                
                 // Debugging to ensure data is pushed
                 
                 std::cout << "Cycle " << cycle << ": Pushed data " << data[i]
-                            << " from Bank " << bankIndex << ", Row " << actualRowIndex
+                            << " from Bank " << bankIndex << ", Row " << rowIndex
                             << ", Column " << colIndex << " into Channel " << i << "\n";
 
                 // Increment x, y, and z only once per cycle
