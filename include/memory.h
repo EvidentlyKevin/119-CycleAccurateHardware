@@ -22,7 +22,7 @@ public:
     static const int MemBanks = 4; // Number of memory banks
     MemBank MemoryBanks[MemBanks];
 
-    void initBanks();
+    void initBanks(int x);
     void pushData(std::vector<channelM<int>>&, int cycle, bool debug = false);
 };
 

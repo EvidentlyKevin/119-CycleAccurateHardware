@@ -27,10 +27,14 @@ class instrFunctions {
         instrFunctions() : systolicArray(SIZE), weights(SIZE, std::vector<int>(SIZE)) {}
 
         void read_host_memory(bitset<32> sourceAddr, bitset<32> destAddr, bitset<12> ImmSize) {
-            int decImmSize = ImmSize.to_ulong();
+
+            int decImmSize = ImmSize.to_ulong() + 1;
+
              unsigned long BI = decImmSize / 16;
-             mem.initBanks();
-    for (int i = 0; i <= 3; i++) {
+
+             mem.initBanks(decImmSize);
+
+    for (int i = 0; i <= BI; i++) {
         std::cout << "Memory Bank " << i << ":\n";
         for (int j = 0; j < BANK_ROWS; j++) {
             for (int k = 0; k < BANK_COLS; k++) {
@@ -52,7 +56,8 @@ class instrFunctions {
         std::cout << "---------------------------\n";
     }
     
-    cout << "max: " << max << endl;
+    cout << "max: " << max - 1 << endl;
+    cout << ImmSize.to_ulong() << endl;
 
         }
 
@@ -145,8 +150,8 @@ bitset<84> exampleInstruction; // 85-bit bitset
             instr.destAddr[i] = memInstrRawInstr[43 - i + 1];
             }
 
-            // Extract ImmSize (bits 10 to 0, 12 bits)
-            for (int i = 0; i < 11; i++) {
+            // Extract ImmSize (bits 11 to 0, 12 bits)
+            for (int i = 0; i <= 11; i++) {
             instr.ImmSize[i] = memInstrRawInstr[11 - i + 1];
             }
 

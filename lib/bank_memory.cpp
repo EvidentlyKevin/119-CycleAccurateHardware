@@ -3,19 +3,30 @@
 #include "../include/memory.h"
 #include <random>
 
-void Memory::initBanks() {
+void Memory::initBanks(int x) {
     std::random_device rd;
     std::mt19937 gen(rd());
     std::uniform_int_distribution<> dis(0, 255);
 
-    for (int i = 0; i < MemBanks; i++) {
+    int max = 0;
+    x+=1;
+    int BI = max / 16;
+
+    for (int i = 0; i <= BI; i++) {
         int foo = 0;
         for (int j = 0; j < BANK_ROWS; j++) {
             ++foo;
             for (int k = 0; k < BANK_COLS; k++) {
+                max++;
+                
                 // MemoryBanks[i].Data[j][k] = dis(gen);
                 MemoryBanks[i].Data[j][k] = foo;
-                // MemoryBanks[i].Data[j][k] = 6;
+                if(max == x){
+                    break;
+                }
+            }
+            if (max == x) {
+                break;
             }
         }
     }
@@ -29,7 +40,7 @@ void Memory::pushData(std::vector<channelM<int>>& channels, int cycle, bool debu
     std::vector<int> data(numChannels);
 
     for (int i = 0; i < numChannels; ++i) {
-        int bankIndex = i / BANK_COLS;
+        int bankIndex = 0; // i / bankcols
 
         // for (int j = 0; j < numBanks; ++j) {
             int colIndex = i % BANK_COLS;

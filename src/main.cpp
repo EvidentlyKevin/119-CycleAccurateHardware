@@ -6,7 +6,7 @@
 
 void memoryFunction(int x) {
     Memory mem;
-    mem.initBanks(); // No parameters needed
+    mem.initBanks(10); // No parameters needed
     int max = 0;
     x += 1;
     int BI = x / 16;
@@ -34,7 +34,7 @@ void memoryFunction(int x) {
         std::cout << "---------------------------\n";
     }
     
-    cout << "max: " <<max << endl;
+    cout << "max: " << max - 1 << endl;
 }
 
 void systolicArrayFunction() {
@@ -90,7 +90,7 @@ void systolicArrayFunctionWithMemory() {
 
     // Create an instance of the memory
     Memory mem;
-    mem.initBanks();
+    mem.initBanks(10);
 
     // Create an instance of the systolic array
     Systolic_Array<int> systolicArray(SIZE);
@@ -160,15 +160,17 @@ void iSAtest() {
     //opcode in reverse
 
     //readHostMemory
- bitset<84> exampleInstruction("000110101000000000000000000000000000000100000000000000000000000000001000000000001010");
+    //Bits 5 to 16 are immsize lol
+    bitset<84> exampleInstruction("0001101010000000000000000000000000000001000000000000000000000000000000001010000000010000");
+
     //writeHostMemory
-   // bitset<84> exampleInstruction2("001000000000000000000000000000000000000000000000000000000000000000000000000000000000");
+    bitset<84> exampleInstruction2("001000000000000000000000000000000000000000000000000000000000000000000000000000000000");
 
     //Reading weights
-    //bitset<84> exampleInstruction3("100000000000000000000000000000000000000000000000000000000000000000000000000000000000");
+    bitset<84> exampleInstruction3("100000000000000000000000000000000000000000000000000000000000000000000000000000000000");
     
     //Matrix Multiply
-    //bitset<84> exampleInstruction4("010000000000000000000000000000000000000000000000000000000000000000000000000000000000");
+    bitset<84> exampleInstruction4("010000000000000000000000000000000000000000000000000000000000000000000000000000000000");
 
 
 
@@ -185,7 +187,7 @@ void iSAtest() {
 
     cout << "" << endl;
 
-    /*cout << "Instruction2: " << exampleInstruction2 << endl;
+    cout << "Instruction2: " << exampleInstruction2 << endl;
 
     opCalls.loadInstruction(exampleInstruction2, 0);
 
@@ -207,7 +209,7 @@ void iSAtest() {
     opCalls.loadInstruction(exampleInstruction4, 0);
 
     opCalls.runPipeline();
-*/
+
 
 
 
@@ -227,7 +229,7 @@ int main() {
     // Use switch-case to handle different options
     switch (testOption) {
         case 1:
-            memoryFunction(56);
+            memoryFunction(10);
             break;
         case 2:
             systolicArrayFunctionWithMemory();
