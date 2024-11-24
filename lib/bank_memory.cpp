@@ -71,6 +71,8 @@ void Memory::pushData(std::vector<channelM<int>>& channels, int cycle, bool debu
     const int Push_Period = 3;
     int numBanks = MemBanks;
     int numChannels = channels.size();
+    double pos_inf = std::numeric_limits<double>::infinity();
+    double neg_inf = -std::numeric_limits<double>::infinity();
 
     // Vector for what data to push to each channel
     std::vector<int> data(numChannels);
@@ -80,6 +82,8 @@ void Memory::pushData(std::vector<channelM<int>>& channels, int cycle, bool debu
         int bankIndex = i / BANK_COLS;
 
         int colIndex = i % BANK_COLS;
+
+
         int storeCycle = 0;
         int rowIndex = 0;
 
@@ -184,7 +188,7 @@ void Memory::pushData(std::vector<channelM<int>>& channels, int cycle, bool debu
 
 
 
-           if (data[i] >= -1000000000 && data[i] <= 1000000000 && data[i] != 1 && data[i] != 0) {
+           if (data[i] >= neg_inf && data[i] <= pos_inf && data[i] != 1 && data[i] != 0) {
             channels[i].push(data[i]);
             }
 
