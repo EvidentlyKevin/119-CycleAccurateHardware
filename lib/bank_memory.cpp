@@ -96,7 +96,7 @@ void Memory::pushData(std::vector<channelM<int>>& channels, int cycle, bool debu
 
 
 
-        if((cycle - 3) % 6 == 0) {
+        if((cycle - 3) % 6 == 0) { // What is this
             storeCycle += 3;   
             data[0] = MemoryBanks[bankIndex].Data[rowIndex + RowOffset2][colIndex];
         }
@@ -119,15 +119,15 @@ void Memory::pushData(std::vector<channelM<int>>& channels, int cycle, bool debu
            
          
            
-        if(cycle % 3 == 0 && cycle > 3){
+        if(cycle % 3 == 0 && cycle > 3) {
                                     
             data[z] = MemoryBanks[bankIndex].Data[rowIndex + 2][colIndex];
             
             data[x] = MemoryBanks[bankIndex].Data[rowIndex + 1][colIndex];
 
-        if (y > BANK_ROWS - 1) { // GET RID OF MAGIC NUMBER
-                y = 0;
-                z = 7;
+            if (y > BANK_ROWS - 1) { // GET RID OF MAGIC NUMBER
+                    y = 0;
+                    z = 7;
             }
             if (x > 7) { // USE EXPRESSION OR CONSTANT
                 x = 0;
@@ -136,13 +136,13 @@ void Memory::pushData(std::vector<channelM<int>>& channels, int cycle, bool debu
         }
 
             
-        if((cycle) % 3 == 0 && cycle > 9){
+        if((cycle) % 3 == 0 && cycle > 9) {
                                     
             data[c] = MemoryBanks[bankIndex].Data[rowIndex + 4][colIndex];
             
             data[a] = MemoryBanks[bankIndex].Data[rowIndex + 3][colIndex];
 
-        if (b > 7) { // GET RID OF MAGIC NUMBER
+            if (b > 7) { // GET RID OF MAGIC NUMBER
                 b = 0;
                 c = 7;
             }
