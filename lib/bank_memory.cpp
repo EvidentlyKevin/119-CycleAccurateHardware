@@ -2,21 +2,6 @@
 
 #include "../include/memory.h"
 #include <random>
-int x = 0;
-int y = 0;
-int z = 0;
-
-int a = 0;
-int b = 0;
-int c = 0;
-
-int d = 0;
-int e = 0;
-int f = 0;
-
-int g = 0;
-
-
 
 void Memory::initBanks() {
     std::random_device rd;
@@ -68,8 +53,7 @@ void Memory::increment(int cycle) {
 }
 
 void Memory::pushData(std::vector<channelM<int>>& channels, int cycle, bool debug) {
-    const int Push_Period = 3;
-    int numBanks = MemBanks;
+    // const int Push_Period = 3;
     int numChannels = channels.size();
     double pos_inf = std::numeric_limits<double>::infinity();
     double neg_inf = -std::numeric_limits<double>::infinity();
@@ -192,10 +176,11 @@ void Memory::pushData(std::vector<channelM<int>>& channels, int cycle, bool debu
                 channels[i].push(data[i]);
             }                
             // Debugging to ensure data is pushed
-            
+            if (debug) {
             std::cout << "Cycle " << cycle << ": Pushed data " << data[i]
                         << " from Bank " << bankIndex << ", Row " << rowIndex
                         << ", Column " << colIndex << " into Channel " << i << "\n";
+            }
 
             // Increment x, y, and z only once per cycle
 

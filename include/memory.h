@@ -25,6 +25,17 @@ public:
     void initBanks();
     void pushData(std::vector<channelM<int>>&, int cycle, bool debug = false);
     void increment(int cycle);
+private:
+    int x = 0;
+    int y = 0;
+    int z = 0;
+    int a = 0;
+    int b = 0;
+    int c = 0;
+    int d = 0;
+    int e = 0;
+    int f = 0;
+    int g = 0;
 };
 
 #endif // MEMORY_H
