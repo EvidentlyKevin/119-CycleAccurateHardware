@@ -19,13 +19,20 @@ struct MemBank {
 
 class Memory {
 public:
-    static const int MemBanks = 4; // Number of memory banks
+    static const int MemBanks = 8; // Number of memory banks
     MemBank MemoryBanks[MemBanks];
+
+    Memory();
 
     void initBanks();
     void pushData(std::vector<channelM<int>>&, int cycle, bool debug = false);
     void increment(int cycle);
 private:
+    std::vector<std::vector<int>> indices;
+    int group;
+    int N = 16;
+    int start = 3;
+    int end = 3 * (N);   // N would be 8 for us**
     int x = 0;
     int y = 0;
     int z = 0;

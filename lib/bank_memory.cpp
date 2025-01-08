@@ -3,6 +3,12 @@
 #include "../include/memory.h"
 #include <random>
 
+
+Memory::Memory() : indices(100, std::vector<int>(100)) {
+    // Additional initialization if needed
+}
+
+
 void Memory::initBanks() {
     std::random_device rd;
     std::mt19937 gen(rd());
@@ -22,6 +28,34 @@ void Memory::initBanks() {
 }
 
 void Memory::increment(int cycle) {
+
+
+    for (int i = start; i < end; i += 6) {
+        int group = (i - start) / 6 + 1;  // Index for each group (this is for making accessing easier)
+
+        
+        if (cycle % 3 == 0 && cycle > i) {
+            indices[group][0]++;
+            indices[group][1]++;
+            indices[group][2] = indices[group][1] - 1; // Update z, c, f, etc.
+            
+            if (indices[group][1] > N - 1) {
+                indices[group][0] = 0;
+                indices[group][1] = 0;
+                indices[group][2] = N - 1;
+            }
+             std::cout << "Group " << group << ": x=" << indices[group][0]
+                      << " y=" << indices[group][1]
+                      << " z=" << indices[group][2] << std::endl;
+
+          
+        }
+    }
+}
+
+
+
+/*void Memory::increment(int cycle) {
     
 
     if((cycle) % 3 == 0 && cycle > 3){      
@@ -49,8 +83,10 @@ void Memory::increment(int cycle) {
         g++;
         cout << "g: " << g << endl;
     }
+
     
-}
+    
+}*/
 
 void Memory::pushData(std::vector<channelM<int>>& channels, int cycle, bool debug) {
     // const int Push_Period = 3;
@@ -80,10 +116,17 @@ void Memory::pushData(std::vector<channelM<int>>& channels, int cycle, bool debu
 
 
 
-        if((cycle - 3) % 6 == 0) { // What is this
-            storeCycle += 3;   
+        if((cycle - 3) % 6 == 0) { // specfic edge cases fpr data[0]
             data[0] = MemoryBanks[bankIndex].Data[rowIndex + RowOffset2][colIndex];
+
         }
+
+        /*for (int j = 0; j < numChannels; ++j) {
+            data[z] = MemoryBanks[bankIndex].Data[rowIndex][colIndex];
+            data[y] = MemoryBanks[bankIndex].Data[rowIndex][colIndex];
+        }*/
+
+       
 
 
         /*if(cycle % Push_Period == 0 && cycle > storeCycle){
@@ -99,15 +142,61 @@ void Memory::pushData(std::vector<channelM<int>>& channels, int cycle, bool debu
             }
             
         }*/
-            
-           
-         
-           
-        if(cycle % 3 == 0 && cycle > 3) {
+
+       
+        //for (int j = 0; j < numChannels; ++j) {
+            //data[j] = MemoryBanks[bankIndex].Data[rowIndex][colIndex];
+       // }
+
+for (int s = start; s < end; s += 6) {
+        
+    if (cycle % 3 == 0 && cycle > s) {
+    // g in this case is group as in the amount of groups needed for specific array sizes
+    for (int g = 1; g <= (N / 2); g++){
+
+    // importabnt to break out of the loop if the indice values are flat out zero which prevents unwanted groups from being pushed
+    if (indices[g][2] == 0 && indices[g][1] == 0 && indices[g][1] == 0) {
+     break;
+     
+    }
+    // if g is not equal to N/2 then push the data into the channels important for edge case
+   if (g != N/2) {
+     data[indices[g][2]] = MemoryBanks[bankIndex].Data[rowIndex + (g * 2)][colIndex];
+     data[indices[g][1]] = MemoryBanks[bankIndex].Data[rowIndex + (g * 2) - 1][colIndex];
+   }
+    // if g is equal to N/2 then push the data into the channels which is the final group aka edge case
+    if(g == N/2) { 
+        data[indices[g][1]] = MemoryBanks[bankIndex].Data[rowIndex + ((g * 2) - 1)][colIndex];
+   }
+
+    // important to break here so it doesn't push multiple times into same channel
+     if (data[i] >= neg_inf && data[i] <= pos_inf && data[i] != 1 && data[i] != 0) {
+        cout << "Data: " << data[i] << endl;
+                channels[i].push(data[i]);
+                break;
+
+            }
+                        
+     
+       
+}
+
+// break for preventing multiple pushes and helps with reducing visual clutter
+break;
+
+    }
+        }
+
+
+
+
+
+
+        /*if(cycle % 3 == 0 && cycle > 3) {
                                     
             data[z] = MemoryBanks[bankIndex].Data[rowIndex + 2][colIndex];
             
-            data[x] = MemoryBanks[bankIndex].Data[rowIndex + 1][colIndex];
+            data[y] = MemoryBanks[bankIndex].Data[rowIndex + 1][colIndex];
 
             if (y > BANK_ROWS - 1) { // GET RID OF MAGIC NUMBER
                     y = 0;
@@ -157,9 +246,10 @@ void Memory::pushData(std::vector<channelM<int>>& channels, int cycle, bool debu
         if (cycle % 3 == 0 && cycle > 21)
         {
             data[g] = MemoryBanks[bankIndex].Data[rowIndex + 7][colIndex];
-        }
-        
+        }*/
 
+
+        
 
         
         
@@ -167,14 +257,15 @@ void Memory::pushData(std::vector<channelM<int>>& channels, int cycle, bool debu
         if (!channels[i].is_full()) {
             if(i == (cycle / 3) % numChannels) {
                 channels[i].push(data[i]);
+                 if (data[0] == 2 && cycle < 6) {
+                channels[0].push(data[0]);
             }
+            }
+           
+
+        
             // Check for data values to push into channels
-
-
-
-            if (data[i] >= neg_inf && data[i] <= pos_inf && data[i] != 1 && data[i] != 0) {
-                channels[i].push(data[i]);
-            }                
+            
             // Debugging to ensure data is pushed
             if (debug) {
             std::cout << "Cycle " << cycle << ": Pushed data " << data[i]

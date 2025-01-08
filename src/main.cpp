@@ -1,6 +1,6 @@
 #include <iostream>
 #include <vector>
-#include "../include/memory.h"
+#include "../lib/bank_memory.cpp"
 #include "../include/systolic_array.h"
 
 void memoryFunction() {
@@ -65,7 +65,15 @@ void systolicArrayFunction() {
 
 void systolicArrayFunctionWithMemory() {
     // Define the size of the systolic array
-    const int SIZE = 8;
+    /*note:
+    You have to adjust the memory bank parameters and N so it doesn't crash
+    *Bank Parameters should be as follows: MemBanks >= SIZE, Rows = SIZE, Cols = SIZE / 4
+    *N should be equal to SIZE
+    You can find these parameters in the memory.h and globals.h files
+    Further investigation or explanation is needed to understand the relationship between the memory banks and the systolic array size
+    */
+    const int SIZE = 16;
+
 
     // Define CHANNEL_CAPACITY
     const size_t CHANNEL_CAPACITY = 4;
@@ -98,7 +106,14 @@ void systolicArrayFunctionWithMemory() {
     }
 
     // NUMBER OF CYCLES FOR SIMULATION
-    int num_cycles = 47;
+    int num_cycles = 138;
+    /*note:
+    We found the number of cycles to get the final outputs on the 8x8, 16x16, and 32x32 systolic arrays
+    8x8: 65 cycles
+    16x16: 138 cycles
+    32x32: 283 cycles
+    Further testing is needed to find the number of cycles for the for other systolic array sizes
+    */
 
     // Simulation loop
     // Make this a function in a utility file?
