@@ -104,7 +104,7 @@ void Memory::pushData(std::vector<channelM<int>>& channels, int cycle, bool debu
         int colIndex = i % BANK_COLS;
 
 
-        int storeCycle = 0;
+        // int storeCycle = 0;
         int rowIndex = 0;
 
         int RowOffset = 2 + ((cycle - 3) / 6) * 2;
