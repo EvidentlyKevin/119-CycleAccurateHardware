@@ -9,7 +9,7 @@
 class cache_fifo : public Cache {
 public:
     // Updated constructor to include 'int verbose'
-    cache_fifo(size_t block_size, size_t cache_size, int n_ways, perf_counter* perf, int verbose);
+    cache_fifo(int block_size, int cache_size, int n_ways, perf_counter* perf, int verbose);
     
     // Override virtual functions
     void init_(const std::string& input_fname) override;

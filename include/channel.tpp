@@ -1,5 +1,5 @@
 template<typename T>
-Channel<T>::Channel(size_t capacity) : capacity(capacity) {}
+Channel<T>::Channel(int capacity) : capacity(capacity) {}
 
 template<typename T>
 bool Channel<T>::channel_push(const T& element) {
@@ -31,6 +31,6 @@ bool Channel<T>::channel_empty() const {
 }
 
 template<typename T>
-size_t Channel<T>::channel_size() const {
+int Channel<T>::channel_size() const {
     return buffer.size();
 }

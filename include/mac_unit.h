@@ -64,8 +64,8 @@ private:
 
     // Constants
     static const int MAX_CLK_STATE = 2;
-    static const size_t CHANNEL_CAPACITY = 128;
-    static const size_t CHANNEL_CAPACITY_INPUT = 10;
+    static const int CHANNEL_CAPACITY = 128;
+    static const int CHANNEL_CAPACITY_INPUT = 10;
 };
 
 #include "mac_unit.tpp"

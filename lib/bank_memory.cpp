@@ -31,7 +31,7 @@ void Memory::increment(int cycle) {
 
 
     for (int i = start; i < end; i += 6) {
-        int group = (i - start) / 6 + 1;  // Index for each group (this is for making accessing easier)
+        group = (i - start) / 6 + 1;  // Index for each group (this is for making accessing easier)
 
         
         if (cycle % 3 == 0 && cycle > i) {
@@ -90,7 +90,7 @@ void Memory::increment(int cycle) {
 
 void Memory::pushData(std::vector<channelM<int>>& channels, int cycle, bool debug) {
     // const int Push_Period = 3;
-    int numChannels = channels.size();
+    size_t numChannels = channels.size();
     double pos_inf = std::numeric_limits<double>::infinity();
     double neg_inf = -std::numeric_limits<double>::infinity();
 
@@ -152,7 +152,7 @@ for (int s = start; s < end; s += 6) {
         
     if (cycle % 3 == 0 && cycle > s) {
     // g in this case is group as in the amount of groups needed for specific array sizes
-    for (int g = 1; g <= (N / 2); g++){
+    for (g = 1; g <= (N / 2); g++){
 
     // importabnt to break out of the loop if the indice values are flat out zero which prevents unwanted groups from being pushed
     if (indices[g][2] == 0 && indices[g][1] == 0 && indices[g][1] == 0) {

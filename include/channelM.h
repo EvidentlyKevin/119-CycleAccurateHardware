@@ -5,15 +5,15 @@
 
 #include <deque>
 #include <stdexcept>
-#include <cstddef> // For size_t
+#include <cstddef> // For int
 
 template<typename T>
 class channelM {
 public:
-    static const size_t DEFAULT_CAPACITY = 128; // Make this easily changeable
+    static const int DEFAULT_CAPACITY = 128; // Make this easily changeable
 
     // Constructor with default capacity
-    channelM(size_t capacity = DEFAULT_CAPACITY) : capacity(capacity) {}
+    channelM(int capacity = DEFAULT_CAPACITY) : capacity(capacity) {}
 
     // Move constructor
     channelM(channelM<T>&& other) noexcept
@@ -71,18 +71,18 @@ public:
     }
 
     // Get the current size of the channel
-    size_t size() const {
+    int size() const {
         return buffer.size();
     }
 
     // Get the capacity of the channel
-    size_t get_capacity() const {
+    int get_capacity() const {
         return capacity;
     }
 
 private:
     std::deque<T> buffer;     // The underlying buffer
-    size_t capacity;          // Maximum capacity of the channel
+    int capacity;          // Maximum capacity of the channel
 
     // Disable copying
     channelM(const channelM&) = delete;

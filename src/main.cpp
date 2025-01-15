@@ -76,7 +76,7 @@ void systolicArrayFunctionWithMemory() {
 
 
     // Define CHANNEL_CAPACITY
-    const size_t CHANNEL_CAPACITY = 4;
+    const int CHANNEL_CAPACITY = 4;
 
     // Create an instance of the memory
     Memory mem;
@@ -153,7 +153,7 @@ void systolicArrayFunctionWithMemory() {
 
     // Print the outputs
     std::cout << "Systolic Array Outputs with Memory Input:\n";
-    for (size_t i = 0; i < outputs.size(); ++i) {
+    for (int i = 0; i < outputs.size(); ++i) {
         std::cout << "Output[" << i << "]: " << outputs[i] << "\n";
     }
 }

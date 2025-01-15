@@ -11,13 +11,13 @@
 class LoadStoreUnit {
 public:
     // Updated constructor to include 'int verbose'
-    LoadStoreUnit(size_t ls_queue_size, int verbose);
+    LoadStoreUnit(int ls_queue_size, int verbose);
     
     void init_(const std::string& input_fname);
     int cycle();
 
 private:
-    size_t ls_queue_size;
+    int ls_queue_size;
     std::queue<int> load_queue, request_queue;
     int verbose_level; // Verbosity level
 };

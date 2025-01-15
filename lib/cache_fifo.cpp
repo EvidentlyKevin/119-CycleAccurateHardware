@@ -6,7 +6,7 @@
 #include <fstream>
 #include <sstream>
 
-cache_fifo::cache_fifo(size_t block_size, size_t cache_size, int n_ways, perf_counter* perf, int verbose)
+cache_fifo::cache_fifo(int block_size, int cache_size, int n_ways, perf_counter* perf, int verbose)
     : Cache(block_size, cache_size, n_ways, perf), verbose_level(verbose) {}
 
 void cache_fifo::init_(const std::string& input_fname) {
@@ -99,7 +99,7 @@ void cache_fifo::cycle() {
             set_fifo_map[set_index].pop();
             free_lines_map[set_index]++;
 
-            for (size_t i = 0; i < block_size * 4; i += 4) {
+            for (int i = 0; i < block_size * 4; i += 4) {
                 cache_map.erase(evict_block_addr + i);
             }
 
@@ -111,7 +111,7 @@ void cache_fifo::cycle() {
         // Load new block into cache
         if (free_lines_map[set_index] > 0) {
             int block_start_addr = (req.address / (block_size * 4)) * (block_size * 4);
-            for (size_t i = 0; i < block_size * 4; i += 4) {
+            for (int i = 0; i < block_size * 4; i += 4) {
                 int addr = block_start_addr + i;
                 auto it = storage_map.find(addr);
                 if (it != storage_map.end()) {

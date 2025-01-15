@@ -15,12 +15,12 @@
 
 class Cache {
 public:
-    Cache(size_t block_size, size_t cache_size, int n_ways, perf_counter* perf);
+    Cache(int block_size, int cache_size, int n_ways, perf_counter* perf);
     virtual ~Cache() = default;
     virtual void init_(const std::string& input_fname) = 0;
     virtual void cycle() = 0;
 protected:
-    size_t block_size, cache_size;
+    int block_size, cache_size;
     int n_ways;
     int stall_rem;
     int miss_penalty;

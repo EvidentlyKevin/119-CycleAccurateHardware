@@ -6,7 +6,7 @@
 #include <fstream>
 #include <sstream>
 
-LoadStoreUnit::LoadStoreUnit(size_t ls_queue_size, int verbose)
+LoadStoreUnit::LoadStoreUnit(int ls_queue_size, int verbose)
     : ls_queue_size(ls_queue_size), verbose_level(verbose) {}
 
 void LoadStoreUnit::init_(const std::string& input_fname) {

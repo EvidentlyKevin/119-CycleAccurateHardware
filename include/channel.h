@@ -9,17 +9,17 @@
 template<typename T>
 class Channel {
 public:
-    explicit Channel(size_t capacity);
+    explicit Channel(int capacity);
 
     bool channel_push(const T& element);
     bool channel_pop(T& element);
     bool channel_full() const;
     bool channel_empty() const;
-    size_t channel_size() const;
+    int channel_size() const;
 
 private:
     std::deque<T> buffer;
-    size_t capacity;
+    int capacity;
 };
 
 #include "channel.tpp"
