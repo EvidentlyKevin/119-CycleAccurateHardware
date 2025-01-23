@@ -1,54 +1,26 @@
+// File: channel.h
+
 #ifndef CHANNEL_H
 #define CHANNEL_H
-
 #include <deque>
-#include <iostream>
+#include <cstddef>
 
 template<typename T>
-class channel {
+class Channel {
 public:
-    channel(size_t capacity) : capacity(capacity), is_full(false) {}
+    explicit Channel(int capacity);
 
-    void channel_push(const T& element) {
-        if (buffer.size() >= capacity) {
-            std::cout << "Buffer full..." << std::endl;
-            return;
-        }
-        buffer.push_back(element);
-        is_full = buffer.size() == capacity;
-    }
-
-    T channel_pop() {
-        if (buffer.empty()) {
-            std::cout << "Buffer empty..." << std::endl;
-            return T();
-        }
-        T ret_val = buffer.front();
-        buffer.pop_front();
-        is_full = false;
-        return ret_val;
-    }
-
-    T front() const {
-        return buffer.front();
-    }
-
-    bool channel_full() const {
-        return is_full;
-    }
-
-    bool channel_empty() const {
-        return buffer.empty();
-    }
-
-    size_t channel_size() const {
-        return buffer.size();
-    }
+    bool channel_push(const T& element);
+    bool channel_pop(T& element);
+    bool channel_full() const;
+    bool channel_empty() const;
+    int channel_size() const;
 
 private:
     std::deque<T> buffer;
-    size_t capacity;
-    bool is_full;
+    int capacity;
 };
 
-#endif
+#include "channel.tpp"
+
+#endif // CHANNEL_H

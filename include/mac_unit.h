@@ -1,116 +1,73 @@
+// File: include/mac_unit.h
+
 #ifndef MAC_UNIT_H
 #define MAC_UNIT_H
 
-//#include "../include/channel.h"
-#include "systolic_array.h"
-#include <chrono>  // For time duration
-#include <Windows.h>
-
+#include "channelM.h"
 
 template<typename T>
-class channel;
+class Systolic_Array; // Forward declaration
 
 template<typename T>
-class Systolic_Array;
-
-// MAC (Multiply-Accumulate) Unit class
-template<typename T>
-class MACUnit { 
+class MACUnit {
 public:
+    // Constructor
+    MACUnit(int row, int col);
 
-    MACUnit(int i, int j) : accumulator(0), rowID(i), colID(j), rightOut(128), downOut(128), inputA(10) {}
-    
-    int clk = 0;
-    int clk_Period = 1;
-    channel<T> inputA;
-    channel<T> rightOut;
-    channel<T> downOut;
-    T a;
-    T b;
-    T w;
-    // Performs the MAC operation
+    void setUpIn(channelM<T>* upChannel);
 
-    void cycle(Systolic_Array<T>& systolic_array) {
-    
-if(clk > 2){
-    clk = 0;    
-}
-             if(clk == 0){
-            if(rowID > 0 && colID > 0){
-        if(!systolic_array[rowID][colID-1]->rightOut.channel_empty() && !systolic_array[rowID-1][colID]->downOut.channel_empty()){
+    void setLeftIn(channelM<T>* leftChannel);
 
+    channelM<T>& getRightOut();
 
-             a = systolic_array[rowID-1][colID]->downOut.channel_pop();
-             b = systolic_array[rowID][colID-1]->rightOut.channel_pop();
-                     clk++;
+    channelM<T>& getDownOut();
 
-             //w = systolic_array.GetWeight(rowID, colID);
-}
-        }
-        else if(rowID == 0 && colID == 0){
-            if (!inputA.channel_empty()){
-             a = inputA.channel_pop();
-             b = 0;
-                     clk++;
-            }
-             //w = systolic_array.GetWeight(rowID, colID);
+    // Set the weight for the MAC unit
+    void setWeight(T weight);
 
+    // Set the input activation (only for the first row)
+    void setInputActivation(T activation);
 
-        }
-        else if(rowID == 0 && colID > 0){  
-            if(!inputA .channel_empty()){
-             a = inputA.channel_pop();
-             b = systolic_array[rowID][colID-1]->rightOut.channel_pop();;
-                     clk++;
-            }
-            // w = systolic_array.GetWeight(rowID, colID);
-          
+    // Perform one cycle of computation
+    //void cycle(Systolic_Array<T>& systolic_array);
+    void cycle();
 
-        }
-        else if(colID == 0 && rowID > 0){   
-            if(!systolic_array[rowID-1][0]->downOut.channel_empty()){
-             a = systolic_array[rowID-1][0]->downOut.channel_pop();
-             b = 0;
-                     clk++;
-            }
-             //w = systolic_array.GetWeight(rowID, colID);
-        }
-        }
-        
-      else if(clk == 1){
+    // Read the accumulator value
+    T readAccumulator() const;
 
-            accumulator = (a*w) + b;
-            clk++;
-        }
-
-       else if(clk == 2){
-            rightOut.channel_push(accumulator);
-            downOut.channel_push(a);
-            clk++;  
-        }
-
-
-
-
-    }
-    
-       
-    
-
-    T read_accumulator() const {
-        return accumulator;
-    }
-
-    void clear_accumulator() {
-        accumulator = 0;
-    }
+    // Debugging method to get the last activation
+    T getLastActivation() const;
 
 private:
-    T accumulator; // Stores the accumulated result
-    T rowID = 0;
-    T colID = 0;
-     // Add the Weight field
-    
+    // DO NOT MOVE INITIALIZATIONS PLEASE
+    int rowID;
+    int colID;
+    T accumulator;
+    T a; // Activation input
+    T b; // Partial sum input
+    T w; // Weight
+    int clk;
+
+    // Channels for data movement
+    channelM<T> rightOut;
+    channelM<T> downOut;
+    channelM<T> inputA;
+    // Input channels from neighboring MAC units
+    channelM<T>* leftIn = nullptr; // Left input channel
+    channelM<T>* upIn = nullptr;   // Up input channel
+
+    // Helper functions
+    // bool fetchInputs(Systolic_Array<T>& systolic_array, bool debug = false);
+    bool fetchInputs(bool debug = false);
+    void computeMAC(bool debug = false);
+    void sendOutputs(bool debug = false);
+
+    // Constants
+    static const int MAX_CLK_STATE = 2;
+    static const int CHANNEL_CAPACITY = 128;
+    static const int CHANNEL_CAPACITY_INPUT = 10;
 };
 
-#endif
+#include "mac_unit.tpp"
+
+#endif // MAC_UNIT_H

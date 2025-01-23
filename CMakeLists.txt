@@ -1,29 +1,28 @@
-# Minimum CMake version required
 cmake_minimum_required(VERSION 3.10)
+project(CacheModelProject)
 
-# Project name and version
-project(CYCLE_ACC VERSION 1.0 LANGUAGES CXX)
-
-# Set the C++ standard to C++17
+# Specify C++ standard
 set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_STANDARD_REQUIRED True)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-# Set the output directory for the build
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+# Include directories
+include_directories(include)
 
-# Include directories - adding the include folder
-include_directories(${PROJECT_SOURCE_DIR}/include)
+# Gather all source files automatically from the lib and src directories
+file(GLOB_RECURSE SRC_FILES src/*.cpp lib/*.cpp) #add scripts folder to source in order to access when calling calling Debug in terminal 
+                                                 #fifo remains, ../scripts/cpp file name 
+                                                
 
-# Source files for the project
-# src and lib directories contain the .cpp files
-file(GLOB LIB_SOURCES
-    ${PROJECT_SOURCE_DIR}/lib/*.cpp
-)
 
-set(SRC_FILES
-    ${PROJECT_SOURCE_DIR}/src/main.cpp
-    ${LIB_SOURCES}
-)
+# Create executable from source files
+add_executable(cache_model ${SRC_FILES})
 
-# Add the executable target
-add_executable(CYCLE_ACC ${SRC_FILES})
+# Set compiler warning options based on the compiler
+if (MSVC)
+    # Use the appropriate warning flags for MSVC
+    target_compile_options(cache_model PRIVATE /W4 /WX)
+else()
+    # Use the appropriate flags for GCC/Clang
+    target_compile_options(cache_model PRIVATE -Wall -Wextra -pedantic -Werror)
+endif()
+
