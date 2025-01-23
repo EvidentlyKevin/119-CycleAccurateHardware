@@ -1,3 +1,0 @@
-C:/Users/modon/Documents/Clinic4/119-CycleAccurateHardware/build/CMakeFiles/cache_model.dir
-C:/Users/modon/Documents/Clinic4/119-CycleAccurateHardware/build/CMakeFiles/ALL_BUILD.dir
-C:/Users/modon/Documents/Clinic4/119-CycleAccurateHardware/build/CMakeFiles/ZERO_CHECK.dir
