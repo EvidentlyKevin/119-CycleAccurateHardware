@@ -2,6 +2,7 @@
 #include <vector>
 #include "../include/memory.h"
 #include "../include/systolic_array.h"
+#include "../include/activation.h"
 
 void memoryFunction() {
     Memory mem;
@@ -20,7 +21,7 @@ void memoryFunction() {
     }
 }
 
-void systolicArrayFunction() {
+void systolicArrayFunction(int act) {
     // Define the size of the systolic array
     const int SIZE = 8;
 
@@ -49,7 +50,7 @@ void systolicArrayFunction() {
     // Run the systolic array for sufficient cycles
     int num_cycles = 100 * SIZE; // Adjust as needed
     for (int cycle = 0; cycle < num_cycles; ++cycle) {
-        systolicArray.cycle();
+        systolicArray.cycle(act); // Activation Selection goes here
     }
 
     // Get the outputs
@@ -63,7 +64,7 @@ void systolicArrayFunction() {
     std::cout << std::endl;
 }
 
-void systolicArrayFunctionWithMemory() {
+void systolicArrayFunctionWithMemory(int act) {
     // Define the size of the systolic array
     /*note:
     You have to adjust the memory bank parameters and N so it doesn't crash
@@ -135,7 +136,7 @@ void systolicArrayFunctionWithMemory() {
         //systolicArray.setInputActivationsFromChannels(memoryToSystolicChannels, true);
 
         // Run one cycle of the systolic array
-        systolicArray.cycle();
+        systolicArray.cycle(act); // Activation Selection goes here
 
 
 
@@ -160,11 +161,24 @@ void systolicArrayFunctionWithMemory() {
 
 int main() {
     int testOption;
-
+    Activation a;
+    int act = 0;
+    // Initialize the activation function
+    std::cout << "Which activation function do you want to use?\n";
+    std::cout << "0: RELU\n";
+    std::cout << "1: Sigmoid\n";
+    std::cout << "2: Tanh\n";
+    std::cout << "3: GELU: ";
+    std::cin.get();
+    std::cin >> act;
+    
     // What do you want to test
     std::cout << "Enter a test option (1-2):\n";
     std::cout << "1: Test Memory Function\n";
     std::cout << "2: Test Systolic Array Function\n";
+    std::cout << "3: Test RELU\n";
+    std::cout << "4: Test Sigmoid\n";
+    std::cout << "5: Test Tanh\n";
     std::cout << "Option: ";
     std::cin >> testOption;
 
@@ -174,7 +188,22 @@ int main() {
             memoryFunction();
             break;
         case 2:
-            systolicArrayFunctionWithMemory();
+            systolicArrayFunctionWithMemory(act);
+            break;
+        case 3:
+            std::cout << "Testing RELU\n";
+            std::cout << "Relu of 5:" << " " << a.relu(5) <<" "<< "Actual: 5\n";
+            std::cout << "Relu of -0.3:" << " " << a.relu(-0.3f) << " " << "Actual: 0\n";
+            break;
+        case 4:
+            std::cout << "Testing Sigmoid\n";
+            std::cout << "Sigmoid of 5:" << " "<< a.sigmoid(5) << " " << "Actual: 0.993307\n";
+            std::cout << "Sigmoid of -0.3:" << " "<< a.sigmoid(-0.3f) << " "<< "Actual: 0.425557\n";
+            break;
+        case 5:
+            std::cout << "Testing Tanh\n";
+            std::cout << "Tanh of 5:" << " "<< a.tanh(5) << " "<< "Actual: 0.999909\n";
+            std::cout << "Tanh of -0.3:" << " "<< a.tanh(-0.3f) << " "<< "Actual: -0.291313\n";
             break;
         default:
             std::cout << "Invalid option selected!" << std::endl;

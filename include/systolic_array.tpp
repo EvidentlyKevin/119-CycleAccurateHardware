@@ -62,10 +62,10 @@ std::unique_ptr<MACUnit<T>>& Systolic_Array<T>::getMACUnit(int row, int col) {
 }
 
 template<typename T>
-void Systolic_Array<T>::cycle() {
+void Systolic_Array<T>::cycle(int act) {
     for (int i = SIZE - 1; i >= 0; --i) {
         for (int j = SIZE - 1; j >= 0; --j) {
-            array[i][j]->cycle();
+            array[i][j]->cycle(act);
         }
     }
 }
