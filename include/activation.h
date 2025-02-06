@@ -3,10 +3,10 @@
 class Activation 
 {
 public:
-    float relu(float);
-    float sigmoid(float);
-    float tanh(float);
-    float gelu(float);
+    double relu(double);
+    double sigmoid(double);
+    double tanh(double);
+    double gelu(double);
 private:
     void reset();
 };

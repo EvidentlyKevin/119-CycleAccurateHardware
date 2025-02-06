@@ -111,21 +111,21 @@ void MACUnit<T>::computeMAC(bool debug) {
 
 template<typename T>
 void MACUnit<T>::sendOutputs(bool debug,int act) {
-    Activation a;
+    Activation activation;
     // Send partial sum to the right
     //Case statement to determine the activation function
     switch (act) {
         case 0:
-            rightOut.push(a.relu(accumulator));
+            rightOut.push(static_cast<T>(activation.relu(accumulator)));
             break;
         case 1:
-            rightOut.push(a.sigmoid(accumulator));
+            rightOut.push(static_cast<T>(activation.sigmoid(accumulator)));
             break;
         case 2:
-            rightOut.push(a.tanh(accumulator));
+            rightOut.push(static_cast<T>(activation.tanh(accumulator)));
             break;
         case 3:
-            rightOut.push(a.gelu(accumulator));
+            rightOut.push(static_cast<T>(activation.gelu(accumulator)));
             break;
         default:
             rightOut.push(accumulator);

@@ -168,8 +168,8 @@ int main() {
     std::cout << "0: RELU\n";
     std::cout << "1: Sigmoid\n";
     std::cout << "2: Tanh\n";
-    std::cout << "3: GELU: ";
-    std::cin.get();
+    std::cout << "3: GELU: \n";
+    //std::cin.get();
     std::cin >> act;
     
     // What do you want to test
@@ -193,17 +193,17 @@ int main() {
         case 3:
             std::cout << "Testing RELU\n";
             std::cout << "Relu of 5:" << " " << a.relu(5) <<" "<< "Actual: 5\n";
-            std::cout << "Relu of -0.3:" << " " << a.relu(-0.3f) << " " << "Actual: 0\n";
+            std::cout << "Relu of -0.3:" << " " << a.relu(-0.3) << " " << "Actual: 0\n";
             break;
         case 4:
             std::cout << "Testing Sigmoid\n";
             std::cout << "Sigmoid of 5:" << " "<< a.sigmoid(5) << " " << "Actual: 0.993307\n";
-            std::cout << "Sigmoid of -0.3:" << " "<< a.sigmoid(-0.3f) << " "<< "Actual: 0.425557\n";
+            std::cout << "Sigmoid of -0.3:" << " "<< a.sigmoid(-0.3) << " "<< "Actual: 0.425557\n";
             break;
         case 5:
             std::cout << "Testing Tanh\n";
             std::cout << "Tanh of 5:" << " "<< a.tanh(5) << " "<< "Actual: 0.999909\n";
-            std::cout << "Tanh of -0.3:" << " "<< a.tanh(-0.3f) << " "<< "Actual: -0.291313\n";
+            std::cout << "Tanh of -0.3:" << " "<< a.tanh(-0.3) << " "<< "Actual: -0.291313\n";
             break;
         default:
             std::cout << "Invalid option selected!" << std::endl;
