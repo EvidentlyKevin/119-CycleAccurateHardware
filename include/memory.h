@@ -11,16 +11,27 @@
 #include <vector>
 #include "channelM.h"
 
+int BANK_ROWS = 5;
+int BANK_COLS = 3;
+int N;
+int MemBanks = 5; // Number of memory banks
+
+
 using namespace std;
 
 struct MemBank {
-    unsigned int Data[BANK_ROWS][BANK_COLS];
+    
+     std::vector<std::vector<int>> Data;
+
+    MemBank(int rows, int cols) : Data(rows, std::vector<int>(cols)) {}
+
 };
 
 class Memory {
 public:
-    static const int MemBanks = 8; // Number of memory banks
-    MemBank MemoryBanks[MemBanks];
+   
+    std::vector<MemBank> MemoryBanks;
+
 
     Memory();
 
@@ -30,7 +41,6 @@ public:
 private:
     std::vector<std::vector<int>> indices;
     int group;
-    int N = 16;
     int start = 3;
     int end = 3 * (N);   // N would be 8 for us**
     int x = 0;
