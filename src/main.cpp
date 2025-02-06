@@ -1,57 +1,57 @@
+
 #include <iostream>
+#include <deque>
 #include <vector>
-#include "../include/Cluster.h"
-#include "../lib/bank_memory.cpp"
+#include <array>
+#include "../include/channel.h"
 #include "../include/systolic_array.h"
+#include "../include/mac_unit.h"
+
+using namespace std;
 
 
-void memoryFunction() {
-    Memory mem;
-    mem.initBanks(); // No parameters needed
 
-    // Display the contents of the memory banks
-    for (int i = 0; i < MemBanks; i++) {
-        std::cout << "Memory Bank " << i << ":\n";
-        for (int j = 0; j < BANK_ROWS; j++) {
-            for (int k = 0; k < BANK_COLS; k++) {
-                std::cout << mem.MemoryBanks[i].Data[j][k] << " ";
-            }
-            std::cout << std::endl;
-        }
-        std::cout << "---------------------------\n";
-    }
-}
+
+
+
 
 
 int main() {
-    int testOption;
-    Cluster<int> cluster(2);
+Systolic_Array<double> systolic_array;
+int loop = 0;
+systolic_array.Construct("C:\\Users\\Henry\\C++Code\\RandomNumOutput\\0801008n0");
+systolic_array.ConstructA("C:\\Users\\Henry\\C++Code\\RandomNumOutput(inputA)\\0801008n0");
 
-    
+int max_cycle = 256, cycle_count = 0, array_size = 8;
 
-    // What do you want to test
-    std::cout << "Enter a test option (1-2):\n";
-    std::cout << "1: Test Memory Function\n";
-    std::cout << "2: Test Systolic Array Function\n";
-    std::cout << "Option: ";
-    std::cin >> testOption;
-    std::cout << "--------------------------" << std::endl;
 
-    // Use switch-case to handle different options
-    switch (testOption) {
-        case 1:
-        memoryFunction();
-            break;
-        case 2:
-            cluster.setParametersForTPUs();
-            //cluster.showbanks();
-            cluster.runAllTPUs();
 
-            break;
-        default:
-            std::cout << "Invalid option selected!" << std::endl;
-            break;
+for (int i = 0; i < array_size; i++){
+    systolic_array[0][i]->inputA.channel_push(systolic_array.A[0][i]);
+}
+
+
+
+while (cycle_count < max_cycle){
+    for (int i = array_size-1; i > -1; i--) { 
+        for (int j = array_size-1; j > -1; j--) {
+            cout << "Clock: " << systolic_array[i][j]->clk << endl;
+            cout << "" << endl;
+            cout << "Performing MAC operation at position: " << i << ", " << j << endl;
+            cout << "operand B: " << systolic_array[i][j]->b << endl;
+            cout << "operand A: " << systolic_array[i][j]->a << endl;
+            cout << "Weight: " << systolic_array[i][j]->w << endl;      
+                        cout << "" << endl;
+            systolic_array[i][j]->cycle(systolic_array);
+                        cout << "Accumulated value: " << systolic_array[i][j]->read_accumulator() << endl;
+                                    cout << "" << endl;
+
+
+        }
     }
+cycle_count++;
 
+}
     return 0;
+
 }
