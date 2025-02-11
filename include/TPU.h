@@ -21,12 +21,12 @@ void run();
 void setparameters();
 void display();
 
-int ROWS;
-int COLS;
-int SIZE;
-int num_cycles;
 int rowID;
 int colID;
+int SIZE;
+int ROWS;
+int COLS;
+int num_cycles;
 
 private:
 

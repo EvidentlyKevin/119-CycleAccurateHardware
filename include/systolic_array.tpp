@@ -46,7 +46,7 @@ void Systolic_Array<T>::setInputActivationsFromChannels(std::vector<channelM<T>>
         T activation;
         if (channels[j].pop(activation)) {
             array[0][j]->setInputActivation(activation);
-            if (false) {
+            if (debug) {
                 std::cout << "Cycle " << current_cycle << ": MAC[0][" << j << "] received activation " << activation << "\n";
             }
         }

@@ -1,7 +1,7 @@
 #include <iostream>
 #include <vector>
 #include "../include/Cluster.h"
-#include "../lib/bank_memory.cpp"
+#include "../include/memory.h"
 #include "../include/systolic_array.h"
 
 

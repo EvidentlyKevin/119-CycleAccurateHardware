@@ -5,6 +5,10 @@ project(CacheModelProject)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+# Remove -Werror for sign-compare issues:
+add_compile_options(-Wno-sign-compare)
+
+
 # Include directories
 include_directories(include)
 
