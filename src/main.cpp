@@ -3,6 +3,7 @@
 #include "../include/Cluster.h"
 #include "../include/memory.h"
 #include "../include/systolic_array.h"
+#include "../include/activation.h"
 
 
 void memoryFunction() {

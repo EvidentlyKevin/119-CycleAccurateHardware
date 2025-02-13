@@ -29,7 +29,7 @@ public:
     std::unique_ptr<MACUnit<T>>& getMACUnit(int row, int col);
 
     // Run one cycle
-    void cycle();
+    void cycle(int act = 0);
 
     // Get the outputs from the last column of MAC units
     std::vector<T> getOutputs() const;
