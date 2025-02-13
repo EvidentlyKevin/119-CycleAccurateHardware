@@ -1,5 +1,6 @@
 // File include/mac_unit.tpp
-
+#include  "../include/activation.h"
+#include "../include/mac_unit.h"
 template<typename T>
 MACUnit<T>::MACUnit(int row, int col)
     : rowID(row), colID(col), accumulator(0), a(0), b(0), w(0), clk(0),
@@ -38,7 +39,7 @@ void MACUnit<T>::setInputActivation(T activation) {
 }
 
 template<typename T>
-void MACUnit<T>::cycle() {
+void MACUnit<T>::cycle(int act) {
     // Reset clk if it exceeds the max state
     if (clk > MAX_CLK_STATE) {
         clk = 0;
@@ -46,18 +47,18 @@ void MACUnit<T>::cycle() {
 
     switch (clk) {
         case 0:
-            if (!fetchInputs(false)) {
+            if (!fetchInputs(true)) {
                 // Inputs not ready, wait
                 return;
             }
             clk++;
             break;
         case 1:
-            computeMAC(false);
+            computeMAC(true);
             clk++;
             break;
         case 2:
-            sendOutputs(false);
+            sendOutputs(true,act);
             clk = 0; // Reset for next operation
             break;
         default:
@@ -109,8 +110,30 @@ void MACUnit<T>::computeMAC(bool debug) {
 }
 
 template<typename T>
-void MACUnit<T>::sendOutputs(bool debug) {
+void MACUnit<T>::sendOutputs(bool debug,int act) {
+    Activation activation;
     // Send partial sum to the right
+    //Case statement to determine the activation function
+    switch (act) {
+        case 0:
+            rightOut.push(static_cast<T>(activation.relu(accumulator)));
+            break;
+        case 1:
+            rightOut.push(static_cast<T>(activation.sigmoid(accumulator)));
+            break;
+        case 2:
+            rightOut.push(static_cast<T>(activation.tanh(accumulator)));
+            break;
+        case 3:
+            rightOut.push(static_cast<T>(activation.gelu(accumulator)));
+            break;
+        default:
+            rightOut.push(accumulator);
+            break;
+
+    }
+    
+
     rightOut.push(accumulator);
     // Debugging: Print the partial sum sent to the right
     if (debug) {
