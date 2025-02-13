@@ -46,18 +46,18 @@ void MACUnit<T>::cycle() {
 
     switch (clk) {
         case 0:
-            if (!fetchInputs(true)) {
+            if (!fetchInputs(false)) {
                 // Inputs not ready, wait
                 return;
             }
             clk++;
             break;
         case 1:
-            computeMAC(true);
+            computeMAC(false);
             clk++;
             break;
         case 2:
-            sendOutputs(true);
+            sendOutputs(false);
             clk = 0; // Reset for next operation
             break;
         default:
