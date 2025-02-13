@@ -3,9 +3,12 @@
 #include "../include/memory.h"
 #include "../include/systolic_array.h"
 #include "../include/activation.h"
+#include "../include/host_memory.h"
 
+hostMemory hostMem;
 void memoryFunction() {
     Memory mem;
+    
     mem.initBanks(); // No parameters needed
 
     // Display the contents of the memory banks
@@ -14,6 +17,7 @@ void memoryFunction() {
         for (int j = 0; j < BANK_ROWS; j++) {
             for (int k = 0; k < BANK_COLS; k++) {
                 std::cout << mem.MemoryBanks[i].Data[j][k] << " ";
+                hostMem.getData(mem.MemoryBanks[i].Data[j][k],i,j);
             }
             std::cout << std::endl;
         }
@@ -38,6 +42,8 @@ void systolicArrayFunction(int act) {
         for (int j = 0; j < SIZE; ++j) {
             weights[i][j] = (i + 1) * (j + 1); // Weights: multiplication table
             weights[i][j] = 1; // Simple weights
+            //hostMem.getData(weights[i][j],i,j);
+            
         }
     }
 
@@ -82,7 +88,7 @@ void systolicArrayFunctionWithMemory(int act) {
     // Create an instance of the memory
     Memory mem;
     mem.initBanks();
-
+    int num_cycles = 138;
     // Create an instance of the systolic array
     Systolic_Array<int> systolicArray(SIZE);
 
@@ -93,6 +99,8 @@ void systolicArrayFunctionWithMemory(int act) {
             // REVIEW HOW WEIGHTS ARE SET
             weights[i][j] = 1; // Simple weights
             // weights[i][j] = (i + 1) * (j + 1); // Complex weights
+            hostMem.getData(weights[i][j],i,j);
+            
         }
     }
     systolicArray.setWeights(weights);
@@ -107,7 +115,7 @@ void systolicArrayFunctionWithMemory(int act) {
     }
 
     // NUMBER OF CYCLES FOR SIMULATION
-    int num_cycles = 138;
+    
     /*note:
     We found the number of cycles to get the final outputs on the 8x8, 16x16, and 32x32 systolic arrays
     8x8: 65 cycles
@@ -138,7 +146,7 @@ void systolicArrayFunctionWithMemory(int act) {
         // Run one cycle of the systolic array
         systolicArray.cycle(act); // Activation Selection goes here
 
-
+        hostMem.saveToFile("weights.csv", cycle);
 
         // Debugging: Print activations read by the systolic array
         std::cout << "Cycle " << cycle << " - Activations read by the systolic array:\n";
@@ -161,7 +169,6 @@ void systolicArrayFunctionWithMemory(int act) {
 
 int main() {
     int testOption;
-    Activation a;
     int act = 0;
     // Initialize the activation function
     std::cout << "Which activation function do you want to use?\n";
@@ -176,9 +183,6 @@ int main() {
     std::cout << "Enter a test option (1-2):\n";
     std::cout << "1: Test Memory Function\n";
     std::cout << "2: Test Systolic Array Function\n";
-    std::cout << "3: Test RELU\n";
-    std::cout << "4: Test Sigmoid\n";
-    std::cout << "5: Test Tanh\n";
     std::cout << "Option: ";
     std::cin >> testOption;
 
@@ -189,21 +193,6 @@ int main() {
             break;
         case 2:
             systolicArrayFunctionWithMemory(act);
-            break;
-        case 3:
-            std::cout << "Testing RELU\n";
-            std::cout << "Relu of 5:" << " " << a.relu(5) <<" "<< "Actual: 5\n";
-            std::cout << "Relu of -0.3:" << " " << a.relu(-0.3) << " " << "Actual: 0\n";
-            break;
-        case 4:
-            std::cout << "Testing Sigmoid\n";
-            std::cout << "Sigmoid of 5:" << " "<< a.sigmoid(5) << " " << "Actual: 0.993307\n";
-            std::cout << "Sigmoid of -0.3:" << " "<< a.sigmoid(-0.3) << " "<< "Actual: 0.425557\n";
-            break;
-        case 5:
-            std::cout << "Testing Tanh\n";
-            std::cout << "Tanh of 5:" << " "<< a.tanh(5) << " "<< "Actual: 0.999909\n";
-            std::cout << "Tanh of -0.3:" << " "<< a.tanh(-0.3) << " "<< "Actual: -0.291313\n";
             break;
         default:
             std::cout << "Invalid option selected!" << std::endl;
