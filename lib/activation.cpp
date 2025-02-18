@@ -27,3 +27,4 @@ double Activation::gelu(double x) {
 void Activation::reset() {
     std::cout << "Resetting activation function" << std::endl;
 }
+

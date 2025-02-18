@@ -40,3 +40,13 @@ void Cluster<T>::showbanks() {
         }
     }
 }
+
+template<typename T>
+void Cluster<T>::setActivationFunction(int activation) {
+    activationFunction = activation;
+}
+
+template<typename T>
+int Cluster<T>::getActivationFunction() const {
+    return activationFunction;
+}

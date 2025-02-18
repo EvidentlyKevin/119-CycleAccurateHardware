@@ -15,6 +15,9 @@ public:
     void runAllTPUs();
     void setParametersForTPUs(); 
     void showbanks(); 
+    // Methods to set and get the activation function choice
+    void setActivationFunction(int activation);
+    int getActivationFunction() const;
 
     static const int DEFAULT_SIZE = 8;
 
@@ -25,11 +28,11 @@ public:
 
 
 
-
-
 private:
 int SIZE;
+int activationFunction = 1; // Default activation function is ReLU
 std::vector<std::vector<std::unique_ptr<TPU<T>>>> array;
+
 
 };
 

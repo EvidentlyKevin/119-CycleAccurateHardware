@@ -1,4 +1,5 @@
 #include "TPU.h"
+#include "activation.h" // Include the activation header file
 
 template<typename T>
 TPU<T>::TPU(int row, int col)
@@ -110,10 +111,45 @@ void TPU<T>::run() {
 
     // Get the outputs from the systolic array
     std::vector<int> outputs = systolicArray.getOutputs();
+// --- NEW CODE: Apply activation function to the outputs ---
+// Create an Activation object
+Activation act;
 
-    // Print the outputs
-    std::cout << "Systolic Array Outputs with Memory Input:\n";
-    for (size_t i = 0; i < outputs.size(); ++i) {
-        std::cout << "Output[" << i << "]: " << outputs[i] << "\n";
+// Create a vector to store the activated outputs
+std::vector<double> activatedOutputs;
+
+// Convert outputs to double, apply the chosen activation function,
+// and store the result in activatedOutputs.
+for (size_t i = 0; i < outputs.size(); ++i) {
+    double value = static_cast<double>(outputs[i]);
+    switch (activationFunction) {  // activationFunction is a member of TPU
+        case 1:
+            value = act.relu(value);
+            break;
+        case 2:
+            value = act.sigmoid(value);
+            break;
+        case 3:
+            value = act.tanh(value);
+            break;
+        case 4:
+            value = act.gelu(value);
+            break;
+        default:
+            value = act.relu(value);  // Default to ReLU if unknown
+            break;
     }
+    activatedOutputs.push_back(value);
+}
+// Print the activated outputs
+std::cout << "Systolic Array Activated Outputs with Memory Input:\n";
+for (size_t i = 0; i < activatedOutputs.size(); ++i) {
+    std::cout << "Output[" << i << "]: " << activatedOutputs[i] << "\n";
+}
+
+// Print the outputs
+// std::cout << "Systolic Array Outputs with Memory Input:\n";
+// for (size_t i = 0; i < outputs.size(); ++i) {
+//     std::cout << "Output[" << i << "]: " << outputs[i] << "\n";
+// }
 }

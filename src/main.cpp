@@ -26,9 +26,8 @@ void memoryFunction() {
 
 int main() {
     int testOption;
-    Cluster<int> cluster(2);
-
-    
+    Cluster<int> cluster(2); // Create a cluster with 2 TPUs
+    // Set the parameters for the TPUs
 
     // What do you want to test
     std::cout << "Enter a test option (1-2):\n";
@@ -43,16 +42,30 @@ int main() {
         case 1:
         memoryFunction();
             break;
-        case 2:
-            cluster.setParametersForTPUs();
-            //cluster.showbanks();
-            cluster.runAllTPUs();
+        case 2:{
+        int activationChoice;
+        std::cout << "Select Activation Function:\n";
+        std::cout << "1: ReLU\n";
+        std::cout << "2: Sigmoid\n";
+        std::cout << "3: Tanh\n";
+        std::cout << "4: GELU\n";
+        std::cout << "Option: ";
+        std::cin >> activationChoice;
+        std::cout << "--------------------------" << std::endl;
 
-            break;
-        default:
-            std::cout << "Invalid option selected!" << std::endl;
-            break;
+        // Set the activation function in the cluster
+        cluster.setActivationFunction(activationChoice);  // You must implement this method in Cluster.
+
+        // Proceed with existing parameter setting and simulation run
+        cluster.setParametersForTPUs();
+        // cluster.showbanks(); // if needed
+        cluster.runAllTPUs();
+        break;
     }
+    default:
+        std::cout << "Invalid option selected!" << std::endl;
+        break;
+}
 
-    return 0;
+return 0;
 }

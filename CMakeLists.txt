@@ -6,7 +6,7 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # Remove -Werror for sign-compare issues:
-add_compile_options(-Wno-sign-compare)
+# add_compile_options(-Wno-sign-compare)
 
 
 # Include directories
@@ -21,10 +21,12 @@ file(GLOB_RECURSE SRC_FILES src/*.cpp lib/*.cpp) #add scripts folder to source i
 # Create executable from source files
 add_executable(cache_model ${SRC_FILES})
 
+
+
 # Set compiler warning options based on the compiler
 if (MSVC)
     # Use the appropriate warning flags for MSVC
-    target_compile_options(cache_model PRIVATE /W4 /WX)
+    target_compile_options(cache_model PRIVATE /W4) #No WX
 else()
     # Use the appropriate flags for GCC/Clang
     target_compile_options(cache_model PRIVATE -Wall -Wextra -pedantic -Werror)
