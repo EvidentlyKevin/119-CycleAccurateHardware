@@ -24,6 +24,6 @@ double Activation::gelu(double x) {
     return 0.5f * x * (1.0f + std::tanh(std::sqrt(2.0f / 3.14159265358f) * (x + 0.044715f * std::pow(x, 3.0f))));
 }
 
-void reset() {
+void Activation::reset() {
     std::cout << "Resetting activation function" << std::endl;
 }
