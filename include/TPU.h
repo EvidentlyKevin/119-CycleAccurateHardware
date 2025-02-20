@@ -5,6 +5,7 @@
 #include <vector>
 #include "systolic_array.h"
 #include "memory.h"
+#include "activation.h"
 
 
 
@@ -27,6 +28,7 @@ int SIZE;
 int ROWS;
 int COLS;
 int num_cycles;
+int activationFunction;
 
 private:
 

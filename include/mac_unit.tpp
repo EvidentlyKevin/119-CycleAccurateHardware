@@ -47,18 +47,18 @@ void MACUnit<T>::cycle(int act) {
 
     switch (clk) {
         case 0:
-            if (!fetchInputs(true)) {
+            if (!fetchInputs(false)) {
                 // Inputs not ready, wait
                 return;
             }
             clk++;
             break;
         case 1:
-            computeMAC(true);
+            computeMAC(false);
             clk++;
             break;
         case 2:
-            sendOutputs(true,act);
+            sendOutputs(false,act);
             clk = 0; // Reset for next operation
             break;
         default:
@@ -134,7 +134,7 @@ void MACUnit<T>::sendOutputs(bool debug,int act) {
     }
     
 
-    rightOut.push(accumulator);
+    // rightOut.push(accumulator);
     // Debugging: Print the partial sum sent to the right
     if (debug) {
         std::cout << "MAC[" << rowID << "][" << colID << "] sent accumulator " << accumulator << " to rightOut\n";

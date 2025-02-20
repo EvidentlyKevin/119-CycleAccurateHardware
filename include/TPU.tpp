@@ -37,6 +37,9 @@ void TPU<T>::setparameters() {
     std::cout << "--------------------------" << std::endl;
     std::cout << "Enter number of cycles for simulation: ";
     std::cin >> num_cycles;
+    std::cout << "Enter the activation function: " << std::endl << "1: ReLU" << std::endl << "2: Sigmoid" << std::endl << "3: Tanh" << std::endl << "4: Gelu" << std::endl;
+    std::cin >> activationFunction;
+    std::cout << "--------------------------" << std::endl;
 }
 
 template<typename T>

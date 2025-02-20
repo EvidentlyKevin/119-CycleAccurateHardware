@@ -26,7 +26,7 @@ void memoryFunction() {
 
 int main() {
     int testOption;
-    Cluster<int> cluster(2);
+    Cluster<int> cluster(1);
 
     
 

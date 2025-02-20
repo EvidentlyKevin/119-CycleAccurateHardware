@@ -65,7 +65,9 @@ template<typename T>
 void Systolic_Array<T>::cycle(int act) {
     for (int i = SIZE - 1; i >= 0; --i) {
         for (int j = SIZE - 1; j >= 0; --j) {
-            array[i][j]->cycle(act);
+            // Only apply the activation function in the final (output) column.
+            int act_to_use = (j == SIZE - 1) ? act : 0;
+            array[i][j]->cycle(act_to_use);
         }
     }
 }
