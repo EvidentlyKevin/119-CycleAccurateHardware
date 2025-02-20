@@ -3,24 +3,32 @@
 
 template<typename T>
 TPU<T>::TPU(int row, int col)
-    : rowID(row), colID(col), SIZE(0), ROWS(0), COLS(0){}
+    : rowID(row), colID(col), SIZE(0), ROWS(0), COLS(0), dequeuedValue(8){}
+
+template<typename T>
+void TPU<T>::setLeftPort(Port<T>* leftPort) {
+    portL = leftPort; // Set the left port
+}
+
+template<typename T>
+Port<T>& TPU<T>::getRPort() {
+    return portR; // Return the right port
+}
+
 
 template<typename T>
 void TPU<T>::setparameters() {
 
-
-    // Define the size of the systolic array
-    /*note:
-    You have to adjust the memory bank parameters and N so it doesn't crash
-    *Bank Parameters should be as follows: MemBanks >= SIZE, Rows = SIZE, Cols = SIZE / 4
-    *N should be equal to SIZE
-    You can find these parameters in the memory.h and globals.h files
-    Further investigation or explanation is needed to understand the relationship between the memory banks and the systolic array size
-    */
    cout << "note: Bank Parameters should be as follows MemBanks >= SIZE, Rows = SIZE, Cols = SIZE / 4" << endl;
-    cout << "8x8: 65 cycles" << endl;
-    cout << "16x16: 138 cycles" << endl;
-    cout << "32x32: 283 cycles" << endl;
+    cout << "8x8: 70 cycles" << endl;
+    cout << "16x16: 140 cycles" << endl;
+    cout << "32x32: 284 cycles" << endl;
+    cout << "64x64: 574 cycles" << endl;
+    cout << "128x128: 766 cycles" << endl;
+    cout << "256x256: 1534 cycles" << endl;
+    cout << "512x512: 4000 cycles" << endl;
+    cout << "1024x1024: 8000 cycles" << endl;
+    cout << "Further testing is needed to find the number of cycles for the for other systolic array sizes" << endl;
    
    cout << "Enter the size of the systolic array: ";
    cin >> SIZE;
@@ -36,24 +44,30 @@ void TPU<T>::setparameters() {
    cout << "--------------------------" << endl;
    cout << "Enter number of cycles for simulation: ";
    cin >> num_cycles;
-
-    
-
-
-   
-
-    
-
-   
 }
 
+
+
 template<typename T>
-void TPU<T>::display() {
+void TPU<T>::run() {
+
+    N = SIZE;
+    cout << "N: " << N << endl;
+    BANK_COLS = COLS;
+    cout << "BANK_COLS: " << BANK_COLS << endl;
+    BANK_ROWS = ROWS;
+    cout << "BANK_ROWS: " << BANK_ROWS << endl;
 
     Memory mem;
-    mem.initBanks(); // No parameters needed
 
-    
+if(rowID == 0 && colID == 0) {
+    mem.initBanks();
+    }
+    else if(portL != nullptr) {
+        dequeuedValue = portL->dequeueAll(); // Dequeue all elements from the queue
+        // Display the contents of the memory bank
+        mem.initBanksFromLeft(dequeuedValue); // Initialize memory banks from the left side
+     }
 
     // Display the contents of the memory banks
     for (int i = 0; i < MemBanks; i++) {
@@ -66,30 +80,7 @@ void TPU<T>::display() {
         }
         std::cout << "---------------------------\n";
     }
-
-}
-
-template<typename T>
-void TPU<T>::run() {
-
-    N = SIZE;
-    cout << "N: " << N << endl;
-    BANK_COLS = COLS;
-    cout << "BANK_COLS: " << BANK_COLS << endl;
-    BANK_ROWS = ROWS;
-    cout << "BANK_ROWS: " << BANK_ROWS << endl;
-
-   
-
-
-    Memory mem;
-   mem.initBanks();
-
-
-    
-
-     
-    
+ 
 
     Systolic_Array<int> systolicArray(SIZE);
 
@@ -120,15 +111,6 @@ void TPU<T>::run() {
     }
 
     // NUMBER OF CYCLES FOR SIMULATION
-
-    /*note:
-    We found the number of cycles to get the final outputs on the 8x8, 16x16, and 32x32 systolic arrays
-    8x8: 65 cycles
-    16x16: 138 cycles
-    32x32: 283 cycles
-    Further testing is needed to find the number of cycles for the for other systolic array sizes
-    */
-
     // Simulation loop
     // Make this a function in a utility file?
     for (int cycle = 0; cycle < num_cycles; ++cycle) {
@@ -166,7 +148,9 @@ void TPU<T>::run() {
 
     // Print the outputs
     std::cout << "Systolic Array Outputs with Memory Input:\n";
-    for (int i = 0; i < outputs.size(); ++i) {
-        std::cout << "Output[" << i << "]: " << outputs[i] << "\n";
+    for (int i = outputs.size()-1; i >= 0; --i) {
+    portR.enqueue(outputs[i]);
+    std::cout << "Output[" << i << "]: " << outputs[i] << "\n";
     }
+    
 }

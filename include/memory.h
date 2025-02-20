@@ -11,8 +11,8 @@
 #include <vector>
 #include "channelM.h"
 
-int BANK_ROWS = 5;
-int BANK_COLS = 3;
+int BANK_ROWS = 8;
+int BANK_COLS = 8;
 int N;
 int MemBanks = 5; // Number of memory banks
 
@@ -38,6 +38,9 @@ public:
     void initBanks();
     void pushData(std::vector<channelM<int>>&, int cycle, bool debug = false);
     void increment(int cycle);
+    void initBanksFromLeft(std::vector<int>& TPU_left);
+
+
 private:
     std::vector<std::vector<int>> indices;
     int group;

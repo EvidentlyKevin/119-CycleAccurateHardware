@@ -5,8 +5,10 @@
 #include <vector>
 #include "systolic_array.h"
 #include "memory.h"
+#include "Port.h"
 
-
+template<typename T>
+class Cluster; // Forward declaration
 
 template<typename T>
 class TPU {
@@ -19,7 +21,15 @@ Memory mem;
 TPU(int row, int col);
 void run();
 void setparameters();
-void display();
+void setLeftPort(Port<T>* leftPort);
+
+
+Port<T> portR;
+Port<T>* portL = nullptr; // Pointer to the left port
+Port<T>& getRPort();
+
+std::vector<int> dequeuedValue;
+
 
 int ROWS;
 int COLS;

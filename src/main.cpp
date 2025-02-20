@@ -25,7 +25,7 @@ void memoryFunction() {
 
 int main() {
     int testOption;
-    Cluster<int> cluster(2);
+    Cluster<int> cluster(3);
 
     
 
@@ -44,8 +44,7 @@ int main() {
             break;
         case 2:
             cluster.setParametersForTPUs();
-            //cluster.showbanks();
-            cluster.runAllTPUs();
+            cluster.runTPUS();
 
             break;
         default:

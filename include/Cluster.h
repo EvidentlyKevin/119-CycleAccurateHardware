@@ -5,6 +5,7 @@
 #include <vector>
 #include <stdexcept>
 #include "TPU.h"
+#include "Port.h"
 
 template<typename T>
 class Cluster {
@@ -12,9 +13,10 @@ public:
 
 // Constructor
     Cluster(int size = DEFAULT_SIZE);
-    void runAllTPUs();
+    void runTPUS();
     void setParametersForTPUs(); 
-    void showbanks(); 
+    void showbanks();
+    void runAllTPUs();
 
     static const int DEFAULT_SIZE = 8;
 

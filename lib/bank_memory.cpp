@@ -4,11 +4,11 @@
 #include <random>
 
 
-Memory::Memory() : MemoryBanks(MemBanks, MemBank(BANK_ROWS, BANK_COLS)), indices(100, std::vector<int>(100, 0)) {
+Memory::Memory() : MemoryBanks(MemBanks, MemBank(BANK_ROWS, BANK_COLS)), indices(10000, std::vector<int>(10000, 0)) {
     // Additional initialization if needed
 }
 
-
+int save;
 
 void Memory::initBanks() {
     Memory mem;
@@ -19,14 +19,37 @@ void Memory::initBanks() {
     for (int i = 0; i < MemBanks; i++) {
         int foo = 0;
         for (int j = 0; j < BANK_ROWS; j++) {
-            ++foo;
+            foo++;
             for (int k = 0; k < BANK_COLS; k++) {
                 // MemoryBanks[i].Data[j][k] = dis(gen);
                 MemoryBanks[i].Data[j][k] = foo;
                 // MemoryBanks[i].Data[j][k] = 6;
+                save = MemoryBanks[0].Data[0][0];
             }
         }
     }
+}
+
+void Memory::initBanksFromLeft(std::vector<int>& TPU_left) {
+    Memory mem;
+    // Initialize memory banks from the left side
+    for (int i = 0; i < MemBanks; i++) {
+        for (int j = 0; j < BANK_ROWS; j++) {
+            for (int k = 0; k < BANK_COLS; k++) {
+                MemoryBanks[i].Data[k][j] = TPU_left[k]; // Set to TPU_left value
+                save = MemoryBanks[0].Data[0][0];
+            }
+
+            break;
+
+        }
+
+        break;
+
+    }
+ 
+    
+    
 }
 
 void Memory::increment(int cycle) {
@@ -80,9 +103,9 @@ void Memory::pushData(std::vector<channelM<int>>& channels, int cycle, bool debu
 
     for (int i = 0; i < numChannels; ++i) {
        
-        int bankIndex = i / BANK_COLS;
+        int bankIndex = 0;
 
-        int colIndex = i % BANK_COLS;
+        int colIndex = 0;
 
 
         // int storeCycle = 0;
@@ -92,7 +115,7 @@ void Memory::pushData(std::vector<channelM<int>>& channels, int cycle, bool debu
 
    
 
-        data[i] = MemoryBanks[bankIndex].Data[rowIndex][colIndex];
+        data[i] = MemoryBanks[0].Data[rowIndex][0];
 
 
 
@@ -131,7 +154,7 @@ for (int s = start; s < end; s += 6) {
    }
 
     // important to break here so it doesn't push multiple times into same channel
-     if (data[i] >= neg_inf && data[i] <= pos_inf && data[i] != 1 && data[i] != 0) {
+     if (data[i] >= neg_inf && data[i] <= pos_inf && data[i] != save && data[i] != 0) {
                 channels[i].push(data[i]);
                 break;
 
