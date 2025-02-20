@@ -104,13 +104,14 @@ void TPU<T>::run() {
 
         // Debugging: Print activations read by the systolic array
         for (int j = 0; j < SIZE; ++j) {
-            // int activation = systolicArray.getMACUnit(0, j)->getLastActivation();
-            // std::cout << "MAC[0][" << j << "] activation: " << activation << "\n";
+             int activation = systolicArray.getMACUnit(0, j)->getLastActivation();
+             std::cout << "MAC[0][" << j << "] activation: " << activation << "\n";
         }
     }
 
     // Get the outputs from the systolic array
-    std::vector<int> outputs = systolicArray.getOutputs();
+std::vector<int> outputs = systolicArray.getOutputs();
+
 // --- NEW CODE: Apply activation function to the outputs ---
 // Create an Activation object
 Activation act;
@@ -148,8 +149,8 @@ for (size_t i = 0; i < activatedOutputs.size(); ++i) {
 }
 
 // Print the outputs
-// std::cout << "Systolic Array Outputs with Memory Input:\n";
-// for (size_t i = 0; i < outputs.size(); ++i) {
-//     std::cout << "Output[" << i << "]: " << outputs[i] << "\n";
-// }
+ /*std::cout << "Systolic Array Outputs with Memory Input:\n";
+ for (size_t i = 0; i < outputs.size(); ++i) {
+    std::cout << "Output[" << i << "]: " << outputs[i] << "\n";
+ }*/
 }

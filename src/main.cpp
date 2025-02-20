@@ -26,7 +26,7 @@ void memoryFunction() {
 
 int main() {
     int testOption;
-    Cluster<int> cluster(2); // Create a cluster with 2 TPUs
+    Cluster<int> cluster(1); // Create a cluster with 2 TPUs
     // Set the parameters for the TPUs
 
     // What do you want to test
@@ -56,7 +56,7 @@ int main() {
         // Set the activation function in the cluster
         cluster.setActivationFunction(activationChoice);  // You must implement this method in Cluster.
 
-        // Proceed with existing parameter setting and simulation run
+        // Proceed with existing parameter setting and simulation run*/
         cluster.setParametersForTPUs();
         // cluster.showbanks(); // if needed
         cluster.runAllTPUs();

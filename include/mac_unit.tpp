@@ -110,7 +110,7 @@ void MACUnit<T>::computeMAC(bool debug) {
 }
 
 template<typename T>
-void MACUnit<T>::sendOutputs(bool debug,int act) {
+void MACUnit<T>::sendOutputs(bool debug, int act) {
     Activation activation;
     // Send partial sum to the right
     //Case statement to determine the activation function
@@ -134,11 +134,11 @@ void MACUnit<T>::sendOutputs(bool debug,int act) {
     }
     
 
-    rightOut.push(accumulator);
+    /*rightOut.push(accumulator);
     // Debugging: Print the partial sum sent to the right
     if (debug) {
         std::cout << "MAC[" << rowID << "][" << colID << "] sent accumulator " << accumulator << " to rightOut\n";
-    }
+    }*/
 
     // Send activation downward
     downOut.push(a);
