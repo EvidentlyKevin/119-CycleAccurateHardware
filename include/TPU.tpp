@@ -24,21 +24,27 @@ void TPU<T>::setparameters() {
     std::cout << "32x32: 283 cycles" << std::endl;
    
     std::cout << "Enter the size of the systolic array: ";
-    std::cin >> SIZE;
+    // std::cin >> SIZE;
+    SIZE = 8;
     std::cout << "--------------------------" << std::endl;
     std::cout << "Enter the number of rows for Bank Memory: ";
-    std::cin >> ROWS;
+    // std::cin >> ROWS;
+    ROWS = 8;
     std::cout << "--------------------------" << std::endl;
     std::cout << "Enter the number of columns for Bank Memory: ";
-    std::cin >> COLS;
+    // std::cin >> COLS;
+    COLS = 2;
     std::cout << "--------------------------" << std::endl;
     std::cout << "Enter the number of memory banks: ";
-    std::cin >> MemBanks;
+    // std::cin >> MemBanks;
+    MemBanks = 8;
     std::cout << "--------------------------" << std::endl;
     std::cout << "Enter number of cycles for simulation: ";
-    std::cin >> num_cycles;
+    // std::cin >> num_cycles;
+    num_cycles = 100;
     std::cout << "Enter the activation function: " << std::endl << "1: ReLU" << std::endl << "2: Sigmoid" << std::endl << "3: Tanh" << std::endl << "4: Gelu" << std::endl;
-    std::cin >> activationFunction;
+    // std::cin >> activationFunction;
+    activationFunction = 1;
     std::cout << "--------------------------" << std::endl;
 }
 
@@ -93,12 +99,17 @@ void TPU<T>::run() {
     }
 
     // Simulation loop
+
+    // Make membank init cycle offset
+    int memoffset = (SIZE * SIZE) / 2;
+
+
     for (int cycle = 0; cycle < num_cycles; ++cycle) {
         mem.increment(cycle);
 
         // Set input activations from memory channels
         if (cycle % 3 == 0 || cycle == 0) {
-            mem.pushData(memoryToSystolicChannels, cycle, true);
+            mem.pushData(memoryToSystolicChannels, cycle, memoffset, true);
             systolicArray.setInputActivationsFromChannels(memoryToSystolicChannels, cycle, false);
         }
         // Run one cycle of the systolic array
@@ -118,5 +129,7 @@ void TPU<T>::run() {
     std::cout << "Systolic Array Outputs with Memory Input:\n";
     for (size_t i = 0; i < outputs.size(); ++i) {
         std::cout << "Output[" << i << "]: " << outputs[i] << "\n";
+        //std::cout << "---------------------------\n";
+        //std::cout << memoffset << std::endl;
     }
 }

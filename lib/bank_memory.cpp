@@ -55,7 +55,7 @@ void Memory::increment(int cycle) {
     }
 }
 
-void Memory::pushData(std::vector<channelM<int>> &channels, int cycle, bool debug) {
+void Memory::pushData(std::vector<channelM<int>> &channels, int cycle, int memoffset, bool debug) {
     size_t numChannels = channels.size();
     double pos_inf = std::numeric_limits<double>::infinity();
     double neg_inf = -std::numeric_limits<double>::infinity();
@@ -117,7 +117,7 @@ void Memory::pushData(std::vector<channelM<int>> &channels, int cycle, bool debu
             }
             // If debugging is enabled, print details about the push.
             if (debug) {
-                std::cout << "Cycle " << cycle << ": Pushed data " << data[i]
+                std::cout << "Cycle (w/ offset = " << memoffset << "): " << (cycle + memoffset) << ": Pushed data " << data[i]
                           << " from Bank " << bankIndex << ", Row " << rowIndex
                           << ", Column " << colIndex << " into Channel " << i << "\n";
             }

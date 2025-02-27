@@ -32,7 +32,7 @@ public:
     Memory();
 
     void initBanks();
-    void pushData(std::vector<channelM<int>> &data, int cycle, bool debug = false);
+    void pushData(std::vector<channelM<int>> &data, int cycle, int memoffset, bool debug = false);
     void increment(int cycle);
 
 private:
