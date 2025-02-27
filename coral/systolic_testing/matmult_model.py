@@ -1,3 +1,5 @@
+# Guide: https://chatgpt.com/c/67c0b233-9ff8-8000-9be1-a4c3f3802619
+
 import tensorflow as tf
 import numpy as np
 
