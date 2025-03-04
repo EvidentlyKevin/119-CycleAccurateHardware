@@ -26,8 +26,16 @@ void TPU<T>::setparameters() {
     cout << "64x64: 574 cycles" << endl;
     cout << "128x128: 766 cycles" << endl;
     cout << "256x256: 1534 cycles" << endl;
-    cout << "512x512: 4000 cycles" << endl;
-    cout << "1024x1024: 8000 cycles" << endl;
+    cout << "512x512: 3070 cycles" << endl;
+    cout << "1024x1024: 6142 cycles" << endl;
+    cout << "2048x2048: 12286 cycles" << endl;
+    cout << "4096x4096: 24574 cycles" << endl;
+    cout << "8192x8192: 49150 cycles" << endl;
+    cout << "16384x16384: 98302 cycles" << endl;
+    cout << "32768x32768: 196606 cycles" << endl;
+    cout << "65536x65536: 393214 cycles" << endl;
+    cout << "131072x131072: 786430 cycles" << endl;
+    cout << "262144x262144: 1572862 cycles" << endl;
     cout << "Further testing is needed to find the number of cycles for the for other systolic array sizes" << endl;
    
    cout << "Enter the size of the systolic array: ";
@@ -69,7 +77,7 @@ if(rowID == 0 && colID == 0) {
         mem.initBanksFromLeft(dequeuedValue); // Initialize memory banks from the left side
      }
 
-    // Display the contents of the memory banks
+    /*(// Display the contents of the memory banks
     for (int i = 0; i < MemBanks; i++) {
         std::cout << "Memory Bank " << i << ":\n";
         for (int j = 0; j < BANK_ROWS; j++) {
@@ -79,7 +87,7 @@ if(rowID == 0 && colID == 0) {
             std::cout << std::endl;
         }
         std::cout << "---------------------------\n";
-    }
+    }*/
  
 
     Systolic_Array<int> systolicArray(SIZE);
