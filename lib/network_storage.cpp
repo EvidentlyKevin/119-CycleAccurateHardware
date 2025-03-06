@@ -47,7 +47,6 @@ void NetworkStorage::push() {
             std::string cmd = "mv " + file.path().string() + " " + network_path;
             std::cout << "Executing: " << cmd << std::endl;
             int result = system(cmd.c_str());
-
             if (result == 0) {
                 std::cout << "Successfully moved: " << file.path().filename().string() << std::endl;
             } else {
