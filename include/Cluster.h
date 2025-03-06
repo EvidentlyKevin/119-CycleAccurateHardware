@@ -4,6 +4,7 @@
 #include <iostream>
 #include <vector>
 #include <stdexcept>
+#include <memory>
 #include "TPU.h"
 
 template<typename T>
@@ -21,18 +22,10 @@ public:
 
     static const int DEFAULT_SIZE = 8;
 
-
-
-
-
-
-
-
 private:
-int SIZE;
-int activationFunction = 1; // Default activation function is ReLU
-std::vector<std::vector<std::unique_ptr<TPU<T>>>> array;
-
+    int SIZE;
+    int activationFunction = 1; // Default activation function is ReLU
+    std::vector<std::vector<std::unique_ptr<TPU<T>>>> array;
 
 };
 

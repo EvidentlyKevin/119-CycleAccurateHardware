@@ -4,6 +4,8 @@
 #include "../include/memory.h"
 #include "../include/systolic_array.h"
 #include "../include/activation.h"
+#include "../include/network_storage.h"
+
 
 
 void memoryFunction() {
@@ -22,7 +24,6 @@ void memoryFunction() {
         std::cout << "---------------------------\n";
     }
 }
-
 
 int main() {
     int testOption;
