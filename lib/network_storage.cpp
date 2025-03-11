@@ -1,11 +1,16 @@
+/*
+Network storage class handles storing, parsing, and retrieving network weights.
+
+*/
+
 #include "../include/network_storage.h"
-#include <fstream> 
-#include <sstream> //
+#include <fstream> //file operations
+#include <sstream> // for string stream
 #include <vector> // For std::vector
-#include <string>
+#include <string> // for string manipulations
 #include <cstdlib> // For std::exit
-#include <iostream>
-#include <filesystem>
+#include <iostream> // for output
+#include <filesystem> // for directory and file handling
  
 namespace fs = std::filesystem;
 
@@ -20,17 +25,18 @@ std::string network_path = "/mnt/network_weights"; // Update this path
 void NetworkStorage::parse() {
     // Implementation of the parse method
     
-    if (!fs::exists(network_path)) {
+    if (!fs::exists(storage)) { // Check if the storage path exists
         std::cerr << "Error: Network storage path does not exist!" << std::endl;
         return;
     }
-    for (const auto& entry : fs::directory_iterator(storage)) {
-        if (entry.path().extension() == ".csv" || entry.path().extension() == ".bin") { // Only parse relevant weight files
+    for (const auto& entry : fs::directory_iterator(storage)) { // Iterate over files in the storage directory
+        if (entry.path().extension() == ".csv" || entry.path().extension() == ".bin"|| entry.path().extension() == ".json") { // don't need .bin can remove later 
             std::ifstream file(entry.path());
             if (!file) {
                 std::cerr << "Error opening file: " << entry.path() << std::endl;
                 continue;
             }
+            std::cout << "Parsed file: " << entry.path().filename().string() << std::endl;
     }
 }
 
@@ -43,10 +49,10 @@ void NetworkStorage::push() {
     }
 
     for (const auto& file : fs::directory_iterator(storage)) {
-        if (file.path().extension() == ".csv" || file.path().extension() == ".bin") { // Only push relevant weight files
-            std::string cmd = "mv " + file.path().string() + " " + network_path;
-            std::cout << "Executing: " << cmd << std::endl;
-            int result = system(cmd.c_str());
+        if (file.path().extension() == ".csv" || file.path().extension() == ".bin" ||entry.path().extension() == ".json" ) { // Only push relevant weight files
+            std::string cmd = "mv " + file.path().string() + " " + network_path; // Move file to network storage
+            std::cout << "Executing: " << cmd << std::endl; //  Debugging output
+            int result = system(cmd.c_str()); // Execute the move command in system shell
             if (result == 0) {
                 std::cout << "Successfully moved: " << file.path().filename().string() << std::endl;
             } else {
@@ -60,7 +66,7 @@ void NetworkStorage::push() {
 
 std::string NetworkStorage::fetch() {
 
-    std::cout << "Fetching data files from network storage...\n";
+    std::cout << "Fetching data files from network storage...\n"; // Debugging (can remove later)
 
     std::string network_path = "/mnt/network_weights"; // Update this path
     if (!fs::exists(network_path)) {
@@ -83,31 +89,6 @@ std::string NetworkStorage::fetch() {
     }
     return "Fetch complete";
 }
-}
-void NetworkStorage::loadBankMem(const std::string& filename) { //might not need
-    std::string filepath = storage + "/" + filename;
-    std::ifstream file(filepath);
-
-    if (!file.is_open()) {
-        std::cerr << "Error opening data file: " << filename << std::endl;
-        return;
-    }
-
-    std::ofstream bankMemory("bank_memory.cpp", std::ios::trunc);
-    if (!bankMemory.is_open()) {
-        std::cerr << "Error opening bank memory file!" << std::endl;
-        return;
-    }
-
-    std::string line;
-    bankMemory << "// Bank Memory Data from " << filename << "\n";
-    while (std::getline(file, line)) {
-        bankMemory << line << "\n"; // Copy data directly
-    }
-
-    file.close();
-    bankMemory.close();
-    std::cout << "Bank memory populated with data from: " << filename << std::endl;
 }
 
 void NetworkStorage::setParameters() {
