@@ -20,7 +20,7 @@ NetworkStorage::NetworkStorage(std::string path, bool debug) : storage(path) {
         std::cout << "NetworkStorage initialized with path: " << storage << std::endl;
     }
 }
-std::string network_path = "\tpu_inference_data.json"; // Update this path
+std::string network_path = "output"; // Update this path and fix it 
 
 void NetworkStorage::parse() {
     // Implementation of the parse method
@@ -30,7 +30,7 @@ void NetworkStorage::parse() {
         return;
     }
     for (const auto& entry : fs::directory_iterator(storage)) { // Iterate over files in the storage directory
-        if (entry.path().extension() == ".csv" || entry.path().extension() == ".bin"|| entry.path().extension() == ".json") { // don't need .bin can remove later 
+        if (entry.path().extension() == ".json") { // don't need .bin can remove later 
             std::ifstream file(entry.path());
             if (!file) {
                 std::cerr << "Error opening file: " << entry.path() << std::endl;
@@ -44,6 +44,7 @@ void NetworkStorage::push() {
     // Implementation of the push method
     
     if (!fs::exists(network_path)) {
+        fs::create_directories(network_path); // Create directory if it doesn't exist
         std::cerr << "Error: Network storage path does not exist!" << std::endl;
         return;
     }
@@ -72,9 +73,8 @@ std::string NetworkStorage::fetch() {
 
     // Implementation of the fetch method
     for (const auto& file : fs::directory_iterator(network_path)) {
-        if (file.path().extension() == ".csv" || file.path().extension() == ".json") { // Only fetch required files
+        if (file.path().extension() == ".json") { // Only fetch required files
             std::string destination = storage + "/" + file.path().filename().string(); // Destination path
-
             // Copy file using filesystem 
             try {
                 fs::copy_file(file.path(), destination, fs::copy_options::overwrite_existing);
@@ -94,3 +94,4 @@ void NetworkStorage::setParameters() {
 void NetworkStorage::showConfig() const {
     // Implementation of the showConfig method
 }
+

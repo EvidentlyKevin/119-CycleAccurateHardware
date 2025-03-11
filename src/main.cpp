@@ -59,6 +59,13 @@ int main() {
 
         // Proceed with existing parameter setting and simulation run*/
         cluster.setParametersForTPUs();
+            //put memory data in here 
+
+        NetworkStorage storage("/home/user/data", true);
+        storage.push();
+        storage.fetch();
+
+
         // cluster.showbanks(); // if needed
         cluster.runAllTPUs();
         break;
