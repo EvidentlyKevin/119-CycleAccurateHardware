@@ -1,5 +1,5 @@
 /*
-Network storage class handles storing, parsing, and retrieving network weights.
+Network storage class handles storing, parsing, and retrieving data.
 
 */
 
@@ -49,7 +49,7 @@ void NetworkStorage::push() {
     }
 
     for (const auto& file : fs::directory_iterator(storage)) {
-        if (file.path().extension() == ".csv" || file.path().extension() == ".bin" || file.path().extension() == ".json") { // Only push relevant weight files
+        if (file.path().extension() == ".csv" || file.path().extension() == ".bin" || file.path().extension() == ".json") { 
             std::string destination = network_path + "/" + file.path().filename().string();
             
             try {
