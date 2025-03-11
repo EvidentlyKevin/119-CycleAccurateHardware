@@ -16,7 +16,7 @@ public:
     void push();
     void setParameters();
     void showConfig() const;
-    void loadBankMem();
+   // void loadBankMem();
 private:
     std::string storage;
 };

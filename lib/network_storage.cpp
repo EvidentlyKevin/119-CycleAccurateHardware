@@ -20,7 +20,7 @@ NetworkStorage::NetworkStorage(std::string path, bool debug) : storage(path) {
         std::cout << "NetworkStorage initialized with path: " << storage << std::endl;
     }
 }
-std::string network_path = "/mnt/network_weights"; // Update this path
+std::string network_path = "\tpu_inference_data.json"; // Update this path
 
 void NetworkStorage::parse() {
     // Implementation of the parse method
@@ -39,7 +39,7 @@ void NetworkStorage::parse() {
             std::cout << "Parsed file: " << entry.path().filename().string() << std::endl;
     }
 }
-
+}
 void NetworkStorage::push() {
     // Implementation of the push method
     
@@ -49,46 +49,42 @@ void NetworkStorage::push() {
     }
 
     for (const auto& file : fs::directory_iterator(storage)) {
-        if (file.path().extension() == ".csv" || file.path().extension() == ".bin" ||entry.path().extension() == ".json" ) { // Only push relevant weight files
-            std::string cmd = "mv " + file.path().string() + " " + network_path; // Move file to network storage
-            std::cout << "Executing: " << cmd << std::endl; //  Debugging output
-            int result = system(cmd.c_str()); // Execute the move command in system shell
-            if (result == 0) {
-                std::cout << "Successfully moved: " << file.path().filename().string() << std::endl;
-            } else {
-                std::cerr << "Error moving file: " << file.path().filename().string() << std::endl;
+        if (file.path().extension() == ".csv" || file.path().extension() == ".bin" || file.path().extension() == ".json") { // Only push relevant weight files
+            std::string destination = network_path + "/" + file.path().filename().string();
+            
+            try {
+                fs::rename(file.path(), destination);
+                std::cout << "Successfully moved file: " << file.path().filename().string() << std::endl;
+            } catch (const fs::filesystem_error& e) {
+                std::cerr << "Error moving file: " << file.path().filename().string() << " - " << e.what() << std::endl;
             }
         }
     }
-}
-
 }
 
 std::string NetworkStorage::fetch() {
-
     std::cout << "Fetching data files from network storage...\n"; // Debugging (can remove later)
 
-    std::string network_path = "/mnt/network_weights"; // Update this path
     if (!fs::exists(network_path)) {
         std::cerr << "Error: Network storage path does not exist!" << std::endl;
         return "";
-    return "Fetch complete";
+    }
+
     // Implementation of the fetch method
     for (const auto& file : fs::directory_iterator(network_path)) {
-        if (file.path().extension() == ".csv") { // Only fetch data files
-            std::string destination = storage + "/" + file.path().filename().string();
-            std::string cmd = "cp " + file.path().string() + " " + destination;
-            int result = system(cmd.c_str());
+        if (file.path().extension() == ".csv" || file.path().extension() == ".json") { // Only fetch required files
+            std::string destination = storage + "/" + file.path().filename().string(); // Destination path
 
-            if (result == 0) {
+            // Copy file using filesystem 
+            try {
+                fs::copy_file(file.path(), destination, fs::copy_options::overwrite_existing);
                 std::cout << "Successfully fetched: " << file.path().filename().string() << std::endl;
-            } else {
-                std::cerr << "Error fetching file: " << file.path().filename().string() << std::endl;
+            } catch (const fs::filesystem_error& e) {
+                std::cerr << "Error fetching file: " << file.path().filename().string() << " - " << e.what() << std::endl;
             }
         }
     }
     return "Fetch complete";
-}
 }
 
 void NetworkStorage::setParameters() {
