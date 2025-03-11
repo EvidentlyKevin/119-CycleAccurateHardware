@@ -61,9 +61,10 @@ int main() {
         cluster.setParametersForTPUs();
             //put memory data in here 
 
-        NetworkStorage storage("/home/user/data", true);
+        NetworkStorage storage("/home/user/data", true); 
         storage.push();
         storage.fetch();
+        storage.parse();
 
 
         // cluster.showbanks(); // if needed
