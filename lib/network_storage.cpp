@@ -37,8 +37,8 @@ void NetworkStorage::parse() {
                 continue;
             }
             std::cout << "Parsed file: " << entry.path().filename().string() << std::endl;
+        }
     }
-}
 }
 void NetworkStorage::push() {
     // Implementation of the push method
