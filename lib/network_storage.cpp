@@ -4,6 +4,7 @@ Network storage class handles storing, parsing, and retrieving data.
 */
 
 #include "../include/network_storage.h"
+#include <nlohmann/json.hpp> // For JSON parsing (if needed)
 #include <fstream> //file operations
 #include <sstream> // for string stream
 #include <vector> // For std::vector
@@ -13,7 +14,7 @@ Network storage class handles storing, parsing, and retrieving data.
 #include <filesystem> // for directory and file handling
  
 namespace fs = std::filesystem;
-
+using json = nlohmann::json; // For JSON parsing (if needed)
 //Constructor
 NetworkStorage::NetworkStorage(std::string path, bool debug) : storage(path) {
     if (debug) {
@@ -53,6 +54,12 @@ void NetworkStorage::push() {
         if (file.path().extension() == ".csv" || file.path().extension() == ".bin" || file.path().extension() == ".json") { 
             std::string destination = network_path + "/" + file.path().filename().string();
             
+            // for loop to get into cluster and iterate thru every tpu 
+            // the pushed data should be doing this 
+
+            
+
+
             try {
                 fs::rename(file.path(), destination);
                 std::cout << "Successfully moved file: " << file.path().filename().string() << std::endl;
@@ -86,12 +93,15 @@ std::string NetworkStorage::fetch() {
     }
     return "Fetch complete";
 }
+//optional: memory remapping 
+//void NetworkStorage::loadBankMem() {
+//
 
-void NetworkStorage::setParameters() {
+void NetworkStorage::fetchDebug() {
     // Implementation of the setParameters method
 }
 
-void NetworkStorage::showConfig() const {
+//void NetworkStorage::showConfig() const {
     // Implementation of the showConfig method
-}
+
 

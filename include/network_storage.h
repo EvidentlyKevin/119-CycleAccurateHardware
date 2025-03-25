@@ -14,7 +14,7 @@ public:
     void parse();
     std::string fetch();
     void push();
-    void setParameters();
+    void fetchDebug();
     void showConfig() const;
    // void loadBankMem();
 private:

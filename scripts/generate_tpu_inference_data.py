@@ -12,8 +12,8 @@ def generate_tpu_inference_data(num_entries, array_size, filename):
         f.write(json.dumps(data, indent=2))
 
 # Parameters
-num_entries = 1000  # number of inference inputs
-array_size = 16      # size of each inference input (should match your systolic array)
+num_entries = 10 # number of inference inputs 1000  before
+array_size = 4    # size of each inference input (should match your systolic array) 16 before
 output_file = "output/tpu_inference_data.json"
 
 # Generate the data
