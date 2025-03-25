@@ -1,51 +1,54 @@
-#include ../Accumulator.h
-
-class Accumulator::Accumulator() {
-    public:
-    void load(){
+#include "Accumulator.h"
 
 
+void load(){
+    // Load the accumulator
+    
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
     }
-})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
