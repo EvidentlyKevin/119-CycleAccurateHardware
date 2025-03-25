@@ -23,6 +23,36 @@ NetworkStorage::NetworkStorage(std::string path, bool debug) : storage(path) {
 }
 std::string network_path = "output"; // Update this path and fix it 
 
+// Function to load inference data from a JSON file
+std::vector<std::vector<float>>loadInferenceData(const std::string& filepath){
+    std::ifstream file (filepath);
+    std::vector<std::vector<float>> data; // 2D vector to hold the data
+   // return data;
+
+    if (!file.is_open()) {
+        std::cerr << "Error opening file: " << filepath << std::endl;
+        return data; // Return empty data if file cannot be opened
+
+    }
+
+    json j;
+    file >> j; // Parse the JSON file
+    file.close(); // Close the file
+
+    for (const auto& row : j) { // Iterate over the JSON array
+        std::vector<float> rowData; // Vector to hold each row of data
+        for (const auto& value : row) { // Iterate over each value in the row
+            rowData.push_back(value.get<float>()); // Convert to float and add to the row
+        }
+        data.push_back(rowData); // Add the row to the 2D vector
+    }
+
+
+return data;
+
+
+}
+
 void NetworkStorage::parse() {
     // Implementation of the parse method
     

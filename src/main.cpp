@@ -5,7 +5,8 @@
 #include "../include/systolic_array.h"
 #include "../include/activation.h"
 #include "../include/network_storage.h"
-
+#include <nlohmann/json.hpp> // For JSON parsing (if needed)
+#include <fstream> //file operations
 
 
 void memoryFunction() {
@@ -26,24 +27,55 @@ void memoryFunction() {
 }
 
 int main() {
-    int testOption;
-    Cluster<int> cluster(1); // Create a cluster with 2 TPUs
-    // Set the parameters for the TPUs
 
+    int testOption;
+   
     // What do you want to test
-    std::cout << "Enter a test option (1-2):\n";
-    std::cout << "1: Test Memory Function\n";
-    std::cout << "2: Test Systolic Array Function\n";
+    std::cout << "Enter a test option (1-3):\n";
+    std::cout << "1: Load and display inference data (JSON)\n";
+    std::cout << "2: Test Memory Function\n";
+    std::cout << "3: Test Systolic Array Function\n";
     std::cout << "Option: ";
     std::cin >> testOption;
     std::cout << "--------------------------" << std::endl;
 
+    // Declare filepath outside the switch-case to avoid bypassing initialization
+   // std::string filepath;
+    //std::vector<std::vector<float>> inferenceData= loadInferenceData(filepath); // Initialize with empty data
+
     // Use switch-case to handle different options
     switch (testOption) {
         case 1:
-        memoryFunction();
+        {
+           
+            //std::string filepath = "output/tpu_inference_data.json";
+            std::string filepath = "../output/tpu_inference_data.json";
+
+            std::vector<std::vector<float>> inferenceData = loadInferenceData(filepath);
+
+            if (inferenceData.empty()) {
+                std::cerr << "Error: No data loaded from the JSON file.\n";
+                return 1;
+            }
+
+            std::cout << "Loaded " << inferenceData.size() << " rows.\n";
+            std::cout << "Each row has " << inferenceData[0].size() << " columns.\n";
+
+            for (const auto& row : inferenceData) {
+                for (float val : row) {
+                    std::cout << val << " ";
+                }
+                std::cout << "\n";
+            }
             break;
-        case 2:{
+        }
+    case 2:
+        memoryFunction();
+        break;
+        case 3:{
+            Cluster<int> cluster(1); // Create a cluster with 2 TPUs
+            // Set the parameters for the TPUs
+        
         int activationChoice;
         std::cout << "Select Activation Function:\n";
         std::cout << "1: ReLU\n";
