@@ -82,12 +82,11 @@ void NetworkStorage::push(std::vector<T>& data) {
     */
 
     // Check if the network storage is initialized
-    if () {
-        std::cerr << "Error: Network storage bad initialization!" << std::endl;
+    if (data.empty()) {
+        std::cerr << "Error: No data to push!" << std::endl;
         return;
-    } else {
-        std::cout << "Network storage initialized successfully!" << std::endl;
     }
+    std::cout << "Network storage initialized with data." << std::endl;
 
     // Calculate the minimum number of TPUs to task with the data
     int numTPUs = Cluster::size(); // Get the number of TPUs in the cluster
