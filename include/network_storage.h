@@ -4,6 +4,8 @@
 #include <iostream>
 #include <stdexcept>
 #include <memory>
+#include <vector>
+#include <filesystem> // for directory and file handling
 
 class NetworkStorage {
 public:
@@ -11,12 +13,16 @@ public:
     NetworkStorage(std::string path = "./storage", bool debug = false);
 
     // Methods
+   
     void parse();
     std::string fetch();
     void push();
-    void setParameters();
+    void fetchDebug();
     void showConfig() const;
    // void loadBankMem();
 private:
     std::string storage;
 };
+
+std::vector<std::vector<float>> loadInferenceData(const std::string& filepath);
+
