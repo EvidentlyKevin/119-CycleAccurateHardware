@@ -50,3 +50,13 @@ template<typename T>
 int Cluster<T>::getActivationFunction() const {
     return activationFunction;
 }
+
+template<typename T>
+void Cluster<T>::sendDataToTPUs(const std::vector<T>& data) {
+    // Do this intelligently instead of sending the same data to all TPUs
+    for (int i = 0; i < SIZE; ++i) {
+        for (int j = 0; j < SIZE; ++j) {
+            array[i][j]->sendData(data);
+        }
+    }
+}

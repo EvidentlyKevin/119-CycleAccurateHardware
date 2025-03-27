@@ -4,6 +4,7 @@ Network storage class handles storing, parsing, and retrieving data.
 */
 
 #include "../include/network_storage.h"
+#include "../include/Cluster.h"
 #include <fstream> //file operations
 #include <sstream> // for string stream
 #include <vector> // For std::vector
@@ -40,26 +41,39 @@ void NetworkStorage::parse() {
         }
     }
 }
-void NetworkStorage::push() {
-    // Implementation of the push method
+void NetworkStorage::push(std::vector<T>& data) {
+    // Kevin's Implementation of the push method
     
-    if (!fs::exists(network_path)) {
-        fs::create_directories(network_path); // Create directory if it doesn't exist
-        std::cerr << "Error: Network storage path does not exist!" << std::endl;
+    /*
+    1) Verify that the netstore data is initialized/populated
+    2) Calculate min number of TPUs to task with the data
+    3) Send data to TPU Memory Banks
+    */
+
+    // Check if the network storage is initialized
+    if () {
+        std::cerr << "Error: Network storage bad initialization!" << std::endl;
         return;
+    } else {
+        std::cout << "Network storage initialized successfully!" << std::endl;
     }
 
-    for (const auto& file : fs::directory_iterator(storage)) {
-        if (file.path().extension() == ".csv" || file.path().extension() == ".bin" || file.path().extension() == ".json") { 
-            std::string destination = network_path + "/" + file.path().filename().string();
-            
-            try {
-                fs::rename(file.path(), destination);
-                std::cout << "Successfully moved file: " << file.path().filename().string() << std::endl;
-            } catch (const fs::filesystem_error& e) {
-                std::cerr << "Error moving file: " << file.path().filename().string() << " - " << e.what() << std::endl;
-            }
-        }
+    // Calculate the minimum number of TPUs to task with the data
+    int numTPUs = Cluster::size(); // Get the number of TPUs in the cluster
+    if (numTPUs <= 0) {
+        std::cerr << "Error: No TPUs available in the cluster!" << std::endl;
+        return;
+    }
+    std::cout << "Number of TPUs available: " << numTPUs << std::endl;
+    // Send data to TPU Memory Banks
+    Cluster::sendDataToTPU(data); // Send data to TPU memory bank
+    std::cout << "Data sent to banks" << std::endl;
+
+    // Check if the data was sent successfully
+    if (/* check if data was sent successfully */) {
+        std::cout << "Data sent successfully!" << std::endl;
+    } else {
+        std::cerr << "Error: Data not sent successfully!" << std::endl;
     }
 }
 

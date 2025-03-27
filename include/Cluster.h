@@ -18,6 +18,7 @@ public:
     void showbanks(); 
     // Methods to set and get the activation function choice
     void setActivationFunction(int activation);
+    void sendDataToTPUs(const std::vector<T>& data);
     int getActivationFunction() const;
 
     static const int DEFAULT_SIZE = 8;
