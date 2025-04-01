@@ -72,6 +72,8 @@ void NetworkStorage::parse() {
         }
     }
 }
+
+// KEVIN WORK
 void NetworkStorage::push(std::vector<T>& data) {
     // Kevin's Implementation of the push method
     
@@ -89,7 +91,7 @@ void NetworkStorage::push(std::vector<T>& data) {
     std::cout << "Network storage initialized with data." << std::endl;
 
     // Calculate the minimum number of TPUs to task with the data
-    int numTPUs = Cluster::size(); // Get the number of TPUs in the cluster
+    int numTPUs = Cluster::size(); // Get the number of TPUs in the cluster (is this called right?)
     if (numTPUs <= 0) {
         std::cerr << "Error: No TPUs available in the cluster!" << std::endl;
         return;
