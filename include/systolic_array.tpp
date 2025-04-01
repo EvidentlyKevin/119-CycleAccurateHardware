@@ -83,3 +83,11 @@ template<typename T>
 std::unique_ptr<MACUnit<T>>& Systolic_Array<T>::operator()(int row, int col) {
     return array[row][col];
 }
+template<typename T>
+void Systolic_Array<T>::print() {
+    for (int i = 0; i < SIZE; ++i) {
+        for (int j = 0; j < SIZE; ++j) {
+            std::cout << "MAC[" << i << "][" << j"]" << " - Weight: " << array[i][j]->getWeight() << ", Activation: " << array[i][j]->getLastActivation() << "\n";
+        }
+    }
+}

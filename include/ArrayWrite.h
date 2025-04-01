@@ -27,11 +27,15 @@ public:
     // Provides access to the layers.
     const std::vector<Layer>& getLayers() const;
 
+    
+
 private:
     std::vector<Layer> layers;
 
     // Helper function to parse a bracketed list into a vector of floats.
     std::vector<float> parseBracketedList(const std::string& str);
+
+    std::vector<int> parseBracketedDims(const std::string& dimStr);
 };
 
 #endif // ARRAYWRITE_H

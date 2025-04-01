@@ -2,6 +2,9 @@
 #include <vector>
 #include "../include/memory.h"
 #include "../include/systolic_array.h"
+#include "../include/ArrayWrite.h"
+#include "../include/Accumulator.h"
+
 
 void memoryFunction() {
     Memory mem;
@@ -158,6 +161,29 @@ void systolicArrayFunctionWithMemory() {
     }
 }
 
+void bertTest() {
+    
+   string file = "../weights/testDump.text";
+   SystolicArray sysArray;
+
+    sysArray.w_fetch(file);
+    // Fetch the layer structure from the file "testDump.text"
+    if (!sysArray.w_fetch(file)) {
+        std::cerr << "Failed to fetch systolic array structure." << std::endl;
+        return;
+    }
+    std::cout << "Systolic Array Structure Loaded Successfully." << std::endl;
+    sysArray.w_fill(file);
+    // Fill the systolic array with actual data from the file.
+    if (!sysArray.w_fill(file)) {
+        std::cerr << "Failed to fill systolic array with data." << std::endl;
+        return;
+    }
+    std::cout << "Systolic Array Data Loaded Successfully." << std::endl;
+    // (Optional) Print the loaded layers for debugging.
+     sysArray.print();
+}
+
 int main() {
     int testOption;
 
@@ -165,6 +191,7 @@ int main() {
     std::cout << "Enter a test option (1-2):\n";
     std::cout << "1: Test Memory Function\n";
     std::cout << "2: Test Systolic Array Function\n";
+    std::cout << "3: Test BERT Mac\n";
     std::cout << "Option: ";
     std::cin >> testOption;
 
@@ -175,6 +202,9 @@ int main() {
             break;
         case 2:
             systolicArrayFunctionWithMemory();
+            break;
+        case 3:
+            bertTest();
             break;
         default:
             std::cout << "Invalid option selected!" << std::endl;

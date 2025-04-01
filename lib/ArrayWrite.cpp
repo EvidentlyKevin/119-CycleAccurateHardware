@@ -43,12 +43,15 @@ std::vector<float> SystolicArray::parseBracketedList(const std::string &str) {
     return result;
 }
 
-// Helper: compute product of elements in an int vector.
 static int product(const std::vector<int>& dims) {
     int prod = 1;
     for (int d : dims) {
         prod *= d;
     }
+    // Debug output: print the product calculation
+    std::cerr << "Calculating product: ";
+    for (int d : dims) std::cerr << d << " ";
+    std::cerr << "=> Product: " << prod << std::endl;
     return prod;
 }
 
@@ -109,6 +112,8 @@ bool SystolicArray::w_fetch(const std::string& filename) {
     return true;
 }
 
+
+
 // w_fill: Reads the file again and fills each layer's data vector
 // using the third token (data token) from each non-blank line.
 // It reshapes the parsed flat list of values into the layer's flat vector (which already has the expected size).
@@ -118,50 +123,105 @@ bool SystolicArray::w_fill(const std::string& filename) {
         std::cerr << "Error: Could not open file " << filename << std::endl;
         return false;
     }
-    
+
     std::string line;
     size_t layerIndex = 0;
-    
+
     while (std::getline(infile, line)) {
         line = trim(line);
         if (line.empty())
             continue;
-        
+
         std::stringstream ss(line);
         std::string nameToken, dimToken, dataToken;
-        if (!std::getline(ss, nameToken, '\t'))
+        if (!std::getline(ss, nameToken, '\t') ||
+            !std::getline(ss, dimToken, '\t') ||
+            !std::getline(ss, dataToken, '\t')) {
             continue;
-        if (!std::getline(ss, dimToken, '\t'))
-            continue;
-        if (!std::getline(ss, dataToken, '\t'))
-            continue;
-        
+        }
+
         if (layerIndex >= layers.size()) {
             std::cerr << "Error: More layers in file than expected." << std::endl;
             break;
         }
-        
-        // Parse the data token into a flat vector of floats.
-        std::vector<float> dataValues = parseBracketedList(dataToken);
+
+        // Trim the tokens to remove any extra spaces
+        dimToken = trim(dimToken);
+        dataToken = trim(dataToken);
+
+        // Parse dimensions correctly as integers
+        layers[layerIndex].dims = parseBracketedDims(dimToken);
         int expectedSize = product(layers[layerIndex].dims);
+
+        // Debugging output: print parsed dimensions and expected size
+        std::cerr << "Layer: " << layers[layerIndex].name << std::endl;
+        std::cerr << "Parsed dims: ";
+        for (auto d : layers[layerIndex].dims) std::cerr << d << " ";
+        std::cerr << " => Expected size: " << expectedSize << std::endl;
+
+        // Parse the data token into a flat vector of floats
+        std::vector<float> dataValues = parseBracketedList(dataToken);
+
+        // Debugging output: print the data values and size
+        //std::cerr << "Parsed data: ";
+        //for (auto val : dataValues) std::cerr << val << " ";
+        std::cerr << " => Data size: " << dataValues.size() << std::endl;
+
         if (dataValues.size() != static_cast<size_t>(expectedSize)) {
-            std::cerr << "Warning: Data size mismatch for layer " 
+            std::cerr << "Warning: Data size mismatch for layer "
                       << layers[layerIndex].name
                       << ". Expected " << expectedSize 
                       << " but got " << dataValues.size() << std::endl;
+
+            // Further diagnostics: Check if the mismatch is due to extra or missing values
+            if (dataValues.size() > static_cast<size_t>(expectedSize)) {
+                std::cerr << "Data has more values than expected, trimming." << std::endl;
+                dataValues.resize(expectedSize); // Resize data if it has extra values
+            } else if (dataValues.size() < static_cast<size_t>(expectedSize)) {
+                std::cerr << "Data has fewer values than expected, padding." << std::endl;
+                dataValues.resize(expectedSize, 0.0f); // Pad with zero if fewer values
+            }
         }
-        
-        // Fill as many elements as possible.
-        size_t count = std::min(dataValues.size(), static_cast<size_t>(expectedSize));
-        for (size_t i = 0; i < count; i++) {
-            layers[layerIndex].data[i] = dataValues[i];
-        }
+
+        // Fill the layer data with parsed values
+        std::copy(dataValues.begin(), dataValues.end(), layers[layerIndex].data.begin());
+
         layerIndex++;
     }
-    
+
     infile.close();
     return true;
 }
+
+std::vector<int> SystolicArray::parseBracketedDims(const std::string& dimStr) {
+    std::vector<int> dims;
+    if (dimStr.size() < 2 || dimStr.front() != '[' || dimStr.back() != ']') {
+        std::cerr << "Warning: Invalid dimension format: " << dimStr << std::endl;
+        return dims;
+    }
+
+    std::stringstream ss(dimStr.substr(1, dimStr.size() - 2)); // Remove brackets
+    std::string token;
+    while (std::getline(ss, token, ',')) {
+        try {
+            dims.push_back(std::stoi(token));
+        } catch (const std::exception& e) {
+            std::cerr << "Error parsing dimension: " << token << " (" << e.what() << ")" << std::endl;
+        }
+    }
+
+    // Debug output: print parsed dimensions
+    std::cerr << "Parsed dims: ";
+    for (auto d : dims) std::cerr << d << " ";
+    std::cerr << " from " << dimStr << std::endl;
+
+    return dims;
+}
+
+
+
+
+
 
 // For debugging: prints out each layer's name, dimensions, and data.
 // For 1D or 2D arrays, it prints them in a human-friendly format; otherwise, it prints the dims and flat data.

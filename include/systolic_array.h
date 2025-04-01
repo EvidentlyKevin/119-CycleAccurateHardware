@@ -31,6 +31,9 @@ public:
     // Run one cycle
     void cycle();
 
+    //print the systolic array for debugging
+    void print();
+
     // Get the outputs from the last column of MAC units
     std::vector<T> getOutputs() const;
 
