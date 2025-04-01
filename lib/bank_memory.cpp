@@ -23,7 +23,7 @@ void Memory::initBanks() {
             for (int k = 0; k < BANK_COLS; k++) {
                 // Uncomment one of the following lines as needed:
                 // MemoryBanks[i].Data[j][k] = dis(gen);
-                MemoryBanks[i].Data[j][k] = foo;
+                MemoryBanks[i].Data[j][k] = 0;
             }
         }
     }

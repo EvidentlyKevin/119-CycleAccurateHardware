@@ -154,3 +154,29 @@ for (size_t i = 0; i < activatedOutputs.size(); ++i) {
     std::cout << "Output[" << i << "]: " << outputs[i] << "\n";
  }*/
 }
+
+template<typename T>
+void TPU<T>::sendData(const std::vector<T>& inputData) {
+
+    Memory mem; // Send data to the TPU memory banks
+    mem.initBanks(); // Initialize memory banks
+
+    int row = 0;
+    int col = 0;
+
+    for (size_t i = 0; i < inputData.size(); ++i) {
+        // Calculate the row and column indices for the memory banks
+        if(row >= BANK_ROWS) break; // Prevent out-of-bounds access
+           
+        mem.MemoryBanks[0].Data[row][col] = inputData[i]; // Store data in memory bank
+
+
+        ++col; // Move to the next column
+        if (col >= BANK_COLS) { // If the end of the row is reached, move to the next row
+            col = 0;
+            ++row;
+        }
+    }
+
+std::cout << "TPU["<< rowID <<"]["<< colID << "] received data:\n";
+}

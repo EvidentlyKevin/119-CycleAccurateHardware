@@ -20,7 +20,8 @@ public:
     void setActivationFunction(int activation);
     void sendDataToTPUs(const std::vector<T>& data);
     int getActivationFunction() const;
-
+    int getSize() const;
+    void setTPUData(int i, int j, const std::vector<T>& data);
     static const int DEFAULT_SIZE = 8;
 
 private:

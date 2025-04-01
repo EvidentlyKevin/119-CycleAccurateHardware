@@ -1,5 +1,6 @@
 #pragma once
 
+#include"Cluster.h"
 #include <string>
 #include <iostream>
 #include <stdexcept>
@@ -16,7 +17,9 @@ public:
    
     void parse();
     std::string fetch();
-    void push();
+    
+    void push(Cluster<float>& cluster, const std::vector<std::vector<float>>& data);
+
     void fetchDebug();
     void showConfig() const;
    // void loadBankMem();

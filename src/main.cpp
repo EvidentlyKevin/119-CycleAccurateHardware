@@ -34,7 +34,7 @@ int main() {
     std::cout << "Enter a test option (1-3):\n";
     std::cout << "1: Load and display inference data (JSON)\n";
     std::cout << "2: Test Memory Function\n";
-    std::cout << "3: Test Systolic Array Function\n";
+    std::cout << "3: Run Full Test Systolic Array Function\n";
     std::cout << "Option: ";
     std::cin >> testOption;
     std::cout << "--------------------------" << std::endl;
@@ -72,10 +72,22 @@ int main() {
     case 2:
         memoryFunction();
         break;
-        case 3:{
-            Cluster<int> cluster(1); // Create a cluster with 2 TPUs
+    case 3:{
+        std::string filepath = "../output/tpu_inference_data.json";
+        std::vector<std::vector<float>> inferenceData = loadInferenceData(filepath);
+
+        if (inferenceData.empty()) {
+            std::cerr << "Error: Could not load inference data.\n";
+            return 1;
+        }
+
+         Cluster<float> cluster(4); // Create a cluster with 4x4 TPus
             // Set the parameters for the TPUs
         
+
+       
+
+
         int activationChoice;
         std::cout << "Select Activation Function:\n";
         std::cout << "1: ReLU\n";
@@ -86,21 +98,20 @@ int main() {
         std::cin >> activationChoice;
         std::cout << "--------------------------" << std::endl;
 
-        // Set the activation function in the cluster
-        cluster.setActivationFunction(activationChoice);  // You must implement this method in Cluster.
-
+        
         // Proceed with existing parameter setting and simulation run*/
         cluster.setParametersForTPUs();
-            //put memory data in here 
+        NetworkStorage storage("../output", true);
+        storage.push(cluster, inferenceData);  // Push JSON data into TPU memory
 
-        NetworkStorage storage("/home/user/data", true); 
-        storage.push();
-        storage.fetch();
-        storage.parse();
+            //put memory data in here
+         // Set the activation function in the cluster
+        cluster.setActivationFunction(activationChoice);  // You must implement this method in Cluster.
 
-
-        // cluster.showbanks(); // if needed
-        cluster.runAllTPUs();
+        //NetworkStorage storage("/home/user/data", true); 
+        cluster.runAllTPUs();            // Run systolic array
+        cluster.showbanks();             // Show memory outputs
+      
         break;
     }
     default:
