@@ -1,4 +1,5 @@
 from channel import Channel
+import systolic_array
 
 class MACUnit:
     CHANNEL_CAPACITY = 128
@@ -33,23 +34,22 @@ class MACUnit:
             self.inputA.push(activation)
 
     def cycle(self):
-        # Fetch input from above or input queue
         if self.rowID == 0:
             if not self.inputA.is_empty():
                 self.a = self.inputA.pop()
             else:
-                return  # No input to compute
+                return
         else:
             if self.upIn and not self.upIn.is_empty():
                 self.a = self.upIn.pop()
             else:
-                return  # No input to compute
+                return
 
-        # MAC: Accumulate (weight * activation)
-        self.accumulator += self.a * self.w
-        print(f"MAC[{self.rowID}][{self.colID}] MAC: a={self.a}, w={self.w} => acc={self.accumulator}")
+        # MAC operation
+        if self.a != 0:
+            self.accumulator += self.a * self.w
+            systolic_array.mac_global_counter += 1
 
-        # Pass activation downward
         if not self.downOut.is_full():
             self.downOut.push(self.a)
 
