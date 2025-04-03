@@ -5,10 +5,9 @@ from tflite_runtime.interpreter import Interpreter, load_delegate
 from tqdm import tqdm  # Import tqdm for progress bars
 
 def run_edge_tpu_inference(array_size):
-    model_path = f"/home/mendel/119-CycleAccurateHardware/coral/systolic/matmul_{array_size}x{array_size}_int32_ones.tflite"
-    input_data = np.random.randint(0, 10, size=(1, array_size)).astype(np.float32)
+    model_path = f"/home/mendel/119-CycleAccurateHardware/coral/systolic/matmul_{array_size}x{array_size}_int8_ones_edgetpu.tflite"
+    input_data = np.random.randint(0, 10, size=(1, array_size)).astype(np.int8)
 
-    # Load Edge TPU-compiled model with TPU delegate
     interpreter = Interpreter(
         model_path=model_path,
         experimental_delegates=[load_delegate('libedgetpu.so.1')]
@@ -21,6 +20,10 @@ def run_edge_tpu_inference(array_size):
 
     # Set input tensor
     interpreter.set_tensor(input_details[0]['index'], input_data)
+
+    for detail in interpreter.get_tensor_details():
+        print(detail['name'], detail['dtype'], detail['shape'])
+
 
     # Run inference and time it
     start_time = time.perf_counter()
@@ -38,7 +41,7 @@ def run_edge_tpu_inference(array_size):
     sys.stdout.write(
         f"\rArray Size: {array_size} | "
         f"Inference Time: {(end_time - start_time) * 1e3:.3f} ms | "
-        f"Temperature: {temp * 1e-3:.1f}°C   "
+        f"Temperature: {temp * 1e-3:.1f}°C  | "
     )
     sys.stdout.flush()
 
@@ -46,9 +49,9 @@ def run_edge_tpu_inference(array_size):
 
 if __name__ == "__main__":
     loop_num = 1000
-    min_time = 0
-    max_time = 0
     array_sizes = [4, 8, 16, 32, 64, 128, 256]
+    min_time = {}
+    max_time = {}
     total_times = {}
     cycle_counts = {}
     total_temps = {}
@@ -56,6 +59,8 @@ if __name__ == "__main__":
     # Progress bar for array sizes
     for array_size in tqdm(array_sizes, desc="Testing Array Sizes"):
         total_times[f"{array_size}"] = 0
+        min_time[f"{array_size}"] = 0
+        max_time[f"{array_size}"] = 0
         cycle_counts[f"{array_size}"] = 0
         total_temps[f"{array_size}"] = 0
 
@@ -63,10 +68,10 @@ if __name__ == "__main__":
         for i in tqdm(range(1, loop_num+1), desc=f"Testing Size {array_size}", leave=False):
             run_time, temp = run_edge_tpu_inference(array_size)
 
-            if min_time == 0 or min_time > run_time:
-                min_time = run_time
-            if max_time == 0 or max_time < run_time:
-                max_time = run_time
+            if min_time[f"{array_size}"] == 0 or min_time[f"{array_size}"] > run_time:
+                min_time[f"{array_size}"] = run_time
+            if max_time[f"{array_size}"] == 0 or max_time[f"{array_size}"] < run_time:
+                max_time[f"{array_size}"] = run_time
 
             total_times[f"{array_size}"] += run_time
             total_temps[f"{array_size}"] += temp
@@ -88,8 +93,8 @@ if __name__ == "__main__":
 
         print(f"\n\n-------------------------------")
         print(f"       Array Size: {array_size}       ")
-        print(f"Min Run Time: {min_time*1e3:.3f} ms")
-        print(f"Max Run Time: {max_time*1e3:.3f} ms")
+        print(f"Min Run Time: {min_time[f'{array_size}']*1e3:.3f} ms")
+        print(f"Max Run Time: {max_time[f'{array_size}']*1e3:.3f} ms")
         print(f"Average Time: {average*1e3:.3f} ms")
         print(f"Average Temp: {avg_temp * 1e-3}°C")
         print(f"Average Cycle Count: {avg_cycles}")
