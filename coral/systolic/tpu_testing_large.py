@@ -1,11 +1,12 @@
 import time
 import numpy as np
-import os
+import sys
 from tflite_runtime.interpreter import Interpreter, load_delegate
+from tqdm import tqdm  # Import tqdm for progress bars
 
 def run_edge_tpu_inference(array_size):
-    model_path = f"/home/mendel/119-CycleAccurateHardware/coral/systolic/matmul_{array_size}_model_edgetpu.tflite"
-    input_data = np.random.randint(0, 10, size=(1, array_size)).astype(np.float32)  # shape: (1, 3)
+    model_path = f"/home/mendel/119-CycleAccurateHardware/coral/systolic/matmul_{array_size}x{array_size}_int32_ones.tflite"
+    input_data = np.random.randint(0, 10, size=(1, array_size)).astype(np.float32)
 
     # Load Edge TPU-compiled model with TPU delegate
     interpreter = Interpreter(
@@ -29,36 +30,66 @@ def run_edge_tpu_inference(array_size):
     # Get output tensor
     output_data = interpreter.get_tensor(output_details[0]['index'])
 
-    #print(f"Input: {input_data.flatten().tolist()}")
-    #print(f"Output: {output_data.flatten().tolist()}")
-    print(f"Inference Time: {(end_time - start_time) * 1e3:.3f} ms")
-    print(f"Temperature: {os.system('cat /sys/class/thermal/thermal_zone0/temp')}")
+    # Read temperature
+    with open("/sys/class/thermal/thermal_zone0/temp", "r") as f:
+        temp = int(f.read().strip())
 
-    return (end_time-start_time) * 1e3
+    # Use tqdm.write() to print while keeping progress bars intact
+    sys.stdout.write(
+        f"\rArray Size: {array_size} | "
+        f"Inference Time: {(end_time - start_time) * 1e3:.3f} ms | "
+        f"Temperature: {temp * 1e-3:.1f}°C   "
+    )
+    sys.stdout.flush()
+
+    return (end_time - start_time), temp
 
 if __name__ == "__main__":
-    loop_num = 50
-    total = 0
+    loop_num = 1000
     min_time = 0
     max_time = 0
-    array_sizes = [4, 16, 32, 64, 128, 256]
+    array_sizes = [4, 8, 16, 32, 64, 128, 256]
     total_times = {}
-    for array_size in array_sizes:
+    cycle_counts = {}
+    total_temps = {}
+
+    # Progress bar for array sizes
+    for array_size in tqdm(array_sizes, desc="Testing Array Sizes"):
         total_times[f"{array_size}"] = 0
-        for i in range(1, loop_num+1):
-            #time.sleep(0.01) 
-            run_time = run_edge_tpu_inference(array_size)
-            if(min_time == 0 or min_time > run_time):
+        cycle_counts[f"{array_size}"] = 0
+        total_temps[f"{array_size}"] = 0
+
+        # Progress bar for loop iterations
+        for i in tqdm(range(1, loop_num+1), desc=f"Testing Size {array_size}", leave=False):
+            run_time, temp = run_edge_tpu_inference(array_size)
+
+            if min_time == 0 or min_time > run_time:
                 min_time = run_time
-            if(max_time == 0 or max_time < run_time):
+            if max_time == 0 or max_time < run_time:
                 max_time = run_time
+
             total_times[f"{array_size}"] += run_time
+            total_temps[f"{array_size}"] += temp
+
+            if temp < 85000:
+                cycle_counts[f"{array_size}"] += run_time * 500000000
+            elif temp < 90000:
+                cycle_counts[f"{array_size}"] += run_time * 250000000
+            elif temp < 95000:
+                cycle_counts[f"{array_size}"] += run_time * 125000000
+            else:
+                cycle_counts[f"{array_size}"] += run_time * 62500000
+
+    # Display final results
     for array_size in array_sizes:
-        average=total_times[f"{array_sizes}"]/loop_num
+        average = total_times[f"{array_size}"] / loop_num
+        avg_cycles = cycle_counts[f"{array_size}"] / loop_num
+        avg_temp = total_temps[f"{array_size}"] / loop_num
+
         print(f"\n\n-------------------------------")
         print(f"       Array Size: {array_size}       ")
-        print(f"Min Run Time: {min_time:.3f} ms")
-        print(f"Max Run Time: {max_time:.3f} ms")
-        print(f"Average Time: {average:.3f} ms")
-
-
+        print(f"Min Run Time: {min_time*1e3:.3f} ms")
+        print(f"Max Run Time: {max_time*1e3:.3f} ms")
+        print(f"Average Time: {average*1e3:.3f} ms")
+        print(f"Average Temp: {avg_temp * 1e-3}°C")
+        print(f"Average Cycle Count: {avg_cycles}")
