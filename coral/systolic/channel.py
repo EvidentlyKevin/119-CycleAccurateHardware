@@ -23,11 +23,11 @@ class Channel:
     data communication between processing elements in systolic arrays.
 
     Attributes:
-        DEFAULT_CAPACITY (int): Default maximum buffer size (128 elements).
+        DEFAULT_CAPACITY (int): Default maximum buffer size (512 elements).
         capacity (int): Maximum number of elements the channel can store.
         buffer (deque): Underlying double-ended queue storing elements.
     """
-    DEFAULT_CAPACITY = 128
+    DEFAULT_CAPACITY = 512
 
     def __init__(self, capacity=DEFAULT_CAPACITY):
         """

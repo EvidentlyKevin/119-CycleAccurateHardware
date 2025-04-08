@@ -145,13 +145,20 @@ class SystolicArray:
         # Tunable coefficients for performance modeling
         alpha = 0.5    # DMA cycles per transferred element
         beta = 0.001   # Setup cost per MAC
-        gamma = 0.05   # Stall penalty (as fraction of ideal throughput)
+        # Stall penalty (as fraction of ideal throughput)
+        if self.SIZE < 64:
+            gamma = 0.5  # smaller models suffer more
+        elif self.SIZE < 128:
+            gamma = 0.1
+        else:
+            gamma = 0.05  # large models saturate pipeline better
 
         macs = M * K * N  # Total number of MAC operations
 
         dma_cycles = int(alpha * (M * K + K * N + M * N))  # inputs + weights + outputs
         setup_cycles = int(beta * macs)
-        ideal_cycles = macs / 65536  # Based on TPU throughput
+        # Matrix-vector specific throughput model
+        ideal_cycles = 2 * self.SIZE - 1
         stall_cycles = int(gamma * ideal_cycles)
 
         overhead_cycles = dma_cycles + setup_cycles + stall_cycles
@@ -159,6 +166,7 @@ class SystolicArray:
 
         # Debug printout
         print(f"\n--- Overhead Breakdown ---")
+        print(f"Ideal cycles:      {ideal_cycles:.2f} (based on TPU throughput)")
         print(f"Raw systolic cycles: {active_cycles}")
         print(f" + DMA cycles:       {dma_cycles}")
         print(f" + Setup cycles:     {setup_cycles}")

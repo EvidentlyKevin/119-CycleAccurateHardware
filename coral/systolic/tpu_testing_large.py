@@ -98,23 +98,43 @@ if __name__ == "__main__":
 
     # Display final results with 1% high/low and average
     for array_size in array_sizes:
-        average_time = total_times[f"{array_size}"] / loop_num
-        avg_cycles = cycle_counts[f"{array_size}"] / loop_num
-        avg_temp = total_temps[f"{array_size}"] / loop_num
+        runtimes = np.array(all_run_times[f"{array_size}"])
+        cycles = np.array(all_cycle_counts[f"{array_size}"])
+        
+        avg_time = np.mean(runtimes)
+        std_time = np.std(runtimes)
+        median_time = np.median(runtimes)
+        min_time = np.min(runtimes)
+        max_time = np.max(runtimes)
 
-        # Calculate 1% high and low for run times and cycle counts
-        run_time_1_percent_low = calculate_percentile(all_run_times[f"{array_size}"], 0.01)
-        run_time_1_percent_high = calculate_percentile(all_run_times[f"{array_size}"], 0.99)
+        avg_cycles = np.mean(cycles)
+        std_cycles = np.std(cycles)
+        median_cycles = np.median(cycles)
+        min_cycles = np.min(cycles)
+        max_cycles = np.max(cycles)
 
-        cycle_count_1_percent_low = calculate_percentile(all_cycle_counts[f"{array_size}"], 0.01)
-        cycle_count_1_percent_high = calculate_percentile(all_cycle_counts[f"{array_size}"], 0.99)
+        temp_avg = total_temps[f"{array_size}"] / loop_num
+
+        # 1% Percentiles
+        run_time_1_percent_low = np.percentile(runtimes, 1)
+        run_time_1_percent_high = np.percentile(runtimes, 99)
+        cycle_count_1_percent_low = np.percentile(cycles, 1)
+        cycle_count_1_percent_high = np.percentile(cycles, 99)
 
         print(f"\n\n-------------------------------")
         print(f"       Array Size: {array_size}       ")
-        print(f"Average Time: {average_time * 1e3:.3f} ms")
-        print(f"Run Time 1% Low: {run_time_1_percent_low * 1e3:.3f} ms")
-        print(f"Run Time 1% High: {run_time_1_percent_high * 1e3:.3f} ms")
-        print(f"Average Temp: {avg_temp * 1e-3:.1f}°C")
-        print(f"Average Cycle Count: {int(avg_cycles)}")
-        print(f"Cycle Count 1% Low: {int(cycle_count_1_percent_low)}")
-        print(f"Cycle Count 1% High: {int(cycle_count_1_percent_high)}")
+        print(f"Average Time:           {avg_time * 1e3:.3f} ms")
+        print(f"Standard Deviation:     {std_time * 1e3:.3f} ms")
+        print(f"Median Time:            {median_time * 1e3:.3f} ms")
+        print(f"Min Time:               {min_time * 1e3:.3f} ms")
+        print(f"Max Time:               {max_time * 1e3:.3f} ms")
+        print(f"Run Time 1% Low:        {run_time_1_percent_low * 1e3:.3f} ms")
+        print(f"Run Time 1% High:       {run_time_1_percent_high * 1e3:.3f} ms")
+        print(f"Average Temp:           {temp_avg * 1e-3:.2f} °C")
+        print(f"Average Cycle Count:    {int(avg_cycles)}")
+        print(f"Standard Dev Cycles:    {int(std_cycles)}")
+        print(f"Median Cycle Count:     {int(median_cycles)}")
+        print(f"Min Cycle Count:        {int(min_cycles)}")
+        print(f"Max Cycle Count:        {int(max_cycles)}")
+        print(f"Cycle Count 1% Low:     {int(cycle_count_1_percent_low)}")
+        print(f"Cycle Count 1% High:    {int(cycle_count_1_percent_high)}")

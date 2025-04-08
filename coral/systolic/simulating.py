@@ -30,23 +30,24 @@ def generate_default_weights(size, dtype=int):
 
 def generate_default_inputs(size, dtype=int):
     """
-    Generates default inputs where each row is the row number (1-based) diagonally injected.
+    Generates a single input vector as a diagonal injection, then flushes the pipeline.
 
     Args:
-        size (int): Size of the systolic array.
-        dtype (type): Data type for elements.
+        size (int): Systolic array width (assumes square).
+        dtype (type): Data type (int, float16, etc.)
 
     Returns:
-        List[List[dtype]]: List of diagonal injection vectors.
+        List[List[dtype]]: Diagonal injection + zero padding.
     """
+    vector = [dtype(i + 1) for i in range(size)]  # input vector: [1, 2, 3, ..., N]
     inputs = []
+
     for i in range(size):
-        row = [dtype(i + 1)] * size
-        # row[i] = dtype(i + 1)  # e.g., 1, 2, 3, ...
+        row = [0] * size
+        row[i] = vector[i]  # inject one element diagonally
         inputs.append(row)
 
-    # Padding rows to flush the pipeline
-    for _ in range(size):
+    for _ in range(size):  # flush the pipeline
         inputs.append([0] * size)
 
     return inputs
