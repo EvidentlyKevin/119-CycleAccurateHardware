@@ -18,40 +18,123 @@ Port<T>& TPU<T>::getRPort() {
 
 template<typename T>
 void TPU<T>::setparameters() {
-
-   cout << "note: Bank Parameters should be as follows MemBanks >= SIZE, Rows = SIZE, Cols = SIZE / 4" << endl;
-    cout << "8x8: 70 cycles" << endl;
-    cout << "16x16: 140 cycles" << endl;
-    cout << "32x32: 284 cycles" << endl;
-    cout << "64x64: 574 cycles" << endl;
-    cout << "128x128: 766 cycles" << endl;
-    cout << "256x256: 1534 cycles" << endl;
-    cout << "512x512: 3070 cycles" << endl;
-    cout << "1024x1024: 6142 cycles" << endl;
-    cout << "2048x2048: 12286 cycles" << endl;
-    cout << "4096x4096: 24574 cycles" << endl;
-    cout << "8192x8192: 49150 cycles" << endl;
-    cout << "16384x16384: 98302 cycles" << endl;
-    cout << "32768x32768: 196606 cycles" << endl;
-    cout << "65536x65536: 393214 cycles" << endl;
-    cout << "131072x131072: 786430 cycles" << endl;
-    cout << "262144x262144: 1572862 cycles" << endl;
-    cout << "Further testing is needed to find the number of cycles for the for other systolic array sizes" << endl;
    
-   cout << "Enter the size of the systolic array: ";
-   cin >> SIZE;
-   cout << "--------------------------" << endl;
-   cout << "Enter the number of rows for Bank Memory: ";
-   cin >> ROWS;
-   cout << "--------------------------" << endl;
-   cout << "Enter the number of columns for Bank Memory: ";
-   cin >> COLS;
-   cout << "--------------------------" << endl;
-   cout << "Enter the number of memory banks: ";
-   cin >> MemBanks;
-   cout << "--------------------------" << endl;
-   cout << "Enter number of cycles for simulation: ";
-   cin >> num_cycles;
+if(rowID == 0 && colID == 0) {
+    cout << "Enter the size of the systolic array: ";
+    cin >> SIZE;
+    portR.enqueue(SIZE); // Send SIZE to the right port
+    }
+    else{
+        if (!portL->isEmpty()) {
+            SIZE = portL->dequeue(); // Receive SIZE from the left port
+            portR.enqueue(SIZE); // Send SIZE to the right port
+            std::cout << "SIZE: " << SIZE << std::endl;
+        }
+        
+    cout << "SIZE: " << SIZE << endl;
+    }
+
+   switch(SIZE){
+case 8:
+    num_cycles = 65;
+    ROWS = 8;
+    COLS = 8;
+    MemBanks = 1;
+    break;
+case 16:
+    num_cycles = 140;
+    ROWS = 16;
+    COLS = 16;
+    MemBanks = 1;
+    break;
+case 32:
+    num_cycles = 284;
+    ROWS = 32;
+    COLS = 32;
+    MemBanks = 1;
+    break;
+case 64:
+    num_cycles = 574;
+    ROWS = 64;
+    COLS = 64;
+    MemBanks = 1;
+    break;
+case 128:
+    num_cycles = 766;
+    ROWS = 128;
+    COLS = 128;
+    MemBanks = 1;
+    break;
+case 256:
+    num_cycles = 1534;
+    ROWS = 256;
+    COLS = 256;
+    MemBanks = 1;
+    break;
+case 512:
+    num_cycles = 3070;
+    ROWS = 512;
+    COLS = 512;
+    MemBanks = 1;
+    break;
+case 1024:
+    num_cycles = 6142;
+    ROWS = 1024;
+    COLS = 1024;
+    MemBanks = 1;
+    break;
+case 2048:
+    num_cycles = 12286;
+    ROWS = 2048;
+    COLS = 2048;
+    MemBanks = 1;
+    break;
+case 4096:
+    num_cycles = 24574;
+    ROWS = 4096;
+    COLS = 4096;
+    MemBanks = 1;
+    break;
+case 8192:
+    num_cycles = 49150;
+    ROWS = 8192;
+    COLS = 8192;
+    MemBanks = 1;
+    break;
+case 16384:
+    num_cycles = 98302;
+    ROWS = 16384;
+    COLS = 16384;
+    MemBanks = 1;
+    break;
+case 32768:
+    num_cycles = 196606;
+    ROWS = 32768;
+    COLS = 32768;
+    MemBanks = 1;
+    break;
+case 65536:
+    num_cycles = 393214;
+    ROWS = 65536;
+    COLS = 65536;
+    MemBanks = 1;
+    break;
+case 131072:
+    num_cycles = 786430;
+    ROWS = 131072;
+    COLS = 131072;
+    MemBanks = 1;
+    break;
+case 262144:
+    num_cycles = 1572862;
+    ROWS = 262144;
+    COLS = 262144;
+    MemBanks = 1;
+    break;
+default:
+    cout << "Not Practical Size" << endl;
+    break;
+   }
 }
 
 
@@ -77,7 +160,7 @@ if(rowID == 0 && colID == 0) {
         mem.initBanksFromLeft(dequeuedValue); // Initialize memory banks from the left side
      }
 
-    /*(// Display the contents of the memory banks
+    // Display the contents of the memory banks
     for (int i = 0; i < MemBanks; i++) {
         std::cout << "Memory Bank " << i << ":\n";
         for (int j = 0; j < BANK_ROWS; j++) {
@@ -87,7 +170,7 @@ if(rowID == 0 && colID == 0) {
             std::cout << std::endl;
         }
         std::cout << "---------------------------\n";
-    }*/
+    }
  
 
     Systolic_Array<int> systolicArray(SIZE);

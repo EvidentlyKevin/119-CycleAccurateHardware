@@ -24,6 +24,7 @@ void setparameters();
 void setLeftPort(Port<T>* leftPort);
 
 
+
 Port<T> portR;
 Port<T>* portL = nullptr; // Pointer to the left port
 Port<T>& getRPort();
