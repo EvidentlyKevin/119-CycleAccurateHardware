@@ -16,6 +16,7 @@ Network storage class handles storing, parsing, and retrieving data.
  
 namespace fs = std::filesystem;
 using json = nlohmann::json; // For JSON parsing (if needed)
+
 //Constructor
 NetworkStorage::NetworkStorage(std::string path, bool debug) : storage(path) {
     if (debug) {
@@ -73,8 +74,7 @@ void NetworkStorage::parse() {
     }
 }
 
-// KEVIN WORK
-void NetworkStorage::push(std::vector<T>& data) {
+void NetworkStorage::push(Cluster<float>& cluster, const std::vector<std::vector<float>>& data) {
     // Kevin's Implementation of the push method
     
     /*
@@ -84,31 +84,32 @@ void NetworkStorage::push(std::vector<T>& data) {
     */
 
     // Check if the network storage is initialized
-    if (data.empty()) {
-        std::cerr << "Error: No data to push!" << std::endl;
+    if (this->storage.empty() || !fs::exists(this->storage)|| data.empty()) {
+        std::cerr << "Error: Network storage bad initialization!" << std::endl;
         return;
     }
     std::cout << "Network storage initialized with data." << std::endl;
 
     // Calculate the minimum number of TPUs to task with the data
-    int numTPUs = Cluster::size(); // Get the number of TPUs in the cluster (is this called right?)
+    int numTPUs = cluster.getSize()*cluster.getSize(); // Get the number of TPUs in the cluster
     if (numTPUs <= 0) {
         std::cerr << "Error: No TPUs available in the cluster!" << std::endl;
         return;
     }
     std::cout << "Number of TPUs available: " << numTPUs << std::endl;
+
     // Send data to TPU Memory Banks
-    Cluster::sendDataToTPU(data); // Send data to TPU memory bank
-    std::cout << "Data sent to banks" << std::endl;
+    int idx = 0;
+    int size = cluster.getSize();
 
-    // Check if the data was sent successfully
-    if (/* check if data was sent successfully */) {
-        std::cout << "Data sent successfully!" << std::endl;
-    } else {
-        std::cerr << "Error: Data not sent successfully!" << std::endl;
+    for (int i = 0; i < size && idx < data.size(); ++i) {
+        for (int j = 0; j < size && idx < data.size(); ++j) {
+            cluster.setTPUData(i, j, data[idx++]);
+        }
     }
-}
 
+    std::cout << "Data sent to TPU memory banks.\n";
+}
 std::string NetworkStorage::fetch() {
     std::cout << "Fetching data files from network storage...\n"; // Debugging (can remove later)
 

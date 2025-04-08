@@ -26,6 +26,10 @@ void display();
     // Add a setter for the activation function selection
     // For example: 1 = ReLU, 2 = Sigmoid, 3 = Tanh, 4 = GELU
 void setActivationFunction(int activation);
+void sendData(const std::vector<T>& inputData) ;
+    // Send data to the TPU memory banks
+    //mem.pushData(data, rowID, colID);
+
 
 
 int rowID;
