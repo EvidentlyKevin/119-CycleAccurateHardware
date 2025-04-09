@@ -63,7 +63,7 @@ void NetworkStorage::parse() {
         return;
     }
     for (const auto& entry : fs::directory_iterator(storage)) { // Iterate over files in the storage directory
-        if (entry.path().extension() == ".json") { // don't need .bin can remove later 
+        if (entry.path().extension() == ".json") { 
             std::ifstream file(entry.path());
             if (!file) {
                 std::cerr << "Error opening file: " << entry.path() << std::endl;

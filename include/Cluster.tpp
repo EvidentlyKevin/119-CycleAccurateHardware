@@ -73,7 +73,7 @@ void Cluster<T>::sendDataToTPUs(const std::vector<T>& data) {
     for (int i = 0; i < SIZE; ++i) {
         for (int j = 0; j < SIZE; ++j) {
             if (idx < data.size()) { // Check if index is within bounds
-                array[i][j]->sendData(data[idx]);// Send data to TPU
+                array[i][j]->TPU::sendData(data[idx]);// Send data to TPU
                 ++idx;
              }
              else{
@@ -95,7 +95,7 @@ int Cluster<T>::getSize() const {
 template<typename T>
 void Cluster<T>::setTPUData(int i, int j, const std::vector<T>& data) {
     if (i < SIZE && j < SIZE) {
-        array[i][j]->sendData(data);  // sendData must exist in TPU<T>
+        array[i][j]->TPU::sendData(data);  // sendData must exist in TPU<T>
     } else {
         std::cerr << " setTPUData: Index out of bounds!\n";
     }

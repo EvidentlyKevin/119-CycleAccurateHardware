@@ -12,9 +12,7 @@ class NetworkStorage {
 public:
     // Constructor
     NetworkStorage(std::string path = "./storage", bool debug = false);
-
-    // Methods
-   
+    // Methods  
     void parse();
     std::string fetch();
     
@@ -22,7 +20,7 @@ public:
 
     void fetchDebug();
     void showConfig() const;
-   // void loadBankMem();
+   
 private:
     std::string storage;
 };
