@@ -180,7 +180,7 @@ for (size_t i = 0; i < activatedOutputs.size(); ++i) {
 
 template<typename T>
 void TPU<T>::sendData(const std::vector<T>& inputData) {
-    
+
     N = SIZE;
     BANK_COLS = COLS;
     BANK_ROWS = ROWS;
@@ -198,8 +198,9 @@ void TPU<T>::sendData(const std::vector<T>& inputData) {
             std::cerr << "Out of memory bounds! Aborting data transfer.\n";
             break;
         }
+        mem.MemoryBanks[bank].Data[row][col] = static_cast<int>(inputData[i]);
 
-        mem.MemoryBanks[bank].Data[row][col] = inputData[i];
+       // mem.MemoryBanks[bank].Data[row][col] = inputData[i];
 
         ++col;
         if (col >= BANK_COLS) {

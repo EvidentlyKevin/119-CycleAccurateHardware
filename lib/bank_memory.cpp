@@ -2,32 +2,56 @@
 
 #include "../include/memory.h"
 #include <random>
+#include <iostream>
 #include <limits>
 
 Memory::Memory() 
     : MemoryBanks(MemBanks, MemBank(BANK_ROWS, BANK_COLS)),
-      indices(100, std::vector<int>(100, 0)) {
-    // Additional initialization if needed
-}
+      indices(100, std::vector<int>(100, 0)) ,
+// Additional initialization if needed
+        z(1), start(3), end(100), group(0) {  // Initialize member variables
+            // Initialize memory banks
+            initBanks();
+        }
+    
+
 
 void Memory::initBanks() {
     // Removed creation of a local Memory instance.
     std::random_device rd;
     std::mt19937 gen(rd());
-    std::uniform_int_distribution<> dis(0, 255);
-
+   
+   std::uniform_int_distribution<> dis(0, 255);
+     
     for (int i = 0; i < MemBanks; i++) {
-        int foo = 0;
         for (int j = 0; j < BANK_ROWS; j++) {
-            ++foo;
             for (int k = 0; k < BANK_COLS; k++) {
-                // Uncomment one of the following lines as needed:
-                // MemoryBanks[i].Data[j][k] = dis(gen);
-                MemoryBanks[i].Data[j][k] = 0;
+                // Set to random non-zero values to avoid the zero problem
+                MemoryBanks[i].Data[j][k] = dis(gen);
+                
+                // Debug output for the first few banks
+                // if (i < 3 && j < 3) {
+                //     std::cout << "Bank[" << i << "][" << j << "][" << k << "] = " 
+                //               << MemoryBanks[i].Data[j][k] << std::endl;
+                // }
             }
         }
     }
+    std::cout << "Memory banks initialized successfully.\n";
 }
+
+//     for (int i = 0; i < MemBanks; i++) {
+//         int foo = 0;
+//         for (int j = 0; j < BANK_ROWS; j++) {
+//             ++foo;
+//             for (int k = 0; k < BANK_COLS; k++) {
+//                 // Uncomment one of the following lines as needed:
+//                 // MemoryBanks[i].Data[j][k] = dis(gen);
+//                 MemoryBanks[i].Data[j][k] = 0;
+//             }
+//         }
+//     }
+// }
 
 void Memory::increment(int cycle) {
     if ((cycle - 3) % 3 == 0) { // specific edge cases for data[0]

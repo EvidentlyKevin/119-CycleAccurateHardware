@@ -4,6 +4,7 @@
 #define MAC_UNIT_H
 
 #include "channelM.h"
+#include "TPU.h"
 
 template<typename T>
 class Systolic_Array; // Forward declaration
