@@ -1,6 +1,7 @@
 // File include/mac_unit.tpp
 #include  "../include/activation.h"
 #include "../include/mac_unit.h"
+
 template<typename T>
 MACUnit<T>::MACUnit(int row, int col)
     : rowID(row), colID(col), accumulator(0), a(0), b(0), w(0), clk(0),
@@ -29,6 +30,7 @@ channelM<T>& MACUnit<T>::getDownOut() {
 template<typename T>
 void MACUnit<T>::setWeight(T weight) {
     w = weight;
+   // std::cout << "MAC[" << rowID << "][" << colID << "] weight set to " << w << std::endl; //debugging
 }
 
 template<typename T>
@@ -85,7 +87,7 @@ bool MACUnit<T>::fetchInputs(bool debug) {
     if (colID == 0) {
         b = 0; // No incoming partial sum
     } else {
-        if (!leftIn || !leftIn->pop(b)) {
+        if (!leftIn || !leftIn->pop(b)) { //remove !leftIn before ||
             return false; // Partial sum not ready
         }
     }
@@ -112,7 +114,8 @@ void MACUnit<T>::computeMAC(bool debug) {
 template<typename T>
 void MACUnit<T>::sendOutputs(bool debug, int act) {
     Activation activation;
-    // Send partial sum to the right
+    T result = accumulator; // Result is the accumulator for now
+    // Apply activation
     //Case statement to determine the activation function
     switch (act) {
         case 0:
@@ -128,17 +131,17 @@ void MACUnit<T>::sendOutputs(bool debug, int act) {
             rightOut.push(static_cast<T>(activation.gelu(accumulator)));
             break;
         default:
-            rightOut.push(accumulator);
+           // rightOut.push(accumulator);
             break;
 
     }
     
 
-    /*rightOut.push(accumulator);
-    // Debugging: Print the partial sum sent to the right
+    // Send result to the right
+    rightOut.push(result);
     if (debug) {
-        std::cout << "MAC[" << rowID << "][" << colID << "] sent accumulator " << accumulator << " to rightOut\n";
-    }*/
+        std::cout << "MAC[" << rowID << "][" << colID << "] sent result " << result << " to rightOut" << std::endl;
+    }
 
     // Send activation downward
     downOut.push(a);

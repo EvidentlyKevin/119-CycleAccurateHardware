@@ -25,19 +25,26 @@ void TPU<T>::setparameters() {
     std::cout << "32x32: 283 cycles" << std::endl;
    
     std::cout << "Enter the size of the systolic array: ";
-    std::cin >> SIZE;
+    // std::cin >> SIZE;
+    SIZE = 8; // For testing purposes, set SIZE to 8
     std::cout << "--------------------------" << std::endl;
+
     std::cout << "Enter the number of rows for Bank Memory: ";
-    std::cin >> ROWS;
+   // std::cin >> ROWS;
+    ROWS = SIZE; // For testing purposes, set ROWS to SIZE
     std::cout << "--------------------------" << std::endl;
     std::cout << "Enter the number of columns for Bank Memory: ";
-    std::cin >> COLS;
+   // std::cin >> COLS;
+    COLS = SIZE / 4; // For testing purposes, set COLS to SIZE / 4
     std::cout << "--------------------------" << std::endl;
     std::cout << "Enter the number of memory banks: ";
-    std::cin >> MemBanks;
+ //   std::cin >> MemBanks;
+    MemBanks = 4; // For testing purposes, set MemBanks to SIZE
     std::cout << "--------------------------" << std::endl;
     std::cout << "Enter number of cycles for simulation: ";
-    std::cin >> num_cycles;
+   // std::cin >> num_cycles;
+   num_cycles = 100; // For testing purposes, set num_cycles to 10
+    
 }
 
 template<typename T>
@@ -56,6 +63,22 @@ void TPU<T>::display() {
         }
         std::cout << "---------------------------\n";
     }
+
+
+    // //Memory mem;
+    // mem.initBanks(); // No parameters needed
+
+    // // Display the contents of the memory banks
+    // for (int i = 0; i < MemBanks; i++) {
+    //     std::cout << "Memory Bank " << i << ":\n";
+    //     for (int j = 0; j < BANK_ROWS; j++) {
+    //         for (int k = 0; k < BANK_COLS; k++) {
+    //             std::cout << mem.MemoryBanks[i].Data[j][k] << " ";
+    //         }
+    //         std::cout << std::endl;
+    //     }
+    //     std::cout << "---------------------------\n";
+    // }
 }
 
 template<typename T>
@@ -158,25 +181,114 @@ for (size_t i = 0; i < activatedOutputs.size(); ++i) {
 template<typename T>
 void TPU<T>::sendData(const std::vector<T>& inputData) {
 
-    Memory mem; // Send data to the TPU memory banks
-    mem.initBanks(); // Initialize memory banks
+    N = SIZE;
+    BANK_COLS = COLS;
+    BANK_ROWS = ROWS;
 
+    Memory mem;
+    mem.initBanks();
+
+    int bank = 0;
     int row = 0;
     int col = 0;
 
     for (size_t i = 0; i < inputData.size(); ++i) {
-        // Calculate the row and column indices for the memory banks
-        if(row >= BANK_ROWS) break; // Prevent out-of-bounds access
-           
-        mem.MemoryBanks[0].Data[row][col] = inputData[i]; // Store data in memory bank
+        // Safety check
+        if (bank >= MemBanks || row >= BANK_ROWS || col >= BANK_COLS) {
+            std::cerr << "Out of memory bounds! Aborting data transfer.\n";
+            break;
+        }
+        mem.MemoryBanks[bank].Data[row][col] = static_cast<int>(inputData[i]);
 
+       // mem.MemoryBanks[bank].Data[row][col] = inputData[i];
 
-        ++col; // Move to the next column
-        if (col >= BANK_COLS) { // If the end of the row is reached, move to the next row
+        ++col;
+        if (col >= BANK_COLS) {
             col = 0;
             ++row;
+
+            if (row >= BANK_ROWS) {
+                row = 0;
+                ++bank;
+            }
         }
     }
 
-std::cout << "TPU["<< rowID <<"]["<< colID << "] received data:\n";
+    std::cout << "Input data size: " << inputData.size() << std::endl;
+    std::cout << "TPU[" << rowID << "][" << colID << "] received data:\n";
+
+    for (const auto& val : inputData) {
+        std::cout << val << " ";
+    }
+    std::cout << std::endl;
 }
+
+// template<typename T>
+// void TPU<T>::sendData(const std::vector<T>& inputData) {
+
+//     Memory mem; // Send data to the TPU memory banks
+//     mem.initBanks(); // Initialize memory banks
+
+//     int row = 0;
+//     int col = 0;
+
+//     for (size_t i = 0; i < inputData.size(); ++i) {
+//         // Calculate the row and column indices for the memory banks
+//         if(row >= BANK_ROWS) break; // Prevent out-of-bounds access
+           
+//         mem.MemoryBanks[0].Data[row][col] = inputData[i]; // Store data in memory bank
+
+
+//         ++col; // Move to the next column
+//         if (col >= BANK_COLS) { // If the end of the row is reached, move to the next row
+//             col = 0;
+//             ++row;
+//         }
+//     }
+// std::cout << "input data size->"<< inputData.size()<< std::endl;
+
+// std::cout << "TPU["<< rowID <<"]["<< colID << "] received data:\n";
+// // Print the input data
+// for (const auto& val : inputData) {
+//     std::cout << val << " ";
+// }
+// std::cout << std::endl;
+
+
+
+    // // Display the contents of the memory banks
+    // for (int i = 0; i < MemBanks; i++) {
+    //     std::cout << "Memory Bank " << i << ":\n";
+    //     for (int j = 0; j < BANK_ROWS; j++) {
+    //         for (int k = 0; k < BANK_COLS; k++) {
+    //             std::cout << mem.MemoryBanks[i].Data[j][k] << " ";
+    //         }
+    //         std::cout << std::endl;
+    //     }
+    //     std::cout << "---------------------------\n";
+    // }
+
+    // int row = 0;
+    // int col = 0;
+
+    // for (size_t i = 0; i < inputData.size(); ++i) {
+    //     if (row >= BANK_ROWS) break;  // Don't overflow memory
+
+    //     this->mem.MemoryBanks[0].Data[row][col] = inputData[i];  //  Store in proper memory
+
+    //     ++col;
+    //     if (col >= BANK_COLS) {
+    //         col = 0;
+    //         ++row;
+    //     }
+    // }
+
+    // std::cout << "TPU[" << rowID << "][" << colID << "] received data:\n";
+    // for (int i = 0; i < BANK_ROWS; ++i) {
+    //     for (int j = 0; j < BANK_COLS; ++j) {
+    //         std::cout << this->mem.MemoryBanks[0].Data[i][j] << " ";
+    //     }
+    //     std::cout << "\n";
+    // }
+    // std::cout << "---------------------------\n";
+

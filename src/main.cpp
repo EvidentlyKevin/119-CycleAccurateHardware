@@ -13,6 +13,7 @@ void memoryFunction() {
     Memory mem;
     mem.initBanks(); // No parameters needed
 
+
     // Display the contents of the memory banks
     for (int i = 0; i < MemBanks; i++) {
         std::cout << "Memory Bank " << i << ":\n";
@@ -40,7 +41,7 @@ int main() {
     std::cout << "--------------------------" << std::endl;
 
     // Declare filepath outside the switch-case to avoid bypassing initialization
-   // std::string filepath;
+    // std::string filepath;
     //std::vector<std::vector<float>> inferenceData= loadInferenceData(filepath); // Initialize with empty data
 
     // Use switch-case to handle different options
@@ -84,10 +85,6 @@ int main() {
          Cluster<float> cluster(4); // Create a cluster with 4x4 TPus
             // Set the parameters for the TPUs
         
-
-       
-
-
         int activationChoice;
         std::cout << "Select Activation Function:\n";
         std::cout << "1: ReLU\n";
