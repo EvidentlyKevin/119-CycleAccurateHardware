@@ -90,7 +90,7 @@ bool MACUnit<T>::fetchInputs(bool debug) {
     }
 
     // Debugging: Print the fetched inputs
-    if (debug) {
+    if (false) {
         std::cout << "MAC[" << rowID << "][" << colID 
         << "] fetchInputs: a=" << a << ", b=" << b << "\n";
     }
@@ -102,7 +102,7 @@ void MACUnit<T>::computeMAC(bool debug) {
     accumulator = (a * w) + b;
 
     // Debugging: Print the MAC operation
-    if (debug) {
+    if (false) {
         std::cout << "MAC[" << rowID << "][" << colID << "] computeMAC: a=" << a
                   << ", w=" << w << ", b=" << b << ", accumulator=" << accumulator << "\n";
     }
@@ -113,14 +113,14 @@ void MACUnit<T>::sendOutputs(bool debug) {
     // Send partial sum to the right
     rightOut.push(accumulator);
     // Debugging: Print the partial sum sent to the right
-    if (debug) {
+    if (false) {
         std::cout << "MAC[" << rowID << "][" << colID << "] sent accumulator " << accumulator << " to rightOut\n";
     }
 
     // Send activation downward
     downOut.push(a);
     // Debugging: Print the activation sent downward
-    if (debug) {
+    if (false) {
         std::cout << "MAC[" << rowID << "][" << colID << "] sent activation " << a << " to downOut\n";
     }
 }
