@@ -39,7 +39,7 @@ void TPU<T>::setparameters() {
     std::cout << "--------------------------" << std::endl;
     std::cout << "Enter the number of memory banks: ";
  //   std::cin >> MemBanks;
-    MemBanks = 4; // For testing purposes, set MemBanks to SIZE
+    MemBanks = SIZE; // For testing purposes, set MemBanks to SIZE
     std::cout << "--------------------------" << std::endl;
     std::cout << "Enter number of cycles for simulation: ";
    // std::cin >> num_cycles;
@@ -48,10 +48,8 @@ void TPU<T>::setparameters() {
 }
 
 template<typename T>
-void TPU<T>::display() {
-    Memory mem;
-    mem.initBanks(); // No parameters needed
-
+void TPU<T>::display(Memory& mem) {
+    
     // Display the contents of the memory banks
     for (int i = 0; i < MemBanks; i++) {
         std::cout << "Memory Bank " << i << ":\n";
@@ -82,7 +80,7 @@ void TPU<T>::display() {
 }
 
 template<typename T>
-void TPU<T>::run() {
+void TPU<T>::run(Memory& mem) {
     N = SIZE;
     std::cout << "N: " << N << std::endl;
     BANK_COLS = COLS;
@@ -90,8 +88,8 @@ void TPU<T>::run() {
     BANK_ROWS = ROWS;
     std::cout << "BANK_ROWS: " << BANK_ROWS << std::endl;
 
-    Memory mem;
-    mem.initBanks();
+   // Memory mem;
+    //mem.initBanks();
 
     Systolic_Array<int> systolicArray(SIZE);
     const int CHANNEL_CAPACITY = 4;
@@ -179,41 +177,33 @@ for (size_t i = 0; i < activatedOutputs.size(); ++i) {
 }
 
 template<typename T>
-void TPU<T>::sendData(const std::vector<T>& inputData) {
+void TPU<T>::sendData(const std::vector<T>& inputData, Memory& mem) {
+    int totalCapacity = mem.MemoryBanks.size() * BANK_ROWS * BANK_COLS;
 
-    N = SIZE;
-    BANK_COLS = COLS;
-    BANK_ROWS = ROWS;
+    if (inputData.size() > totalCapacity) {
+        std::cerr << "Error: Input data size exceeds memory capacity.\n";
+        return;
+    }
 
-    Memory mem;
-    mem.initBanks();
-
-    int bank = 0;
-    int row = 0;
-    int col = 0;
-
+    int bank = 0, row = 0, col = 0;
     for (size_t i = 0; i < inputData.size(); ++i) {
-        // Safety check
-        if (bank >= MemBanks || row >= BANK_ROWS || col >= BANK_COLS) {
-            std::cerr << "Out of memory bounds! Aborting data transfer.\n";
-            break;
+        if (bank >= mem.MemoryBanks.size() || row >= BANK_ROWS || col >= BANK_COLS) {
+            std::cerr << "Error: Out of memory bounds! Aborting data transfer.\n";
+            return;
         }
-        mem.MemoryBanks[bank].Data[row][col] = static_cast<int>(inputData[i]);
 
-       // mem.MemoryBanks[bank].Data[row][col] = inputData[i];
+        mem.MemoryBanks[bank].Data[row][col] = static_cast<int>(inputData[i]);
 
         ++col;
         if (col >= BANK_COLS) {
             col = 0;
             ++row;
-
             if (row >= BANK_ROWS) {
                 row = 0;
                 ++bank;
             }
         }
     }
-
     std::cout << "Input data size: " << inputData.size() << std::endl;
     std::cout << "TPU[" << rowID << "][" << colID << "] received data:\n";
 

@@ -105,6 +105,10 @@ void NetworkStorage::push(Cluster<float>& cluster, const std::vector<std::vector
 
     for (int i = 0; i < size && idx < data.size(); ++i) {
         for (int j = 0; j < size && idx < data.size(); ++j) {
+            if (idx >= data.size()) {
+                std::cerr << "Error: Data index out of bounds while pushing data to TPU" << std::endl;
+                return;
+            }
             cluster.setTPUData(i, j, data[idx++]);
         }
     }

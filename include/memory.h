@@ -19,7 +19,6 @@ inline int MemBanks;    // Number of memory banks (e.g., set MemBanks = 5 in a .
 // Structure representing a memory bank
 struct MemBank {
     std::vector<std::vector<int>> Data;
-
     MemBank(int rows, int cols)
         : Data(rows, std::vector<int>(cols))
     {}
@@ -32,8 +31,9 @@ public:
     Memory();
 
     void initBanks();
-    void pushData(std::vector<channelM<int>> &data, int cycle, bool debug = false);
+    void pushData(std::vector<channelM<int>>& channels, int cycle, bool debug = false);
     void increment(int cycle);
+    void loadFromJson(const std::string& filename);
 
 private:
     std::vector<std::vector<int>> indices;

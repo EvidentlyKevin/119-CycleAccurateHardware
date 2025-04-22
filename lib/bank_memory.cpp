@@ -4,6 +4,10 @@
 #include <random>
 #include <iostream>
 #include <limits>
+#include <fstream> // For file operations
+#include <nlohmann/json.hpp> // For JSON parsing
+
+using json = nlohmann::json; // For JSON parsing (if needed)
 
 Memory::Memory() 
     : MemoryBanks(MemBanks, MemBank(BANK_ROWS, BANK_COLS)),
@@ -14,44 +18,50 @@ Memory::Memory()
             initBanks();
         }
     
-
-
 void Memory::initBanks() {
+
+    if (MemBanks <= 0 || BANK_ROWS <= 0 || BANK_COLS <= 0) {
+        std::cerr << "Error: Invalid memory dimensions.\n";
+        return;
+    }
+
+    std::cout << "Initializing MemoryBanks: MemBanks = " << MemBanks
+              << ", BANK_ROWS = " << BANK_ROWS
+              << ", BANK_COLS = " << BANK_COLS << std::endl;
+
     // Removed creation of a local Memory instance.
-    std::random_device rd;
-    std::mt19937 gen(rd());
-   
-   std::uniform_int_distribution<> dis(0, 255);
+    // std::random_device rd;
+    // std::mt19937 gen(rd());
+    // std::uniform_int_distribution<> dis(0, 255);
      
+//     for (int i = 0; i < MemBanks; i++) {
+//         for (int j = 0; j < BANK_ROWS; j++) {
+//             for (int k = 0; k < BANK_COLS; k++) {
+
+
+//                 // Set to random non-zero values to avoid the zero problem
+//                 MemoryBanks[i].Data[j][k] = dis(gen);
+                
+//                 // Debug output for the first few banks
+//                 // if (i < 3 && j < 3) {
+//                 //     std::cout << "Bank[" << i << "][" << j << "][" << k << "] = " 
+//                 //               << MemoryBanks[i].Data[j][k] << std::endl;
+//                 // }
+//             }
+//         }
+//     }
+//     std::cout << "Memory banks initialized successfully.\n";
+// }
+
     for (int i = 0; i < MemBanks; i++) {
         for (int j = 0; j < BANK_ROWS; j++) {
             for (int k = 0; k < BANK_COLS; k++) {
-                // Set to random non-zero values to avoid the zero problem
-                MemoryBanks[i].Data[j][k] = dis(gen);
-                
-                // Debug output for the first few banks
-                // if (i < 3 && j < 3) {
-                //     std::cout << "Bank[" << i << "][" << j << "][" << k << "] = " 
-                //               << MemoryBanks[i].Data[j][k] << std::endl;
-                // }
+                MemoryBanks[i].Data[j][k] = 0;
             }
         }
     }
     std::cout << "Memory banks initialized successfully.\n";
 }
-
-//     for (int i = 0; i < MemBanks; i++) {
-//         int foo = 0;
-//         for (int j = 0; j < BANK_ROWS; j++) {
-//             ++foo;
-//             for (int k = 0; k < BANK_COLS; k++) {
-//                 // Uncomment one of the following lines as needed:
-//                 // MemoryBanks[i].Data[j][k] = dis(gen);
-//                 MemoryBanks[i].Data[j][k] = 0;
-//             }
-//         }
-//     }
-// }
 
 void Memory::increment(int cycle) {
     if ((cycle - 3) % 3 == 0) { // specific edge cases for data[0]
@@ -147,4 +157,31 @@ void Memory::pushData(std::vector<channelM<int>> &channels, int cycle, bool debu
             }
         }
     }
+}
+
+void Memory::loadFromJson(const std::string& filename) {
+    std::ifstream file(filename);
+    if (!file.is_open()) {
+        std::cerr << "Error: Could not open JSON file: " << filename << std::endl;
+        return;
+    }
+    json j;
+    file >> j;
+    file.close();
+
+    MemoryBanks.clear();
+
+    // Assuming j is an array of banks (each bank is a 2D array of ints)
+    for (const auto& bankJson : j) {
+        std::vector<std::vector<int>> bankData;
+        for (const auto& rowJson : bankJson) {
+            std::vector<int> row = rowJson.get<std::vector<int>>();
+            bankData.push_back(row);
+        }
+        // Create a MemBank from the loaded data
+        MemBank bank(static_cast<int>(bankData.size()), bankData.empty() ? 0 : static_cast<int>(bankData[0].size()));
+        bank.Data = bankData;
+        MemoryBanks.push_back(bank);
+    }
+    std::cout << "Memory banks loaded from JSON successfully." << std::endl;
 }

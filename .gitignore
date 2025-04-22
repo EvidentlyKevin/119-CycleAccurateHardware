@@ -7,7 +7,8 @@ node_modules/
 # Ignore build directories
 build/
 dist/
-
+build_and_run.bat
+package.json
 # Ignore OS generated files
 .DS_Store
 Thumbs.db

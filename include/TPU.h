@@ -15,22 +15,22 @@ class TPU {
 
 public:
 
-Memory mem;
-
 TPU(int row, int col);
-void run();
+void run(Memory& mem);
 void setparameters();
-void display();
+void display(Memory& mem);
 
 
     // Add a setter for the activation function selection
     // For example: 1 = ReLU, 2 = Sigmoid, 3 = Tanh, 4 = GELU
     void setActivationFunction(int activation);
-    void sendData(const std::vector<T>& inputData) ;
+    void sendData(const std::vector<T>& inputData, Memory& mem); // Send data to the TPU memory banks;
     // Send data to the TPU memory banks
     //mem.pushData(data, rowID, colID);
 
 
+
+private:
 
 int rowID;
 int colID;
@@ -38,10 +38,7 @@ int SIZE;
 int ROWS;
 int COLS;
 int num_cycles;
-
-private:
-
-int activationFunction = 1; // Default activation function is ReLU
+int activationFunction;
 };
 
 #include "TPU.tpp"

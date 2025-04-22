@@ -5,7 +5,8 @@ import random
 def generate_tpu_inference_data(num_entries, array_size, filename):
     data = []
     for _ in range(num_entries):
-        entry = [round(random.uniform(0, 1), 4) for _ in range(array_size)]
+        entry = [random.randint(0, 100) for _ in range(array_size)]  # Random integers between 0 and 100
+        #entry = [round(random.uniform(0, 1), 4) for _ in range(array_size)] # Random floats between 0 and 1
         data.append(entry)
 
     with open(filename, 'w') as f:

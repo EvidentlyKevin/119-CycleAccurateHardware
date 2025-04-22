@@ -3,34 +3,33 @@
 
 #include <iostream>
 #include <vector>
-#include <stdexcept>
 #include <memory>
 #include "TPU.h"
+#include "memory.h"
 
 template<typename T>
 class Cluster {
 public:
-
-// Constructor
+    //Memory persistentMem;
     Cluster(int size = DEFAULT_SIZE);
     void runAllTPUs();
-    void setParametersForTPUs(); 
-    void showbanks(); 
-    // Methods to set and get the activation function choice
+    void setParametersForTPUs();
+    void showbanks();
     void setActivationFunction(int activation);
-    void sendDataToTPUs(const std::vector<T>& data);
     int getActivationFunction() const;
+    //Memory& getMemory() { return persistentMem; }
+    void sendDataToTPUs(const std::vector<std::vector<T>>& data);
     int getSize() const;
     void setTPUData(int i, int j, const std::vector<T>& data);
+    void loadFromJson(const std::string& filepath);
     static const int DEFAULT_SIZE = 8;
 
 private:
     int SIZE;
-    int activationFunction = 1; // Default activation function is ReLU
+    int activationFunction;
+    Memory persistentMem;
     std::vector<std::vector<std::unique_ptr<TPU<T>>>> array;
-
 };
 
 #include "Cluster.tpp"
-
 #endif // CLUSTER_H

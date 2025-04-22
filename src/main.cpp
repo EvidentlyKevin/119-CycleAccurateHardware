@@ -82,6 +82,21 @@ int main() {
             return 1;
         }
 
+        // Flatten the 2D inference data into a 1D vector
+        std::vector<float> flattenedData;
+        for (const auto& row : inferenceData) {
+            flattenedData.insert(flattenedData.end(), row.begin(), row.end());
+        }
+
+        // Calculate total memory capacity
+        int totalCapacity = MemBanks * BANK_ROWS * BANK_COLS;
+
+        if (flattenedData.size() > totalCapacity) {
+            std::cerr << "Error: Input data size (" << flattenedData.size()
+                      << ") exceeds memory capacity (" << totalCapacity << ").\n";
+            return 1;
+        }
+
          Cluster<float> cluster(4); // Create a cluster with 4x4 TPus
             // Set the parameters for the TPUs
         
@@ -95,7 +110,6 @@ int main() {
         std::cin >> activationChoice;
         std::cout << "--------------------------" << std::endl;
 
-        
         // Proceed with existing parameter setting and simulation run*/
         cluster.setParametersForTPUs();
         NetworkStorage storage("../output", true);
