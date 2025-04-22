@@ -1,10 +1,10 @@
 #include <iostream>
 #include <vector>
 #include "../include/Cluster.h"
-#include "../lib/bank_memory.cpp"
+#include "../include/memory.h"
 #include "../include/systolic_array.h"
-#include "../lib/activation.cpp"
-#include "../lib/network_storage.cpp"
+#include "../include/activation.h"
+#include "../include/network_storage.h"
 #include "../include/nlohmann/json.hpp" // For JSON parsing (if needed)
 #include <fstream> //file operations
 using namespace std;
