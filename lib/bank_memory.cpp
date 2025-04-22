@@ -138,7 +138,7 @@ void Memory::pushData(std::vector<channelM<int>> &channels, int cycle, bool debu
                     
                     // Break to avoid pushing multiple times into the same channel.
                     if (data[i] >= neg_inf && data[i] <= pos_inf &&
-                        data[i] != 1 && data[i] != 0) {
+                        data[i] != save && data[i] != 0) {
                         channels[i].push(data[i]);
                         break;
                     }

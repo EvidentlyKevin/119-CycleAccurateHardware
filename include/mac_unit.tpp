@@ -139,7 +139,7 @@ void MACUnit<T>::sendOutputs(bool debug, int act) {
 
     // Send result to the right
     rightOut.push(result);
-    if (debug) {
+    if (false) {
         std::cout << "MAC[" << rowID << "][" << colID << "] sent result " << result << " to rightOut" << std::endl;
     }
 

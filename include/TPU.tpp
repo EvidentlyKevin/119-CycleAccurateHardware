@@ -157,12 +157,13 @@ if(rowID == 0 && colID == 0) {
     mem.initBanks();
     }
     else if(portL != nullptr) {
-        dequeuedValue = std::vector<T>(portL->dequeueAll().begin(), portL->dequeueAll().end()); // Dequeue all elements from the queue and cast to int
+        cout << "Getting data from left port" << endl;
+        dequeuedValue = portL->dequeueAll(); // Dequeue all elements from the queue
+        cout << "Getting data from left port" << endl;
         // Display the contents of the memory bank
         mem.initBanksFromLeft(dequeuedValue); // Initialize memory banks from the left side
      }
 
-    // Display the contents of the memory banks
     for (int i = 0; i < MemBanks; i++) {
         std::cout << "Memory Bank " << i << ":\n";
         for (int j = 0; j < BANK_ROWS; j++) {
@@ -266,11 +267,11 @@ for (size_t i = 0; i < outputs.size(); ++i) {
     }
     activatedOutputs.push_back(value);
 }
-// Print the activated outputs
-std::cout << "Systolic Array Activated Outputs with Memory Input:\n";
+
+/*std::cout << "Systolic Array Activated Outputs with Memory Input:\n";
 for (size_t i = 0; i < activatedOutputs.size(); ++i) {
     std::cout << "Output[" << i << "]: " << activatedOutputs[i] << "\n";
-    }
+    }*/
 }
 
 template<typename T>
