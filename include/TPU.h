@@ -9,6 +9,9 @@
 
 template<typename T>
 class Cluster; // Forward declaration
+#include "activation.h" // Include the activation header file
+
+
 
 template<typename T>
 class TPU {
@@ -22,6 +25,10 @@ TPU(int row, int col);
 void run();
 void setparameters();
 void setLeftPort(Port<T>* leftPort);
+void display();
+void setActivationFunction(int activation);
+void sendData(const std::vector<T>& inputData) ;
+
 
 
 
@@ -29,7 +36,7 @@ Port<T> portR;
 Port<T>* portL = nullptr; // Pointer to the left port
 Port<T>& getRPort();
 
-std::vector<int> dequeuedValue;
+std::vector<T> dequeuedValue;
 
 
 int ROWS;
@@ -40,6 +47,7 @@ int rowID;
 int colID;
 
 private:
+int activationFunction = 1; // Default activation function is ReLU
 
 
 };

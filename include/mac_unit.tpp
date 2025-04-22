@@ -1,4 +1,6 @@
 // File include/mac_unit.tpp
+#include  "../include/activation.h"
+#include "../include/mac_unit.h"
 
 template<typename T>
 MACUnit<T>::MACUnit(int row, int col)
@@ -28,6 +30,7 @@ channelM<T>& MACUnit<T>::getDownOut() {
 template<typename T>
 void MACUnit<T>::setWeight(T weight) {
     w = weight;
+   // std::cout << "MAC[" << rowID << "][" << colID << "] weight set to " << w << std::endl; //debugging
 }
 
 template<typename T>
@@ -38,7 +41,7 @@ void MACUnit<T>::setInputActivation(T activation) {
 }
 
 template<typename T>
-void MACUnit<T>::cycle() {
+void MACUnit<T>::cycle(int act) {
     // Reset clk if it exceeds the max state
     if (clk > MAX_CLK_STATE) {
         clk = 0;
@@ -57,7 +60,7 @@ void MACUnit<T>::cycle() {
             clk++;
             break;
         case 2:
-            sendOutputs(true);
+            sendOutputs(true,act);
             clk = 0; // Reset for next operation
             break;
         default:
@@ -84,7 +87,7 @@ bool MACUnit<T>::fetchInputs(bool debug) {
     if (colID == 0) {
         b = 0; // No incoming partial sum
     } else {
-        if (!leftIn || !leftIn->pop(b)) {
+        if (!leftIn || !leftIn->pop(b)) { //remove !leftIn before ||
             return false; // Partial sum not ready
         }
     }
@@ -109,12 +112,35 @@ void MACUnit<T>::computeMAC(bool debug) {
 }
 
 template<typename T>
-void MACUnit<T>::sendOutputs(bool debug) {
-    // Send partial sum to the right
-    rightOut.push(accumulator);
-    // Debugging: Print the partial sum sent to the right
-    if (false) {
-        std::cout << "MAC[" << rowID << "][" << colID << "] sent accumulator " << accumulator << " to rightOut\n";
+void MACUnit<T>::sendOutputs(bool debug, int act) {
+    Activation activation;
+    T result = accumulator; // Result is the accumulator for now
+    // Apply activation
+    //Case statement to determine the activation function
+    switch (act) {
+        case 0:
+            rightOut.push(static_cast<T>(activation.relu(accumulator)));
+            break;
+        case 1:
+            rightOut.push(static_cast<T>(activation.sigmoid(accumulator)));
+            break;
+        case 2:
+            rightOut.push(static_cast<T>(activation.tanh(accumulator)));
+            break;
+        case 3:
+            rightOut.push(static_cast<T>(activation.gelu(accumulator)));
+            break;
+        default:
+           // rightOut.push(accumulator);
+            break;
+
+    }
+    
+
+    // Send result to the right
+    rightOut.push(result);
+    if (debug) {
+        std::cout << "MAC[" << rowID << "][" << colID << "] sent result " << result << " to rightOut" << std::endl;
     }
 
     // Send activation downward

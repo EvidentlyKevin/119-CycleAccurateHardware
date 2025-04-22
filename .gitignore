@@ -27,3 +27,6 @@ __pycache__/
 
 # Ignore environment variables
 .env
+
+
+CMakelists.txt

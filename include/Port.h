@@ -28,34 +28,34 @@ class Port{
         return *this;
     }
         // Enqueue a single value
-        void enqueue(int value) {
+        void enqueue(T value) {
             data.push_back(value);
         }
     
         // Enqueue multiple values
-        void enqueueMultiple(const std::vector<int>& values) {
+        void enqueueMultiple(const std::vector<T>& values) {
             data.insert(data.end(), values.begin(), values.end());
         }
     
         // Dequeue all elements and return them
-        std::vector<int> dequeueAll() {
-            std::vector<int> poppedData = data; // Store current elements
+        std::vector<T> dequeueAll() {
+            std::vector<T> poppedData = data; // Store current elements
             data.clear(); // Clear the queue
             return poppedData; // Return removed elements
         }
 
        // Dequeue single element and return it
-    int dequeue() {
+    T dequeue() {
         if (data.empty()) {
             throw std::out_of_range("Queue is empty!");
         }
-        int poppedValue = data.front(); // Store the front value
+        T poppedValue = data.front(); // Store the front value
         data.erase(data.begin());       // Remove the first element
         return poppedValue;             // Return the removed value
     }
     
         // Get front element
-        int front() {
+        T front() {
             if (!data.empty()) {
                 return data.front();
             }
@@ -68,7 +68,7 @@ class Port{
         }
     
         // Get size of queue
-        int size() {
+        T size() {
             return data.size();
         }
     };

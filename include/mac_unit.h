@@ -4,6 +4,7 @@
 #define MAC_UNIT_H
 
 #include "channelM.h"
+#include "TPU.h"
 
 template<typename T>
 class Systolic_Array; // Forward declaration
@@ -30,7 +31,7 @@ public:
 
     // Perform one cycle of computation
     //void cycle(Systolic_Array<T>& systolic_array);
-    void cycle();
+    void cycle(int act);
 
     // Read the accumulator value
     T readAccumulator() const;
@@ -60,7 +61,7 @@ private:
     // bool fetchInputs(Systolic_Array<T>& systolic_array, bool debug = false);
     bool fetchInputs(bool debug = false);
     void computeMAC(bool debug = false);
-    void sendOutputs(bool debug = false);
+    void sendOutputs(bool debug = false, int act = 0);
 
     // Constants
     static const int MAX_CLK_STATE = 2;

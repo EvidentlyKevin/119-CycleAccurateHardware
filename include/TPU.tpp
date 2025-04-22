@@ -1,4 +1,6 @@
+using namespace std;
 #include "TPU.h"
+
 
 
 template<typename T>
@@ -155,7 +157,7 @@ if(rowID == 0 && colID == 0) {
     mem.initBanks();
     }
     else if(portL != nullptr) {
-        dequeuedValue = portL->dequeueAll(); // Dequeue all elements from the queue
+        dequeuedValue = std::vector<T>(portL->dequeueAll().begin(), portL->dequeueAll().end()); // Dequeue all elements from the queue and cast to int
         // Display the contents of the memory bank
         mem.initBanksFromLeft(dequeuedValue); // Initialize memory banks from the left side
      }
@@ -193,26 +195,14 @@ if(rowID == 0 && colID == 0) {
     systolicArray.setWeights(weights);
 
     std::vector<channelM<int>> memoryToSystolicChannels;
-    // Reserve is expensive, use emplace_back instead
-    // emplace_back constructs the object in place, no need to copy
-    // meaning that the object is constructed directly in the vector
-    //memoryToSystolicChannels.reserve(SIZE);
+    // Reserve is expensive; using emplace_back to construct channels in place.
     for (int i = 0; i < SIZE; ++i) {
         memoryToSystolicChannels.emplace_back(CHANNEL_CAPACITY);
     }
 
-    // NUMBER OF CYCLES FOR SIMULATION
     // Simulation loop
-    // Make this a function in a utility file?
     for (int cycle = 0; cycle < num_cycles; ++cycle) {
-
         mem.increment(cycle);
-
-
-        // Memory pushes data into channels
-        
-
-       
 
         // Set input activations from memory channels
         if (cycle % 3 == 0 || cycle == 0) {
@@ -244,4 +234,156 @@ if(rowID == 0 && colID == 0) {
     std::cout << "Output[" << i << "]: " << outputs[i] << "\n";
     }
     
+
+
+// --- NEW CODE: Apply activation function to the outputs ---
+// Create an Activation object
+Activation act;
+
+// Create a vector to store the activated outputs
+std::vector<double> activatedOutputs;
+
+// Convert outputs to double, apply the chosen activation function,
+// and store the result in activatedOutputs.
+for (size_t i = 0; i < outputs.size(); ++i) {
+    double value = static_cast<double>(outputs[i]);
+    switch (activationFunction) {  // activationFunction is a member of TPU
+        case 1:
+            value = act.relu(value);
+            break;
+        case 2:
+            value = act.sigmoid(value);
+            break;
+        case 3:
+            value = act.tanh(value);
+            break;
+        case 4:
+            value = act.gelu(value);
+            break;
+        default:
+            value = act.relu(value);  // Default to ReLU if unknown
+            break;
+    }
+    activatedOutputs.push_back(value);
 }
+// Print the activated outputs
+std::cout << "Systolic Array Activated Outputs with Memory Input:\n";
+for (size_t i = 0; i < activatedOutputs.size(); ++i) {
+    std::cout << "Output[" << i << "]: " << activatedOutputs[i] << "\n";
+    }
+}
+
+template<typename T>
+void TPU<T>::sendData(const std::vector<T>& inputData) {
+
+    N = SIZE;
+    BANK_COLS = COLS;
+    BANK_ROWS = ROWS;
+
+    Memory mem;
+    mem.initBanks();
+
+    int bank = 0;
+    int row = 0;
+    int col = 0;
+
+    for (size_t i = 0; i < inputData.size(); ++i) {
+        // Safety check
+        if (bank >= MemBanks || row >= BANK_ROWS || col >= BANK_COLS) {
+            std::cerr << "Out of memory bounds! Aborting data transfer.\n";
+            break;
+        }
+        mem.MemoryBanks[bank].Data[row][col] = static_cast<int>(inputData[i]);
+
+       // mem.MemoryBanks[bank].Data[row][col] = inputData[i];
+
+        ++col;
+        if (col >= BANK_COLS) {
+            col = 0;
+            ++row;
+
+            if (row >= BANK_ROWS) {
+                row = 0;
+                ++bank;
+            }
+        }
+    }
+
+    std::cout << "Input data size: " << inputData.size() << std::endl;
+    std::cout << "TPU[" << rowID << "][" << colID << "] received data:\n";
+
+    for (const auto& val : inputData) {
+        std::cout << val << " ";
+    }
+    std::cout << std::endl;
+}
+
+// template<typename T>
+// void TPU<T>::sendData(const std::vector<T>& inputData) {
+
+//     Memory mem; // Send data to the TPU memory banks
+//     mem.initBanks(); // Initialize memory banks
+
+//     int row = 0;
+//     int col = 0;
+
+//     for (size_t i = 0; i < inputData.size(); ++i) {
+//         // Calculate the row and column indices for the memory banks
+//         if(row >= BANK_ROWS) break; // Prevent out-of-bounds access
+           
+//         mem.MemoryBanks[0].Data[row][col] = inputData[i]; // Store data in memory bank
+
+
+//         ++col; // Move to the next column
+//         if (col >= BANK_COLS) { // If the end of the row is reached, move to the next row
+//             col = 0;
+//             ++row;
+//         }
+//     }
+// std::cout << "input data size->"<< inputData.size()<< std::endl;
+
+// std::cout << "TPU["<< rowID <<"]["<< colID << "] received data:\n";
+// // Print the input data
+// for (const auto& val : inputData) {
+//     std::cout << val << " ";
+// }
+// std::cout << std::endl;
+
+
+
+    // // Display the contents of the memory banks
+    // for (int i = 0; i < MemBanks; i++) {
+    //     std::cout << "Memory Bank " << i << ":\n";
+    //     for (int j = 0; j < BANK_ROWS; j++) {
+    //         for (int k = 0; k < BANK_COLS; k++) {
+    //             std::cout << mem.MemoryBanks[i].Data[j][k] << " ";
+    //         }
+    //         std::cout << std::endl;
+    //     }
+    //     std::cout << "---------------------------\n";
+    // }
+
+    // int row = 0;
+    // int col = 0;
+
+    // for (size_t i = 0; i < inputData.size(); ++i) {
+    //     if (row >= BANK_ROWS) break;  // Don't overflow memory
+
+    //     this->mem.MemoryBanks[0].Data[row][col] = inputData[i];  //  Store in proper memory
+
+    //     ++col;
+    //     if (col >= BANK_COLS) {
+    //         col = 0;
+    //         ++row;
+    //     }
+    // }
+
+    // std::cout << "TPU[" << rowID << "][" << colID << "] received data:\n";
+    // for (int i = 0; i < BANK_ROWS; ++i) {
+    //     for (int j = 0; j < BANK_COLS; ++j) {
+    //         std::cout << this->mem.MemoryBanks[0].Data[i][j] << " ";
+    //     }
+    //     std::cout << "\n";
+    // }
+    // std::cout << "---------------------------\n";
+
