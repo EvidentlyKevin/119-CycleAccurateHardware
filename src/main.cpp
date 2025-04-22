@@ -46,7 +46,7 @@ int main() {
     // What do you want to test
     std::cout << "Enter a test option (1-3):\n";
     std::cout << "1: Load and display inference data (JSON)\n";
-    std::cout << "3: Test Memory Function\n";
+    std::cout << "2: Original Cluster Test\n";
     std::cout << "4: Run Full Test Systolic Array Function\n";
     std::cout << "Option: ";
     std::cin >> testOption;
