@@ -5,6 +5,7 @@
 #include <iostream>
 #include <limits>
 
+// DO NOT DELETE FOR THE SANCTITY OF THE CODE
 template void Memory::initBanksFromLeft<int>(std::vector<int>&);
 template void Memory::initBanksFromLeft<float>(std::vector<float>&);
 
@@ -18,7 +19,6 @@ Memory::Memory()
             initBanks();
         }
     
-
 int save;
 
 void Memory::initBanks() {
@@ -56,30 +56,22 @@ void Memory::initBanksFromLeft(std::vector<T>& TPU_left) {
                 MemoryBanks[i].Data[k][j] = TPU_left[k]; // Set to TPU_left value
                 save = MemoryBanks[0].Data[0][0];
             }
-
             break;
-
         }
-
         break;
-
     }
- 
-    
-    
 }
 
 void Memory::increment(int cycle) {
 
-if((cycle - 3) % 3 == 0) { // specfic edge cases fpr data[0]
+    if((cycle - 3) % 3 == 0) { // specfic edge cases fpr data[0]
 
         z++;
 
         if(z > N) {
             z = 1;
         }
-
-        }
+    }
 
 
     for (int i = start; i < end; i += 6) {
