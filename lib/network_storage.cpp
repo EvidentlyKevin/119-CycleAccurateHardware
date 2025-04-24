@@ -100,7 +100,7 @@ void NetworkStorage::push(Cluster<float>& cluster, const std::vector<std::vector
     std::cout << "Number of TPUs available: " << numTPUs << std::endl;
 
     // Send data to TPU Memory Banks
-    int idx = 0;
+    size_t idx = 0;
     int size = cluster.getSize();
 
     for (int i = 0; i < size && idx < data.size(); ++i) {

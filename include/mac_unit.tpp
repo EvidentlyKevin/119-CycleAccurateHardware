@@ -49,18 +49,18 @@ void MACUnit<T>::cycle(int act) {
 
     switch (clk) {
         case 0:
-            if (!fetchInputs(true)) {
+            if (!fetchInputs()) {
                 // Inputs not ready, wait
                 return;
             }
             clk++;
             break;
         case 1:
-            computeMAC(true);
+            computeMAC();
             clk++;
             break;
         case 2:
-            sendOutputs(true,act);
+            sendOutputs(act);
             clk = 0; // Reset for next operation
             break;
         default:
@@ -71,7 +71,7 @@ void MACUnit<T>::cycle(int act) {
 
 // Modify the fetchInputs method to use the input channels
 template<typename T>
-bool MACUnit<T>::fetchInputs(bool debug) {
+bool MACUnit<T>::fetchInputs() {
     // Fetch activation 'a'
     if (rowID == 0) {
         if (!inputA.pop(a)) {
@@ -91,28 +91,16 @@ bool MACUnit<T>::fetchInputs(bool debug) {
             return false; // Partial sum not ready
         }
     }
-
-    // Debugging: Print the fetched inputs
-    if (false) {
-        std::cout << "MAC[" << rowID << "][" << colID 
-        << "] fetchInputs: a=" << a << ", b=" << b << "\n";
-    }
     return true; // Inputs fetched successfully
 }
 
 template<typename T>
-void MACUnit<T>::computeMAC(bool debug) {
+void MACUnit<T>::computeMAC() {
     accumulator = (a * w) + b;
-
-    // Debugging: Print the MAC operation
-    if (false) {
-        std::cout << "MAC[" << rowID << "][" << colID << "] computeMAC: a=" << a
-                  << ", w=" << w << ", b=" << b << ", accumulator=" << accumulator << "\n";
-    }
 }
 
 template<typename T>
-void MACUnit<T>::sendOutputs(bool debug, int act) {
+void MACUnit<T>::sendOutputs(int act) {
     Activation activation;
     T result = accumulator; // Result is the accumulator for now
     // Apply activation

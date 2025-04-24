@@ -58,10 +58,10 @@ private:
     channelM<T>* upIn = nullptr;   // Up input channel
 
     // Helper functions
-    // bool fetchInputs(Systolic_Array<T>& systolic_array, bool debug = false);
-    bool fetchInputs(bool debug = false);
-    void computeMAC(bool debug = false);
-    void sendOutputs(bool debug = false, int act = 0);
+    // bool fetchInputs(Systolic_Array<T>& systolic_array);
+    bool fetchInputs();
+    void computeMAC();
+    void sendOutputs(int act = 0);
 
     // Constants
     static const int MAX_CLK_STATE = 2;

@@ -23,7 +23,7 @@ public:
     void setInputActivations(const std::vector<T>& activations);
 
     // Set input activations from channels
-    void setInputActivationsFromChannels(std::vector<channelM<T>>& channels, int current_cycle = 0, bool debug = false);
+    void setInputActivationsFromChannels(std::vector<channelM<T>>& channels, bool debug = false);
 
     // Access a specific MAC unit
     std::unique_ptr<MACUnit<T>>& getMACUnit(int row, int col);

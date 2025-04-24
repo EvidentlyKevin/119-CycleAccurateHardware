@@ -19,35 +19,33 @@ class TPU {
 
 public:
 
-Memory mem;
+    Memory mem;
 
-TPU(int row, int col);
-void run();
-void setparameters();
-void setLeftPort(Port<T>* leftPort);
-void display();
-void setActivationFunction(int activation);
-void sendData(const std::vector<T>& inputData) ;
-
-
+    TPU(int row, int col);
+    void run();
+    void setparameters();
+    void setLeftPort(Port<T>* leftPort);
+    void display();
+    void setActivationFunction(int activation);
+    void sendData(const std::vector<T>& inputData) ;
 
 
-Port<T> portR;
-Port<T>* portL = nullptr; // Pointer to the left port
-Port<T>& getRPort();
-
-std::vector<T> dequeuedValue;
 
 
-int ROWS;
-int COLS;
-int SIZE;
-int num_cycles;
-int rowID;
-int colID;
+    Port<T> portR;
+    Port<T>* portL = nullptr; // Pointer to the left port
+    Port<T>& getRPort();
+
+    int rowID;
+    int colID;
+    std::vector<T> dequeuedValue;
+    int SIZE;
+    int ROWS;
+    int COLS;
+    int num_cycles;
 
 private:
-int activationFunction = 1; // Default activation function is ReLU
+    int activationFunction = 1; // Default activation function is ReLU
 
 
 };

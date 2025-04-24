@@ -82,7 +82,7 @@ public:
 
 private:
     std::deque<T> buffer;     // The underlying buffer
-    int capacity;          // Maximum capacity of the channel
+    size_t capacity;          // Maximum capacity of the channel
 
     // Disable copying
     channelM(const channelM&) = delete;

@@ -7,6 +7,9 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # Remove -Werror for sign-compare issues:
 # add_compile_options(-Wno-sign-compare)
+IF(NOT ENABLE_UNUSED_VAR_PAR_WARNINGS)
+    SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wno-unused-variable -Wno-unused-parameter")
+ENDIF()
 
 
 # Include directories

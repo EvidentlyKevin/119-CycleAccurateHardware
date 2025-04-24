@@ -1,11 +1,10 @@
 using namespace std;
 #include "TPU.h"
 
-
-
 template<typename T>
 TPU<T>::TPU(int row, int col)
-    : rowID(row), colID(col), SIZE(0), ROWS(0), COLS(0), dequeuedValue(8){}
+    // Fix initialization order to match declaration order in TPU.h
+    : rowID(row), colID(col), dequeuedValue(8), SIZE(0), ROWS(0), COLS(0) {}
 
 template<typename T>
 void TPU<T>::setLeftPort(Port<T>* leftPort) {
@@ -16,7 +15,6 @@ template<typename T>
 Port<T>& TPU<T>::getRPort() {
     return portR; // Return the right port
 }
-
 
 template<typename T>
 void TPU<T>::setparameters() {
@@ -139,8 +137,6 @@ default:
    }
 }
 
-
-
 template<typename T>
 void TPU<T>::run() {
 
@@ -175,12 +171,9 @@ if(rowID == 0 && colID == 0) {
         std::cout << "---------------------------\n";
     }
  
-
     Systolic_Array<int> systolicArray(SIZE);
 
-        const int CHANNEL_CAPACITY = 4;
-
-    
+    const int CHANNEL_CAPACITY = 4;
     
     // Create an instance of the systolic array
 
@@ -207,22 +200,24 @@ if(rowID == 0 && colID == 0) {
 
         // Set input activations from memory channels
         if (cycle % 3 == 0 || cycle == 0) {
-            mem.pushData(memoryToSystolicChannels, cycle, true);
-            systolicArray.setInputActivationsFromChannels(memoryToSystolicChannels, cycle, false);
+            mem.pushData(memoryToSystolicChannels, cycle, false); // Changed debug flag to false
+            systolicArray.setInputActivationsFromChannels(memoryToSystolicChannels, false);
         }
-        //systolicArray.setInputActivationsFromChannels(memoryToSystolicChannels, true);
 
         // Run one cycle of the systolic array
         systolicArray.cycle();
 
-
-
-        // Debugging: Print activations read by the systolic array
-        //std::cout << "Cycle " << cycle << " - Activations read by the systolic array:\n";
-        for (int j = 0; j < SIZE; ++j) {
-            int activation = systolicArray.getMACUnit(0, j)->getLastActivation();
-           // std::cout << "MAC[0][" << j << "] activation: " << activation << "\n";
+        // Remove unused activation variable loop
+        // Instead, you can add a debug flag check if you need to output activations
+        /*
+        if (debug) {
+            std::cout << "Cycle " << cycle << " - Activations read by the systolic array:\n";
+            for (int j = 0; j < SIZE; ++j) {
+                int activation = systolicArray.getMACUnit(0, j)->getLastActivation();
+                std::cout << "MAC[0][" << j << "] activation: " << activation << "\n";
+            }
         }
+        */
     }
 
     // Get the outputs from the systolic array
@@ -231,46 +226,44 @@ if(rowID == 0 && colID == 0) {
     // Print the outputs
     std::cout << "Systolic Array Outputs with Memory Input:\n";
     for (int i = outputs.size()-1; i >= 0; --i) {
-    portR.enqueue(outputs[i]);
-    std::cout << "Output[" << i << "]: " << outputs[i] << "\n";
+        portR.enqueue(outputs[i]);
+        std::cout << "Output[" << i << "]: " << outputs[i] << "\n";
     }
     
+    // --- NEW CODE: Apply activation function to the outputs ---
+    // Create an Activation object
+    Activation act;
 
+    // Create a vector to store the activated outputs
+    std::vector<double> activatedOutputs;
 
-// --- NEW CODE: Apply activation function to the outputs ---
-// Create an Activation object
-Activation act;
-
-// Create a vector to store the activated outputs
-std::vector<double> activatedOutputs;
-
-// Convert outputs to double, apply the chosen activation function,
-// and store the result in activatedOutputs.
-for (size_t i = 0; i < outputs.size(); ++i) {
-    double value = static_cast<double>(outputs[i]);
-    switch (activationFunction) {  // activationFunction is a member of TPU
-        case 1:
-            value = act.relu(value);
-            break;
-        case 2:
-            value = act.sigmoid(value);
-            break;
-        case 3:
-            value = act.tanh(value);
-            break;
-        case 4:
-            value = act.gelu(value);
-            break;
-        default:
-            value = act.relu(value);  // Default to ReLU if unknown
-            break;
+    // Convert outputs to double, apply the chosen activation function,
+    // and store the result in activatedOutputs.
+    for (size_t i = 0; i < outputs.size(); ++i) {
+        double value = static_cast<double>(outputs[i]);
+        switch (activationFunction) {  // activationFunction is a member of TPU
+            case 1:
+                value = act.relu(value);
+                break;
+            case 2:
+                value = act.sigmoid(value);
+                break;
+            case 3:
+                value = act.tanh(value);
+                break;
+            case 4:
+                value = act.gelu(value);
+                break;
+            default:
+                value = act.relu(value);  // Default to ReLU if unknown
+                break;
+        }
+        activatedOutputs.push_back(value);
     }
-    activatedOutputs.push_back(value);
-}
 
-/*std::cout << "Systolic Array Activated Outputs with Memory Input:\n";
-for (size_t i = 0; i < activatedOutputs.size(); ++i) {
-    std::cout << "Output[" << i << "]: " << activatedOutputs[i] << "\n";
+    /*std::cout << "Systolic Array Activated Outputs with Memory Input:\n";
+    for (size_t i = 0; i < activatedOutputs.size(); ++i) {
+        std::cout << "Output[" << i << "]: " << activatedOutputs[i] << "\n";
     }*/
 }
 
@@ -296,8 +289,6 @@ void TPU<T>::sendData(const std::vector<T>& inputData) {
         }
         mem.MemoryBanks[bank].Data[row][col] = static_cast<int>(inputData[i]);
 
-       // mem.MemoryBanks[bank].Data[row][col] = inputData[i];
-
         ++col;
         if (col >= BANK_COLS) {
             col = 0;
@@ -318,73 +309,3 @@ void TPU<T>::sendData(const std::vector<T>& inputData) {
     }
     std::cout << std::endl;
 }
-
-// template<typename T>
-// void TPU<T>::sendData(const std::vector<T>& inputData) {
-
-//     Memory mem; // Send data to the TPU memory banks
-//     mem.initBanks(); // Initialize memory banks
-
-//     int row = 0;
-//     int col = 0;
-
-//     for (size_t i = 0; i < inputData.size(); ++i) {
-//         // Calculate the row and column indices for the memory banks
-//         if(row >= BANK_ROWS) break; // Prevent out-of-bounds access
-           
-//         mem.MemoryBanks[0].Data[row][col] = inputData[i]; // Store data in memory bank
-
-
-//         ++col; // Move to the next column
-//         if (col >= BANK_COLS) { // If the end of the row is reached, move to the next row
-//             col = 0;
-//             ++row;
-//         }
-//     }
-// std::cout << "input data size->"<< inputData.size()<< std::endl;
-
-// std::cout << "TPU["<< rowID <<"]["<< colID << "] received data:\n";
-// // Print the input data
-// for (const auto& val : inputData) {
-//     std::cout << val << " ";
-// }
-// std::cout << std::endl;
-
-
-
-    // // Display the contents of the memory banks
-    // for (int i = 0; i < MemBanks; i++) {
-    //     std::cout << "Memory Bank " << i << ":\n";
-    //     for (int j = 0; j < BANK_ROWS; j++) {
-    //         for (int k = 0; k < BANK_COLS; k++) {
-    //             std::cout << mem.MemoryBanks[i].Data[j][k] << " ";
-    //         }
-    //         std::cout << std::endl;
-    //     }
-    //     std::cout << "---------------------------\n";
-    // }
-
-    // int row = 0;
-    // int col = 0;
-
-    // for (size_t i = 0; i < inputData.size(); ++i) {
-    //     if (row >= BANK_ROWS) break;  // Don't overflow memory
-
-    //     this->mem.MemoryBanks[0].Data[row][col] = inputData[i];  //  Store in proper memory
-
-    //     ++col;
-    //     if (col >= BANK_COLS) {
-    //         col = 0;
-    //         ++row;
-    //     }
-    // }
-
-    // std::cout << "TPU[" << rowID << "][" << colID << "] received data:\n";
-    // for (int i = 0; i < BANK_ROWS; ++i) {
-    //     for (int j = 0; j < BANK_COLS; ++j) {
-    //         std::cout << this->mem.MemoryBanks[0].Data[i][j] << " ";
-    //     }
-    //     std::cout << "\n";
-    // }
-    // std::cout << "---------------------------\n";
-

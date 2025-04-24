@@ -5,6 +5,10 @@
 #include <iostream>
 #include <limits>
 
+template void Memory::initBanksFromLeft<int>(std::vector<int>&);
+template void Memory::initBanksFromLeft<float>(std::vector<float>&);
+
+
 Memory::Memory() 
     : MemoryBanks(MemBanks, MemBank(BANK_ROWS, BANK_COLS)),
       indices(10000, std::vector<int>(10000, 0)) ,
@@ -145,6 +149,11 @@ void Memory::pushData(std::vector<channelM<int>> &channels, int cycle, bool debu
                 }
                 // Break to prevent further processing and multiple pushes.
                 break;
+            }
+            if (debug) {
+                // std::cout << "Cycle " << cycle << ": Pushed data " << data[i]
+                //          << " from Bank " << bankIndex << ", Row " << rowIndex
+                //          << ", Column " << colIndex << " into Channel " << i << "\n";
             }
         }
 

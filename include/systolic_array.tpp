@@ -41,13 +41,13 @@ void Systolic_Array<T>::setInputActivations(const std::vector<T>& activations) {
 }
 
 template<typename T>
-void Systolic_Array<T>::setInputActivationsFromChannels(std::vector<channelM<T>>& channels, int current_cycle, bool debug) {
+void Systolic_Array<T>::setInputActivationsFromChannels(std::vector<channelM<T>>& channels, bool debug) {
     for (int j = 0; j < SIZE; ++j) {
         T activation;
         if (channels[j].pop(activation)) {
             array[0][j]->setInputActivation(activation);
-            if (false) {
-                std::cout << "Cycle " << current_cycle << ": MAC[0][" << j << "] received activation " << activation << "\n";
+            if (debug) {
+                //std::cout << "Cycle " << current_cycle << ": MAC[0][" << j << "] received activation " << activation << "\n";
             }
         }
     }

@@ -40,13 +40,13 @@ public:
 
 private:
     std::vector<std::vector<int>> indices;
-    int group;
-    int start = 3;
-    int end = 3 * N;   // Note: N must be defined before using Memory (see globals definition)
     int x = 0;
     int y = 0;
     int z = 0;
     int g = 0;
+    int start = 3;
+    int end = 3 * N;   // Note: N must be defined before using Memory (see globals definition)
+    int group;
 };
 
 #endif // MEMORY_H
